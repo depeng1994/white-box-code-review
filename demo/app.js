@@ -132,6 +132,14 @@ function sortRows(rows, sortState) {
   });
 }
 
+function prioritizeReviewDetails(details) {
+  return [...details].sort((a, b) => {
+    const aRank = a.type === "MR评价" ? 0 : 1;
+    const bRank = b.type === "MR评价" ? 0 : 1;
+    return aRank - bRank;
+  });
+}
+
 function updateSortMarks() {
   document.querySelectorAll(".sort-button").forEach((button) => {
     const table = button.dataset.table;
@@ -260,7 +268,7 @@ function createPrDetailRow(row) {
 
 function renderPrDetail(row) {
   const [label, cls] = level(row.score);
-  const details = row.detail || [];
+  const details = prioritizeReviewDetails(row.detail || []);
   return `
     <div class="detail-header">
       <div>
@@ -299,20 +307,20 @@ function renderContributorTable() {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${row.name}</td>
-      <td>${metricLink(row, "submit_prs", formatNumber(row.submit_prs))}</td>
-      <td>${metricLink(row, "submit_lines", formatNumber(row.submit_lines))}</td>
-      <td>${metricLink(row, "received_reviews", formatNumber(row.received_reviews))}</td>
-      <td>${metricLink(row, "rated_prs", formatNumber(row.rated_prs))}</td>
-      <td class="negative">${metricLink(row, "poor_prs", formatNumber(row.poor_prs))}</td>
-      <td>${metricLink(row, "poor_rate", percent(row.poor_prs, row.rated_prs))}</td>
-      <td class="positive">${metricLink(row, "excellent_prs", formatNumber(row.excellent_prs))}</td>
-      <td>${metricLink(row, "excellent_rate", percent(row.excellent_prs, row.rated_prs))}</td>
-      <td>${metricLink(row, "review_comments", formatNumber(row.review_comments))}</td>
-      <td>${metricLink(row, "review_prs", formatNumber(row.review_prs))}</td>
-      <td>${metricLink(row, "scored_prs", formatNumber(row.scored_prs))}</td>
-      <td class="negative">${metricLink(row, "scored_poor", formatNumber(row.scored_poor))}</td>
-      <td class="positive">${metricLink(row, "scored_excellent", formatNumber(row.scored_excellent))}</td>
-      <td>${metricLink(row, "scored_excellent_rate", percent(row.scored_excellent, row.scored_prs))}</td>
+      <td class="submit-metric">${metricLink(row, "submit_prs", formatNumber(row.submit_prs))}</td>
+      <td class="submit-metric">${metricLink(row, "submit_lines", formatNumber(row.submit_lines))}</td>
+      <td class="submit-metric">${metricLink(row, "received_reviews", formatNumber(row.received_reviews))}</td>
+      <td class="submit-metric">${metricLink(row, "rated_prs", formatNumber(row.rated_prs))}</td>
+      <td class="submit-metric negative">${metricLink(row, "poor_prs", formatNumber(row.poor_prs))}</td>
+      <td class="submit-metric">${metricLink(row, "poor_rate", percent(row.poor_prs, row.rated_prs))}</td>
+      <td class="submit-metric positive">${metricLink(row, "excellent_prs", formatNumber(row.excellent_prs))}</td>
+      <td class="submit-metric">${metricLink(row, "excellent_rate", percent(row.excellent_prs, row.rated_prs))}</td>
+      <td class="review-metric review-start">${metricLink(row, "review_comments", formatNumber(row.review_comments))}</td>
+      <td class="review-metric">${metricLink(row, "review_prs", formatNumber(row.review_prs))}</td>
+      <td class="review-metric">${metricLink(row, "scored_prs", formatNumber(row.scored_prs))}</td>
+      <td class="review-metric negative">${metricLink(row, "scored_poor", formatNumber(row.scored_poor))}</td>
+      <td class="review-metric positive">${metricLink(row, "scored_excellent", formatNumber(row.scored_excellent))}</td>
+      <td class="review-metric">${metricLink(row, "scored_excellent_rate", percent(row.scored_excellent, row.scored_prs))}</td>
     `;
     contributorBody.appendChild(tr);
   }
