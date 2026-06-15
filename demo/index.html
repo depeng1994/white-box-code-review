@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>代码白盒检视看板 Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">WB</div>
+          <div>
+            <div class="brand-title">WhiteBox Review</div>
+            <div class="brand-subtitle">PR Review Intelligence</div>
+          </div>
+        </div>
+
+        <nav class="nav-stack" aria-label="主导航">
+          <button class="nav-item active" type="button">看板</button>
+          <button class="nav-item" type="button">PR 明细</button>
+          <button class="nav-item" type="button">贡献者</button>
+          <button class="nav-item" type="button">数据刷新</button>
+        </nav>
+
+        <div class="sync-panel">
+          <div class="sync-label">最近刷新</div>
+          <div class="sync-time">2026-06-15 00:03</div>
+          <div class="sync-note">已同步 18 个合入 PR，过滤 27 条系统检视。</div>
+        </div>
+      </aside>
+
+      <main class="content">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">cann/torchtitan-npu</p>
+            <h1>代码白盒检视看板</h1>
+            <p class="header-copy">按合入时间追踪 PR 质量、检视密度、评分分布与贡献者协作质量。</p>
+          </div>
+          <div class="header-actions">
+            <button class="ghost-button" type="button">导出 CSV</button>
+            <button class="primary-button" type="button">刷新数据</button>
+          </div>
+        </header>
+
+        <section class="control-bar" aria-label="筛选条件">
+          <label class="field">
+            <span>时间粒度</span>
+            <select id="periodSelect">
+              <option value="week">周</option>
+              <option value="month">月</option>
+              <option value="quarter">季度</option>
+              <option value="half">半年</option>
+              <option value="year">全年</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>时间范围</span>
+            <select id="rangeSelect"></select>
+          </label>
+
+          <label class="field field-wide">
+            <span>搜索</span>
+            <input id="searchInput" type="search" placeholder="PR 标题、贡献者、评分人、文件路径" />
+          </label>
+
+          <div class="view-switch" role="tablist" aria-label="统计视角">
+            <button class="view-tab active" type="button" data-view="pr">PR 视角</button>
+            <button class="view-tab" type="button" data-view="contributor">贡献者视角</button>
+          </div>
+        </section>
+
+        <section class="metrics-grid" aria-label="总览指标">
+          <article class="metric-card">
+            <span>已合入 PR</span>
+            <strong id="metricPr">18</strong>
+            <em>较上期 +12.5%</em>
+          </article>
+          <article class="metric-card">
+            <span>提交代码行数</span>
+            <strong id="metricLines">12,846</strong>
+            <em>含新增与删除</em>
+          </article>
+          <article class="metric-card">
+            <span>被检视意见</span>
+            <strong id="metricReviews">63</strong>
+            <em>人工行内意见</em>
+          </article>
+          <article class="metric-card">
+            <span>平均评分</span>
+            <strong id="metricScore">3.7</strong>
+            <em>优秀阈值 &gt; 3</em>
+          </article>
+          <article class="metric-card">
+            <span>待改进 / 优秀</span>
+            <strong><span id="metricPoor">3</span> / <span id="metricExcellent">9</span></strong>
+            <em>评分 &lt;3 / &gt;3</em>
+          </article>
+        </section>
+
+        <section id="prView" class="view-panel active">
+          <div class="section-heading">
+            <div>
+              <h2>PR 汇总</h2>
+              <p>点击 PR 行可展开检视意见与 MR 评价，快速定位质量风险。</p>
+            </div>
+            <div class="legend">
+              <span class="dot poor"></span>待改进
+              <span class="dot ok"></span>达标
+              <span class="dot excellent"></span>优秀
+            </div>
+          </div>
+
+          <div class="table-card">
+            <table class="data-table" id="prTable">
+              <thead>
+                <tr>
+                  <th>PR</th>
+                  <th>标题</th>
+                  <th>作者</th>
+                  <th>合入时间</th>
+                  <th>代码行数</th>
+                  <th>检视意见</th>
+                  <th>评分</th>
+                  <th>评分人</th>
+                  <th>等级</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <div class="detail-panel" id="detailPanel">
+            <div class="detail-empty">选择一条 PR 查看检视意见与 MR 评价。</div>
+          </div>
+        </section>
+
+        <section id="contributorView" class="view-panel">
+          <div class="section-heading">
+            <div>
+              <h2>贡献者统计</h2>
+              <p>同一张表内分组展示提交贡献与检视贡献，并随时间粒度切换。</p>
+            </div>
+            <div class="density-note">左侧贡献者固定，右侧按贡献类型分组。</div>
+          </div>
+
+          <div class="table-card wide-table">
+            <table class="data-table contributor-table" id="contributorTable">
+              <thead>
+                <tr class="group-row">
+                  <th rowspan="2">贡献者</th>
+                  <th colspan="8">提交贡献</th>
+                  <th colspan="6">检视贡献</th>
+                </tr>
+                <tr>
+                  <th>提交 PR</th>
+                  <th>代码行数</th>
+                  <th>被检视</th>
+                  <th>已评分</th>
+                  <th>待改进</th>
+                  <th>待改进占比</th>
+                  <th>优秀</th>
+                  <th>优秀占比</th>
+                  <th>检视意见</th>
+                  <th>涉及 PR</th>
+                  <th>打分 PR</th>
+                  <th>待改进评分</th>
+                  <th>优秀评分</th>
+                  <th>优秀评分占比</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
