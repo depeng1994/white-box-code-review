@@ -11,12 +11,21 @@ const rangeSelect = document.querySelector("#rangeSelect");
 const searchInput = document.querySelector("#searchInput");
 const prBody = document.querySelector("#prTable tbody");
 const contributorBody = document.querySelector("#contributorTable tbody");
-const detailPanel = document.querySelector("#detailPanel");
+const drilldownModal = document.querySelector("#drilldownModal");
+const drilldownClose = document.querySelector("#drilldownClose");
+const drilldownTitle = document.querySelector("#drilldownTitle");
+const drilldownKicker = document.querySelector("#drilldownKicker");
+const drilldownSummary = document.querySelector("#drilldownSummary");
+const drilldownBody = document.querySelector("#drilldownTable tbody");
 
 let dashboard = null;
 let ranges = fallbackRanges;
 let selectedPrId = null;
 let staticBundle = null;
+let selectedDrilldownPrId = null;
+let prSort = { key: "id", direction: "desc" };
+let contributorSort = { key: "submit_prs", direction: "desc" };
+let activeDrilldownRows = [];
 
 function formatNumber(value) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
@@ -66,13 +75,57 @@ function matchesSearch(row) {
   return JSON.stringify(row).toLowerCase().includes(keyword);
 }
 
+function escapeAttr(value) {
+  return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
+function rate(numerator, denominator) {
+  return denominator ? numerator / denominator : 0;
+}
+
+function sortDirection(current, key) {
+  if (current.key !== key) return "desc";
+  return current.direction === "desc" ? "asc" : "desc";
+}
+
+function numericValue(row, key) {
+  if (key === "score") return row.score ?? -1;
+  if (key === "poor_rate") return rate(row.poor_prs, row.rated_prs);
+  if (key === "excellent_rate") return rate(row.excellent_prs, row.rated_prs);
+  if (key === "scored_excellent_rate") return rate(row.scored_excellent, row.scored_prs);
+  return Number(row[key] ?? 0);
+}
+
+function sortRows(rows, sortState) {
+  const direction = sortState.direction === "asc" ? 1 : -1;
+  return [...rows].sort((a, b) => {
+    const delta = numericValue(a, sortState.key) - numericValue(b, sortState.key);
+    if (delta !== 0) return delta * direction;
+    return String(a.title || a.name || a.id).localeCompare(String(b.title || b.name || b.id), "zh-CN");
+  });
+}
+
+function updateSortMarks() {
+  document.querySelectorAll(".sort-button").forEach((button) => {
+    const table = button.dataset.table;
+    const state = table === "contributor" ? contributorSort : prSort;
+    const active = button.dataset.sort === state.key;
+    button.classList.toggle("active", active);
+    const mark = button.querySelector(".sort-mark");
+    mark.textContent = active ? (state.direction === "asc" ? "↑" : "↓") : "↕";
+    button.title = active ? `当前${state.direction === "asc" ? "升序" : "降序"}，点击切换` : "点击排序";
+  });
+}
+
 async function loadDashboard() {
   const params = new URLSearchParams({
     period: periodSelect.value,
     range: rangeSelect.value || "",
   });
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 1500);
   try {
-    const response = await fetch(`/api/dashboard?${params.toString()}`);
+    const response = await fetch(`/api/dashboard?${params.toString()}`, { signal: controller.signal });
     if (!response.ok) {
       const text = await response.text();
       throw new Error(text);
@@ -80,6 +133,8 @@ async function loadDashboard() {
     dashboard = await response.json();
   } catch (error) {
     dashboard = await loadStaticDashboard();
+  } finally {
+    window.clearTimeout(timeout);
   }
   ranges = dashboard.ranges || fallbackRanges;
   populateRanges(true);
@@ -128,13 +183,29 @@ function renderMetrics() {
 }
 
 function renderPrTable() {
-  const rows = (dashboard?.prs || []).filter(matchesSearch);
+  const rows = sortRows((dashboard?.prs || []).filter(matchesSearch), prSort);
   prBody.innerHTML = "";
 
   for (const row of rows) {
-    const [label, cls] = level(row.score);
+    prBody.appendChild(createPrMainRow(row, selectedPrId, (id) => {
+      selectedPrId = selectedPrId === id ? null : id;
+      renderPrTable();
+    }));
+
+    if (row.id === selectedPrId) {
+      prBody.appendChild(createPrDetailRow(row));
+    }
+  }
+
+  if (!rows.length) {
+    prBody.innerHTML = `<tr><td colspan="9" class="title-cell">当前筛选条件下暂无 PR 数据。</td></tr>`;
+  }
+}
+
+function createPrMainRow(row, selectedId, onSelect) {
+  const [label, cls] = level(row.score);
     const tr = document.createElement("tr");
-    tr.className = row.id === selectedPrId ? "selected" : "";
+  tr.className = row.id === selectedId ? "selected" : "";
     tr.dataset.id = row.id;
     tr.innerHTML = `
       <td>#${row.id}</td>
@@ -148,28 +219,22 @@ function renderPrTable() {
       <td><span class="badge ${cls}">${label}</span></td>
     `;
     tr.addEventListener("click", () => {
-      selectedPrId = row.id;
-      renderPrTable();
-      renderDetail();
+    onSelect(row.id);
     });
-    prBody.appendChild(tr);
-  }
-
-  if (!rows.length) {
-    prBody.innerHTML = `<tr><td colspan="9" class="title-cell">当前筛选条件下暂无 PR 数据。</td></tr>`;
-  }
+  return tr;
 }
 
-function renderDetail() {
-  const row = (dashboard?.prs || []).find((item) => item.id === selectedPrId);
-  if (!row) {
-    detailPanel.innerHTML = `<div class="detail-empty">选择一条 PR 查看检视意见与 MR 评价。</div>`;
-    return;
-  }
+function createPrDetailRow(row) {
+      const detailRow = document.createElement("tr");
+      detailRow.className = "pr-detail-row";
+      detailRow.innerHTML = `<td colspan="9">${renderPrDetail(row)}</td>`;
+  return detailRow;
+}
 
+function renderPrDetail(row) {
   const [label, cls] = level(row.score);
   const details = row.detail || [];
-  detailPanel.innerHTML = `
+  return `
     <div class="detail-header">
       <div>
         <div class="detail-title">#${row.id} ${row.title}</div>
@@ -200,27 +265,27 @@ function renderDetail() {
 }
 
 function renderContributorTable() {
-  const rows = (dashboard?.contributors || []).filter(matchesSearch);
+  const rows = sortRows((dashboard?.contributors || []).filter(matchesSearch), contributorSort);
   contributorBody.innerHTML = "";
 
   for (const row of rows) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${row.name}</td>
-      <td>${formatNumber(row.submit_prs)}</td>
-      <td>${formatNumber(row.submit_lines)}</td>
-      <td>${formatNumber(row.received_reviews)}</td>
-      <td>${formatNumber(row.rated_prs)}</td>
-      <td class="negative">${formatNumber(row.poor_prs)}</td>
-      <td>${percent(row.poor_prs, row.rated_prs)}</td>
-      <td class="positive">${formatNumber(row.excellent_prs)}</td>
-      <td>${percent(row.excellent_prs, row.rated_prs)}</td>
-      <td>${formatNumber(row.review_comments)}</td>
-      <td>${formatNumber(row.review_prs)}</td>
-      <td>${formatNumber(row.scored_prs)}</td>
-      <td class="negative">${formatNumber(row.scored_poor)}</td>
-      <td class="positive">${formatNumber(row.scored_excellent)}</td>
-      <td>${percent(row.scored_excellent, row.scored_prs)}</td>
+      <td>${metricLink(row, "submit_prs", formatNumber(row.submit_prs))}</td>
+      <td>${metricLink(row, "submit_lines", formatNumber(row.submit_lines))}</td>
+      <td>${metricLink(row, "received_reviews", formatNumber(row.received_reviews))}</td>
+      <td>${metricLink(row, "rated_prs", formatNumber(row.rated_prs))}</td>
+      <td class="negative">${metricLink(row, "poor_prs", formatNumber(row.poor_prs))}</td>
+      <td>${metricLink(row, "poor_rate", percent(row.poor_prs, row.rated_prs))}</td>
+      <td class="positive">${metricLink(row, "excellent_prs", formatNumber(row.excellent_prs))}</td>
+      <td>${metricLink(row, "excellent_rate", percent(row.excellent_prs, row.rated_prs))}</td>
+      <td>${metricLink(row, "review_comments", formatNumber(row.review_comments))}</td>
+      <td>${metricLink(row, "review_prs", formatNumber(row.review_prs))}</td>
+      <td>${metricLink(row, "scored_prs", formatNumber(row.scored_prs))}</td>
+      <td class="negative">${metricLink(row, "scored_poor", formatNumber(row.scored_poor))}</td>
+      <td class="positive">${metricLink(row, "scored_excellent", formatNumber(row.scored_excellent))}</td>
+      <td>${metricLink(row, "scored_excellent_rate", percent(row.scored_excellent, row.scored_prs))}</td>
     `;
     contributorBody.appendChild(tr);
   }
@@ -230,11 +295,105 @@ function renderContributorTable() {
   }
 }
 
+function metricLink(row, metric, label) {
+  return `<button class="metric-link" type="button" data-contributor="${escapeAttr(row.name)}" data-metric="${metric}">${label}</button>`;
+}
+
+function prHasReviewFrom(pr, contributor) {
+  return (pr.detail || []).some((item) => item.type === "检视意见" && item.author === contributor);
+}
+
+function prHasScoreFrom(pr, contributor) {
+  return (pr.detail || []).some((item) => item.type === "MR评价" && item.author === contributor);
+}
+
+function metricTitle(metric) {
+  return {
+    submit_prs: "提交 PR",
+    submit_lines: "提交代码行数",
+    received_reviews: "被检视意见",
+    rated_prs: "已评分 PR",
+    poor_prs: "待改进 PR",
+    poor_rate: "待改进占比",
+    excellent_prs: "优秀 PR",
+    excellent_rate: "优秀占比",
+    review_comments: "提交检视意见",
+    review_prs: "检视涉及 PR",
+    scored_prs: "打分 PR",
+    scored_poor: "打分待改进",
+    scored_excellent: "打分优秀",
+    scored_excellent_rate: "打分优秀占比",
+  }[metric] || metric;
+}
+
+function filterPrsForMetric(contributor, metric) {
+  const prs = dashboard?.prs || [];
+  const ownPr = (pr) => pr.author === contributor;
+  const rated = (pr) => pr.score !== null && pr.score !== undefined;
+  const poor = (pr) => rated(pr) && pr.score < 3;
+  const excellent = (pr) => rated(pr) && pr.score > 3;
+
+  if (["submit_prs", "submit_lines", "received_reviews"].includes(metric)) {
+    return prs.filter(ownPr);
+  }
+  if (metric === "rated_prs") return prs.filter((pr) => ownPr(pr) && rated(pr));
+  if (["poor_prs", "poor_rate"].includes(metric)) return prs.filter((pr) => ownPr(pr) && poor(pr));
+  if (["excellent_prs", "excellent_rate"].includes(metric)) {
+    return prs.filter((pr) => ownPr(pr) && excellent(pr));
+  }
+  if (["review_comments", "review_prs"].includes(metric)) {
+    return prs.filter((pr) => prHasReviewFrom(pr, contributor));
+  }
+  if (metric === "scored_prs") return prs.filter((pr) => prHasScoreFrom(pr, contributor));
+  if (metric === "scored_poor") {
+    return prs.filter((pr) => prHasScoreFrom(pr, contributor) && poor(pr));
+  }
+  if (["scored_excellent", "scored_excellent_rate"].includes(metric)) {
+    return prs.filter((pr) => prHasScoreFrom(pr, contributor) && excellent(pr));
+  }
+  return [];
+}
+
+function openDrilldown(contributor, metric) {
+  const rows = sortRows(filterPrsForMetric(contributor, metric), prSort);
+  activeDrilldownRows = rows;
+  selectedDrilldownPrId = rows[0]?.id || null;
+  drilldownKicker.textContent = `${contributor} · ${dashboard?.range || ""}`;
+  drilldownTitle.textContent = metricTitle(metric);
+  drilldownSummary.textContent = `${rows.length} 个相关 PR`;
+  renderDrilldownRows(rows);
+  drilldownModal.hidden = false;
+}
+
+function renderDrilldownRows(rows) {
+  drilldownBody.innerHTML = "";
+  const sortedRows = sortRows(rows, prSort);
+  activeDrilldownRows = sortedRows;
+  for (const row of sortedRows) {
+    drilldownBody.appendChild(createPrMainRow(row, selectedDrilldownPrId, (id) => {
+      selectedDrilldownPrId = selectedDrilldownPrId === id ? null : id;
+      renderDrilldownRows(sortedRows);
+    }));
+    if (row.id === selectedDrilldownPrId) {
+      drilldownBody.appendChild(createPrDetailRow(row));
+    }
+  }
+  if (!rows.length) {
+    drilldownBody.innerHTML = `<tr><td colspan="9" class="title-cell">当前指标没有可展示的 PR 明细。</td></tr>`;
+  }
+}
+
+function closeDrilldown() {
+  drilldownModal.hidden = true;
+  selectedDrilldownPrId = null;
+  activeDrilldownRows = [];
+}
+
 function renderAll() {
   renderMetrics();
   renderPrTable();
-  renderDetail();
   renderContributorTable();
+  updateSortMarks();
 }
 
 document.querySelectorAll(".view-tab").forEach((tab) => {
@@ -256,6 +415,39 @@ rangeSelect.addEventListener("change", async () => {
   await loadDashboard();
 });
 searchInput.addEventListener("input", renderAll);
+document.addEventListener("click", (event) => {
+  const button = event.target.closest(".sort-button");
+  if (!button) return;
+  event.stopPropagation();
+  if (button.dataset.table === "contributor") {
+    contributorSort = {
+      key: button.dataset.sort,
+      direction: sortDirection(contributorSort, button.dataset.sort),
+    };
+    renderContributorTable();
+  } else {
+    prSort = {
+      key: button.dataset.sort,
+      direction: sortDirection(prSort, button.dataset.sort),
+    };
+    renderPrTable();
+    if (!drilldownModal.hidden) renderDrilldownRows(activeDrilldownRows);
+  }
+  updateSortMarks();
+});
+contributorBody.addEventListener("click", (event) => {
+  const button = event.target.closest(".metric-link");
+  if (!button) return;
+  event.stopPropagation();
+  openDrilldown(button.dataset.contributor, button.dataset.metric);
+});
+drilldownClose.addEventListener("click", closeDrilldown);
+drilldownModal.addEventListener("click", (event) => {
+  if (event.target === drilldownModal) closeDrilldown();
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !drilldownModal.hidden) closeDrilldown();
+});
 
 populateRanges(false);
 loadDashboard().catch((error) => {
