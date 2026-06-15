@@ -29,6 +29,10 @@ DEFAULT_REPO = "torchtitan-npu"
 DEFAULT_DB = Path("data/review_board.sqlite3")
 DEFAULT_STATIC_DIR = Path("demo")
 MR_EVAL_KEYWORD = "【MR评价】"
+LGTM_PATTERN = re.compile(r"(?im)(^|\s)/lgtm(?=$|\s|[。；;,.，、])")
+EVALUATION_DIMENSION_PATTERN = re.compile(
+    r"(编码规范遵守度|代码设计|DT质量|测试质量|功能质量|性能|安全|可维护性)\s*[:：]"
+)
 TZ = ZoneInfo("Asia/Shanghai")
 SYSTEM_USER_MARKERS = (
     "robot",
@@ -123,6 +127,21 @@ def compact_text(raw: str) -> str:
 def extract_score(body: str) -> float | None:
     match = re.search(r"评价分数[:：]\s*([0-9]+(?:\.[0-9]+)?)", body)
     return float(match.group(1)) if match else None
+
+
+def is_lgtm_body(body: str) -> bool:
+    return LGTM_PATTERN.search(body) is not None
+
+
+def evaluation_opinion_empty(body: str) -> bool:
+    match = re.search(r"评价意见\s*[:：]\s*(.*)", body)
+    if not match:
+        return False
+    tail = match.group(1)
+    dimension = EVALUATION_DIMENSION_PATTERN.search(tail)
+    opinion = tail[: dimension.start()] if dimension else tail
+    opinion = re.sub(r"[\s,，;；。:：、-]+", "", opinion)
+    return not opinion
 
 
 def score_value(value: Any) -> float | None:
@@ -296,6 +315,18 @@ class ReviewStore:
                     raw_json TEXT NOT NULL
                 );
 
+                CREATE TABLE IF NOT EXISTS lgtm_comments (
+                    repo TEXT NOT NULL,
+                    pr_number INTEGER NOT NULL,
+                    comment_id INTEGER PRIMARY KEY,
+                    author TEXT NOT NULL,
+                    created_at TEXT,
+                    updated_at TEXT,
+                    body TEXT NOT NULL,
+                    is_system_comment INTEGER NOT NULL DEFAULT 0,
+                    raw_json TEXT NOT NULL
+                );
+
                 CREATE TABLE IF NOT EXISTS sync_runs (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     repo TEXT NOT NULL,
@@ -314,6 +345,8 @@ class ReviewStore:
                 CREATE INDEX IF NOT EXISTS idx_review_author ON review_comments (author);
                 CREATE INDEX IF NOT EXISTS idx_eval_pr ON mr_evaluations (repo, pr_number);
                 CREATE INDEX IF NOT EXISTS idx_eval_author ON mr_evaluations (author);
+                CREATE INDEX IF NOT EXISTS idx_lgtm_pr ON lgtm_comments (repo, pr_number);
+                CREATE INDEX IF NOT EXISTS idx_lgtm_author ON lgtm_comments (author);
                 """
             )
             self._migrate_score_column(conn)
@@ -424,9 +457,11 @@ class ReviewStore:
         pr_number: int,
         reviews: list[dict[str, Any]],
         evaluations: list[dict[str, Any]],
+        lgtms: list[dict[str, Any]],
     ) -> None:
         conn.execute("DELETE FROM review_comments WHERE repo = ? AND pr_number = ?", (repo.full_name, pr_number))
         conn.execute("DELETE FROM mr_evaluations WHERE repo = ? AND pr_number = ?", (repo.full_name, pr_number))
+        conn.execute("DELETE FROM lgtm_comments WHERE repo = ? AND pr_number = ?", (repo.full_name, pr_number))
 
         conn.executemany(
             """
@@ -479,6 +514,30 @@ class ReviewStore:
             ],
         )
 
+        conn.executemany(
+            """
+            INSERT INTO lgtm_comments (
+                repo, pr_number, comment_id, author, created_at, updated_at,
+                body, is_system_comment, raw_json
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            [
+                (
+                    repo.full_name,
+                    pr_number,
+                    item["comment_id"],
+                    item["author"],
+                    item["created_at"],
+                    item["updated_at"],
+                    item["body"],
+                    int(item["is_system_comment"]),
+                    json.dumps(item["raw"], ensure_ascii=False),
+                )
+                for item in lgtms
+            ],
+        )
+
 
 class Collector:
     def __init__(self, client: GitCodeClient, store: ReviewStore, repo: RepoRef) -> None:
@@ -504,8 +563,8 @@ class Collector:
                     pr_number = int(pr["number"])
                     self.store.upsert_pr(conn, self.repo, pr)
                     comments = self.client.list_comments(self.repo, pr_number)
-                    reviews, evaluations = self._extract_comments(pr_number, comments)
-                    self.store.replace_pr_comments(conn, self.repo, pr_number, reviews, evaluations)
+                    reviews, evaluations, lgtms = self._extract_comments(pr_number, comments)
+                    self.store.replace_pr_comments(conn, self.repo, pr_number, reviews, evaluations, lgtms)
                 pr_count += 1
             self.store.finish_sync(run_id, "success", pr_count)
             return pr_count
@@ -517,9 +576,10 @@ class Collector:
         self,
         pr_number: int,
         comments: list[dict[str, Any]],
-    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
         reviews: list[dict[str, Any]] = []
         evaluations: list[dict[str, Any]] = []
+        lgtms: list[dict[str, Any]] = []
         for comment in comments:
             body = str(comment.get("body") or "")
             system = is_system_user(comment)
@@ -559,7 +619,20 @@ class Collector:
                         "raw": comment,
                     }
                 )
-        return reviews, evaluations
+            if is_lgtm_body(body) and not system:
+                compact = compact_text(body)
+                lgtms.append(
+                    {
+                        "comment_id": int(comment["id"]),
+                        "author": user_login(comment),
+                        "created_at": str(comment.get("created_at") or ""),
+                        "updated_at": str(comment.get("updated_at") or ""),
+                        "body": compact,
+                        "is_system_comment": False,
+                        "raw": comment,
+                    }
+                )
+        return reviews, evaluations, lgtms
 
 
 def period_window(period: str, range_label: str | None) -> tuple[datetime, datetime, str]:
@@ -621,6 +694,21 @@ def primary_evaluation(evals: list[sqlite3.Row]) -> sqlite3.Row | None:
     return sorted(evals, key=lambda row: (row["created_at"] or "", row["comment_id"] or 0))[0]
 
 
+def latest_lgtm(lgtms: list[sqlite3.Row]) -> sqlite3.Row | None:
+    if not lgtms:
+        return None
+    return sorted(lgtms, key=lambda row: (row["created_at"] or "", row["comment_id"] or 0))[-1]
+
+
+def nonstandard_reason(evaluation: sqlite3.Row | None) -> str:
+    if evaluation is None:
+        return "只有LGTM无评分"
+    score = score_value(evaluation["score"])
+    if score is not None and score != 3 and evaluation_opinion_empty(str(evaluation["body"] or "")):
+        return "非3分且评价意见为空"
+    return ""
+
+
 class DashboardQueries:
     def __init__(self, store: ReviewStore, repo: RepoRef) -> None:
         self.store = store
@@ -640,6 +728,7 @@ class DashboardQueries:
             pr_numbers = [int(row["pr_number"]) for row in prs]
             reviews_by_pr = self._group_rows(conn, "review_comments", pr_numbers)
             evals_by_pr = self._group_rows(conn, "mr_evaluations", pr_numbers)
+            lgtms_by_pr = self._group_rows(conn, "lgtm_comments", pr_numbers)
             sync = conn.execute(
                 "SELECT * FROM sync_runs WHERE repo = ? ORDER BY id DESC LIMIT 1",
                 (self.repo.full_name,),
@@ -660,8 +749,12 @@ class DashboardQueries:
             total_lines += lines
             reviews = reviews_by_pr.get(number, [])
             evals = evals_by_pr.get(number, [])
+            lgtms = lgtms_by_pr.get(number, [])
             evaluation = primary_evaluation(evals)
+            lgtm = latest_lgtm(lgtms)
             score = score_value(evaluation["score"]) if evaluation else None
+            nonstandard = nonstandard_reason(evaluation) if lgtm else ""
+            nonstandard_reviewer = lgtm["author"] if lgtm and nonstandard else ""
             if score is not None:
                 rated += 1
                 score_sum += score
@@ -691,6 +784,13 @@ class DashboardQueries:
                 scorer["scored_poor"] += int(item_score is not None and item_score < 3)
                 scorer["scored_excellent"] += int(item_score is not None and item_score > 3)
 
+            if nonstandard_reviewer:
+                owner = contributor_map.setdefault(
+                    nonstandard_reviewer,
+                    empty_contributor(nonstandard_reviewer),
+                )
+                owner["nonstandard_prs"] += 1
+
             pr_payload.append(
                 {
                     "id": number,
@@ -703,6 +803,8 @@ class DashboardQueries:
                     "reviewer": evaluation["author"] if evaluation else "",
                     "level": score_level(score),
                     "summary": evaluation["body"] if evaluation else "",
+                    "nonstandardReviewer": nonstandard_reviewer,
+                    "nonstandardReason": nonstandard,
                     "htmlUrl": pr["html_url"],
                     "detail": [
                         {
@@ -825,6 +927,7 @@ def empty_contributor(name: str) -> dict[str, Any]:
         "scored_prs": 0,
         "scored_poor": 0,
         "scored_excellent": 0,
+        "nonstandard_prs": 0,
     }
 
 

@@ -46,12 +46,46 @@ class ThemeToggleTest(unittest.TestCase):
         html = (DEMO / "index.html").read_text(encoding="utf-8")
         js = (DEMO / "app.js").read_text(encoding="utf-8")
 
-        self.assertIn('<th class="review-group" colspan="7">检视贡献</th>', html)
+        self.assertIn('<th class="review-group" colspan="8">检视贡献</th>', html)
         self.assertIn('data-sort="scored_poor_rate"', html)
         self.assertIn("待改进评分占比", html)
         self.assertIn('metricLink(row, "scored_poor_rate", percent(row.scored_poor, row.scored_prs))', js)
         self.assertIn('scored_poor_rate: "打分待改进占比"', js)
         self.assertIn('["scored_poor", "scored_poor_rate"].includes(metric)', js)
+
+    def test_review_contribution_includes_nonstandard_prs(self) -> None:
+        html = (DEMO / "index.html").read_text(encoding="utf-8")
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
+
+        self.assertIn('data-sort="nonstandard_prs"', html)
+        self.assertIn("非标PR数", html)
+        self.assertIn('metricLink(row, "nonstandard_prs", formatNumber(row.nonstandard_prs))', js)
+        self.assertIn('nonstandard_prs: "非标 PR"', js)
+        self.assertIn('pr.nonstandardReviewer === contributor', js)
+
+    def test_committer_users_render_with_badge(self) -> None:
+        css = (DEMO / "styles.css").read_text(encoding="utf-8")
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
+
+        for user in [
+            "depeng1994",
+            "zhong_lin",
+            "lrwei0709",
+            "zzyyjj012",
+            "xuyujun",
+            "panchao-gitcode",
+            "zhaowei1936",
+            "zhanghz1",
+        ]:
+            self.assertIn(f'"{user}"', js)
+
+        self.assertIn("function renderUserName", js)
+        self.assertIn('class="committer-badge"', js)
+        self.assertIn("renderUserName(row.author)", js)
+        self.assertIn("renderUserName(row.reviewer)", js)
+        self.assertIn("renderUserName(row.name)", js)
+        self.assertIn("renderUserName(item.author)", js)
+        self.assertIn(".committer-badge", css)
 
     def test_static_assets_are_versioned_to_avoid_mixed_html_and_js(self) -> None:
         html = (DEMO / "index.html").read_text(encoding="utf-8")

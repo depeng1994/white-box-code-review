@@ -8,7 +8,7 @@ import sys
 import unittest
 from pathlib import Path
 
-from backend.review_board import DashboardQueries, RepoRef, ReviewStore, extract_score
+from backend.review_board import Collector, DashboardQueries, RepoRef, ReviewStore, extract_score
 from scripts.export_static_dashboard import export_static_bundle
 
 
@@ -160,6 +160,37 @@ def seed_evaluation(
             created_at,
             created_at,
             score,
+            body,
+            0,
+            "{}",
+        ),
+    )
+
+
+def seed_lgtm(
+    conn: sqlite3.Connection,
+    *,
+    pr_number: int,
+    comment_id: int,
+    author: str,
+    created_at: str,
+    body: str = "/lgtm",
+) -> None:
+    conn.execute(
+        """
+        INSERT INTO lgtm_comments (
+            repo, pr_number, comment_id, author, created_at, updated_at,
+            body, is_system_comment, raw_json
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "cann/torchtitan-npu",
+            pr_number,
+            comment_id,
+            author,
+            created_at,
+            created_at,
             body,
             0,
             "{}",
@@ -367,6 +398,155 @@ class StaticExportTest(unittest.TestCase):
                 stored_score = conn.execute("SELECT score FROM mr_evaluations WHERE comment_id = 1").fetchone()[0]
             self.assertEqual(score_type, "REAL")
             self.assertEqual(stored_score, 3.1)
+
+    def test_dashboard_counts_nonstandard_prs_for_last_lgtm_reviewer(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            db_path = root / "review_board.sqlite3"
+            store = ReviewStore(db_path)
+            store.init_schema()
+            with sqlite3.connect(db_path) as conn:
+                seed_pr(
+                    conn,
+                    pr_number=301,
+                    title="Only lgtm without score",
+                    author="alice",
+                    merged_at="2026-06-02T10:00:00+08:00",
+                )
+                seed_lgtm(
+                    conn,
+                    pr_number=301,
+                    comment_id=3011,
+                    author="first-reviewer",
+                    created_at="2026-06-02T10:10:00+08:00",
+                )
+                seed_lgtm(
+                    conn,
+                    pr_number=301,
+                    comment_id=3012,
+                    author="last-reviewer",
+                    created_at="2026-06-02T10:20:00+08:00",
+                )
+
+                seed_pr(
+                    conn,
+                    pr_number=302,
+                    title="Non-three score without opinion",
+                    author="bob",
+                    merged_at="2026-06-03T10:00:00+08:00",
+                )
+                seed_evaluation(
+                    conn,
+                    pr_number=302,
+                    comment_id=3021,
+                    author="score-reviewer",
+                    created_at="2026-06-03T10:10:00+08:00",
+                    score=2.9,
+                    body="【MR评价】评价分数:2.9, 评价意见： 编码规范遵守度：无问题；代码设计：一般；DT质量：覆盖不足",
+                )
+                seed_lgtm(
+                    conn,
+                    pr_number=302,
+                    comment_id=3022,
+                    author="last-reviewer",
+                    created_at="2026-06-03T10:20:00+08:00",
+                )
+
+                seed_pr(
+                    conn,
+                    pr_number=303,
+                    title="Three score without opinion",
+                    author="carol",
+                    merged_at="2026-06-04T10:00:00+08:00",
+                )
+                seed_evaluation(
+                    conn,
+                    pr_number=303,
+                    comment_id=3031,
+                    author="score-reviewer",
+                    created_at="2026-06-04T10:10:00+08:00",
+                    score=3.0,
+                    body="【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无问题；代码设计：达标；DT质量：达标",
+                )
+                seed_lgtm(
+                    conn,
+                    pr_number=303,
+                    comment_id=3032,
+                    author="last-reviewer",
+                    created_at="2026-06-04T10:20:00+08:00",
+                )
+
+                seed_pr(
+                    conn,
+                    pr_number=304,
+                    title="Non-three score with opinion",
+                    author="dave",
+                    merged_at="2026-06-05T10:00:00+08:00",
+                )
+                seed_evaluation(
+                    conn,
+                    pr_number=304,
+                    comment_id=3041,
+                    author="score-reviewer",
+                    created_at="2026-06-05T10:10:00+08:00",
+                    score=2.9,
+                    body="【MR评价】评价分数:2.9, 评价意见：需要补充异常分支说明；编码规范遵守度：无问题；代码设计：一般；DT质量：覆盖不足",
+                )
+                seed_lgtm(
+                    conn,
+                    pr_number=304,
+                    comment_id=3042,
+                    author="last-reviewer",
+                    created_at="2026-06-05T10:20:00+08:00",
+                )
+
+            dashboard = DashboardQueries(store, RepoRef("cann", "torchtitan-npu")).dashboard("month", "2026-06")
+            prs = {item["id"]: item for item in dashboard["prs"]}
+            contributors = {item["name"]: item for item in dashboard["contributors"]}
+
+            self.assertEqual(prs[301]["nonstandardReviewer"], "last-reviewer")
+            self.assertEqual(prs[301]["nonstandardReason"], "只有LGTM无评分")
+            self.assertEqual(prs[302]["nonstandardReviewer"], "last-reviewer")
+            self.assertEqual(prs[302]["nonstandardReason"], "非3分且评价意见为空")
+            self.assertEqual(prs[303]["nonstandardReviewer"], "")
+            self.assertEqual(prs[304]["nonstandardReviewer"], "")
+            self.assertEqual(contributors["last-reviewer"]["nonstandard_prs"], 2)
+            self.assertNotIn("first-reviewer", contributors)
+
+    def test_collector_extracts_lgtm_comments_and_skips_system_users(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            store = ReviewStore(Path(tmpdir) / "review_board.sqlite3")
+            collector = Collector(object(), store, RepoRef("cann", "torchtitan-npu"))  # type: ignore[arg-type]
+
+            reviews, evaluations, lgtms = collector._extract_comments(
+                350,
+                [
+                    {
+                        "id": 1,
+                        "comment_type": "pr_comment",
+                        "body": "/lgtm",
+                        "user": {"login": "human-reviewer"},
+                        "created_at": "2026-06-10T10:00:00+08:00",
+                        "updated_at": "2026-06-10T10:00:00+08:00",
+                    },
+                    {
+                        "id": 2,
+                        "comment_type": "pr_comment",
+                        "body": "/lgtm",
+                        "user": {"login": "cann-robot"},
+                        "created_at": "2026-06-10T10:01:00+08:00",
+                        "updated_at": "2026-06-10T10:01:00+08:00",
+                    },
+                ],
+            )
+
+            self.assertEqual(reviews, [])
+            self.assertEqual(evaluations, [])
+            self.assertEqual([item["author"] for item in lgtms], ["human-reviewer"])
 
     def test_committed_static_json_matches_committed_database_months(self) -> None:
         db_path = Path("data/review_board.sqlite3")

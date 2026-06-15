@@ -22,6 +22,16 @@ const themeIcon = themeToggle?.querySelector(".theme-icon");
 const themeLabel = themeToggle?.querySelector(".theme-label");
 const themeStorageKey = "reviewBoardTheme";
 const assetVersion = document.documentElement.dataset.assetVersion || "local";
+const COMMITTER_USERS = new Set([
+  "depeng1994",
+  "zhong_lin",
+  "lrwei0709",
+  "zzyyjj012",
+  "xuyujun",
+  "panchao-gitcode",
+  "zhaowei1936",
+  "zhanghz1",
+]);
 
 let dashboard = null;
 let ranges = fallbackRanges;
@@ -103,8 +113,25 @@ function matchesSearch(row) {
   return JSON.stringify(row).toLowerCase().includes(keyword);
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 function escapeAttr(value) {
   return String(value).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
+function renderUserName(name) {
+  const value = String(name || "");
+  if (!value) return "-";
+  const label = escapeHtml(value);
+  if (!COMMITTER_USERS.has(value)) return label;
+  return `<span class="user-chip committer-user"><span>${label}</span><span class="committer-badge">Committer</span></span>`;
 }
 
 function rate(numerator, denominator) {
@@ -246,13 +273,13 @@ function createPrMainRow(row, selectedId, onSelect) {
     tr.dataset.id = row.id;
     tr.innerHTML = `
       <td>#${row.id}</td>
-      <td class="title-cell">${row.title}</td>
-      <td>${row.author}</td>
+      <td class="title-cell">${escapeHtml(row.title)}</td>
+      <td>${renderUserName(row.author)}</td>
       <td>${normalizeTime(row.mergedAt)}</td>
       <td>${formatNumber(row.lines)}</td>
       <td>${formatNumber(row.reviews)}</td>
       <td>${formatScore(row.score)}</td>
-      <td>${row.reviewer || "-"}</td>
+      <td>${renderUserName(row.reviewer)}</td>
       <td><span class="badge ${cls}">${label}</span></td>
     `;
     tr.addEventListener("click", () => {
@@ -275,7 +302,12 @@ function renderPrDetail(row) {
     <div class="detail-header">
       <div>
         <div class="detail-title">#${row.id} ${row.title}</div>
-        <div class="detail-meta">${row.author} · ${normalizeTime(row.mergedAt)} · ${formatNumber(row.lines)} 行代码 · ${formatNumber(row.reviews)} 条检视意见</div>
+        <div class="detail-meta">${renderUserName(row.author)} · ${normalizeTime(row.mergedAt)} · ${formatNumber(row.lines)} 行代码 · ${formatNumber(row.reviews)} 条检视意见</div>
+        ${
+          row.nonstandardReason
+            ? `<div class="detail-meta nonstandard-note">非标 PR：${escapeHtml(row.nonstandardReason)} · 归因 ${renderUserName(row.nonstandardReviewer)}</div>`
+            : ""
+        }
       </div>
       <span class="badge ${cls}">${label}</span>
     </div>
@@ -287,10 +319,10 @@ function renderPrDetail(row) {
                 (item) => `
                   <div class="review-item">
                     <div class="review-top">
-                      <span>${item.type} · ${item.author} · ${normalizeTime(item.createdAt)}</span>
-                      <span>${item.path || "-"}</span>
+                      <span>${escapeHtml(item.type)} · ${renderUserName(item.author)} · ${normalizeTime(item.createdAt)}</span>
+                      <span>${escapeHtml(item.path || "-")}</span>
                     </div>
-                    <div class="review-body">${item.body}</div>
+                    <div class="review-body">${escapeHtml(item.body)}</div>
                   </div>
                 `,
               )
@@ -308,7 +340,7 @@ function renderContributorTable() {
   for (const row of rows) {
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${row.name}</td>
+      <td>${renderUserName(row.name)}</td>
       <td class="submit-metric">${metricLink(row, "submit_prs", formatNumber(row.submit_prs))}</td>
       <td class="submit-metric">${metricLink(row, "submit_lines", formatNumber(row.submit_lines))}</td>
       <td class="submit-metric">${metricLink(row, "received_reviews", formatNumber(row.received_reviews))}</td>
@@ -324,12 +356,13 @@ function renderContributorTable() {
       <td class="review-metric">${metricLink(row, "scored_poor_rate", percent(row.scored_poor, row.scored_prs))}</td>
       <td class="review-metric positive">${metricLink(row, "scored_excellent", formatNumber(row.scored_excellent))}</td>
       <td class="review-metric">${metricLink(row, "scored_excellent_rate", percent(row.scored_excellent, row.scored_prs))}</td>
+      <td class="review-metric">${metricLink(row, "nonstandard_prs", formatNumber(row.nonstandard_prs))}</td>
     `;
     contributorBody.appendChild(tr);
   }
 
   if (!rows.length) {
-    contributorBody.innerHTML = `<tr><td colspan="16">当前筛选条件下暂无贡献者数据。</td></tr>`;
+    contributorBody.innerHTML = `<tr><td colspan="17">当前筛选条件下暂无贡献者数据。</td></tr>`;
   }
 }
 
@@ -362,6 +395,7 @@ function metricTitle(metric) {
     scored_poor_rate: "打分待改进占比",
     scored_excellent: "打分优秀",
     scored_excellent_rate: "打分优秀占比",
+    nonstandard_prs: "非标 PR",
   }[metric] || metric;
 }
 
@@ -389,6 +423,9 @@ function filterPrsForMetric(contributor, metric) {
   }
   if (["scored_excellent", "scored_excellent_rate"].includes(metric)) {
     return prs.filter((pr) => prHasScoreFrom(pr, contributor) && excellent(pr));
+  }
+  if (metric === "nonstandard_prs") {
+    return prs.filter((pr) => pr.nonstandardReviewer === contributor);
   }
   return [];
 }
