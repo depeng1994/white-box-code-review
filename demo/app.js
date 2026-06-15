@@ -17,6 +17,10 @@ const drilldownTitle = document.querySelector("#drilldownTitle");
 const drilldownKicker = document.querySelector("#drilldownKicker");
 const drilldownSummary = document.querySelector("#drilldownSummary");
 const drilldownBody = document.querySelector("#drilldownTable tbody");
+const themeToggle = document.querySelector("#themeToggle");
+const themeIcon = themeToggle?.querySelector(".theme-icon");
+const themeLabel = themeToggle?.querySelector(".theme-label");
+const themeStorageKey = "reviewBoardTheme";
 
 let dashboard = null;
 let ranges = fallbackRanges;
@@ -26,6 +30,29 @@ let selectedDrilldownPrId = null;
 let prSort = { key: "id", direction: "desc" };
 let contributorSort = { key: "submit_prs", direction: "desc" };
 let activeDrilldownRows = [];
+
+function preferredTheme() {
+  const saved = localStorage.getItem(themeStorageKey);
+  if (saved === "light" || saved === "dark") return saved;
+  return document.documentElement.dataset.theme || "dark";
+}
+
+function applyTheme(theme) {
+  const nextTheme = theme === "light" ? "light" : "dark";
+  document.documentElement.dataset.theme = nextTheme;
+  if (!themeToggle) return;
+  const isLight = nextTheme === "light";
+  themeToggle.setAttribute("aria-pressed", String(isLight));
+  themeToggle.setAttribute("aria-label", isLight ? "切换深色主题" : "切换浅色主题");
+  if (themeIcon) themeIcon.textContent = isLight ? "☀" : "☾";
+  if (themeLabel) themeLabel.textContent = isLight ? "深色" : "浅色";
+}
+
+function toggleTheme() {
+  const nextTheme = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  localStorage.setItem(themeStorageKey, nextTheme);
+  applyTheme(nextTheme);
+}
 
 function formatNumber(value) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) return "-";
@@ -448,7 +475,9 @@ drilldownModal.addEventListener("click", (event) => {
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !drilldownModal.hidden) closeDrilldown();
 });
+themeToggle?.addEventListener("click", toggleTheme);
 
+applyTheme(preferredTheme());
 populateRanges(false);
 loadDashboard().catch((error) => {
   console.error(error);

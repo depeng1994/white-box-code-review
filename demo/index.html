@@ -1,9 +1,19 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>代码白盒检视看板 Demo</title>
+    <script>
+      (() => {
+        try {
+          const theme = localStorage.getItem("reviewBoardTheme");
+          if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+        } catch (error) {
+          document.documentElement.dataset.theme = "dark";
+        }
+      })();
+    </script>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -39,6 +49,10 @@
             <p class="header-copy">按合入时间追踪 PR 质量、检视密度、评分分布与贡献者协作质量。</p>
           </div>
           <div class="header-actions">
+            <button class="theme-button" id="themeToggle" type="button" aria-label="切换浅色主题" aria-pressed="false">
+              <span class="theme-icon" aria-hidden="true">☾</span>
+              <span class="theme-label">浅色</span>
+            </button>
             <button class="ghost-button" type="button">导出 CSV</button>
             <button class="primary-button" type="button">刷新数据</button>
           </div>
