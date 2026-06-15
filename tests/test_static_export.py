@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
@@ -218,6 +221,21 @@ class StaticExportTest(unittest.TestCase):
         upload_pos = workflow.find("actions/upload-pages-artifact")
         self.assertGreaterEqual(export_pos, 0)
         self.assertGreater(upload_pos, export_pos)
+
+    def test_export_script_can_run_directly_from_workflow(self) -> None:
+        env = os.environ.copy()
+        env.pop("PYTHONPATH", None)
+
+        completed = subprocess.run(
+            [sys.executable, "scripts/export_static_dashboard.py", "--help"],
+            cwd=Path.cwd(),
+            env=env,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+
+        self.assertEqual(completed.returncode, 0, completed.stdout)
 
 
 if __name__ == "__main__":
