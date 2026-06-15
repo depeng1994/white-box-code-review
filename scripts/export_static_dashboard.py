@@ -20,7 +20,9 @@ DEFAULT_OUTPUT = Path("demo/dashboard-static.json")
 
 
 def export_static_bundle(db_path: Path, output_path: Path, repo: RepoRef) -> dict[str, Any]:
-    queries = DashboardQueries(ReviewStore(db_path), repo)
+    store = ReviewStore(db_path)
+    store.init_schema()
+    queries = DashboardQueries(store, repo)
     ranges = queries.available_ranges()
     dashboards: dict[str, dict[str, Any]] = {}
 

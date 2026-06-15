@@ -339,7 +339,7 @@ function prHasReviewFrom(pr, contributor) {
 }
 
 function prHasScoreFrom(pr, contributor) {
-  return (pr.detail || []).some((item) => item.type === "MR评价" && item.author === contributor);
+  return pr.reviewer === contributor && pr.score !== null && pr.score !== undefined;
 }
 
 function metricTitle(metric) {

@@ -8,7 +8,7 @@ import sys
 import unittest
 from pathlib import Path
 
-from backend.review_board import RepoRef, ReviewStore
+from backend.review_board import DashboardQueries, RepoRef, ReviewStore, extract_score
 from scripts.export_static_dashboard import export_static_bundle
 
 
@@ -134,7 +134,45 @@ def seed_pr(
     )
 
 
+def seed_evaluation(
+    conn: sqlite3.Connection,
+    *,
+    pr_number: int,
+    comment_id: int,
+    author: str,
+    created_at: str,
+    score: float,
+    body: str,
+) -> None:
+    conn.execute(
+        """
+        INSERT INTO mr_evaluations (
+            repo, pr_number, comment_id, author, created_at, updated_at,
+            score, body, is_system_comment, raw_json
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "cann/torchtitan-npu",
+            pr_number,
+            comment_id,
+            author,
+            created_at,
+            created_at,
+            score,
+            body,
+            0,
+            "{}",
+        ),
+    )
+
+
 class StaticExportTest(unittest.TestCase):
+    def test_extract_score_preserves_decimal_scores(self) -> None:
+        self.assertEqual(extract_score("【MR评价】评价分数:3.1, 评价意见：通过"), 3.1)
+        self.assertEqual(extract_score("【MR评价】评价分数：2.9"), 2.9)
+        self.assertEqual(extract_score("【MR评价】评价分数:4"), 4.0)
+
     def test_export_static_bundle_contains_dashboards_for_all_ranges(self) -> None:
         import tempfile
 
@@ -192,6 +230,143 @@ class StaticExportTest(unittest.TestCase):
             self.assertEqual(bundle["ranges"]["month"], ["2026-06", "2026-01"])
             self.assertEqual(bundle["dashboards"]["month"]["2026-06"]["metrics"]["mergedPrs"], 1)
             self.assertEqual(bundle["dashboards"]["month"]["2026-01"]["metrics"]["mergedPrs"], 1)
+
+    def test_dashboard_uses_first_decimal_mr_evaluation_for_pr_and_contributors(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            db_path = root / "review_board.sqlite3"
+            store = ReviewStore(db_path)
+            store.init_schema()
+            with sqlite3.connect(db_path) as conn:
+                seed_pr(
+                    conn,
+                    pr_number=236,
+                    title="Refactored kl loss",
+                    author="mystri",
+                    merged_at="2026-05-28T19:53:51+08:00",
+                )
+                seed_evaluation(
+                    conn,
+                    pr_number=236,
+                    comment_id=1,
+                    author="old-reviewer",
+                    created_at="2026-05-25T10:10:36+08:00",
+                    score=2.9,
+                    body="【MR评价】评价分数:2.9, 评价意见：需改进",
+                )
+                seed_evaluation(
+                    conn,
+                    pr_number=236,
+                    comment_id=2,
+                    author="lrwei0709",
+                    created_at="2026-05-28T19:51:32+08:00",
+                    score=3.1,
+                    body="【MR评价】评价分数:3.1, 评价意见：达标",
+                )
+
+            dashboard = DashboardQueries(store, RepoRef("cann", "torchtitan-npu")).dashboard("month", "2026-05")
+            pr = dashboard["prs"][0]
+            contributors = {item["name"]: item for item in dashboard["contributors"]}
+
+            self.assertEqual(pr["score"], 2.9)
+            self.assertEqual(pr["reviewer"], "old-reviewer")
+            self.assertEqual(pr["level"], "待改进")
+            self.assertEqual(dashboard["metrics"]["averageScore"], 2.9)
+            self.assertEqual(dashboard["metrics"]["poorPrs"], 1)
+            self.assertEqual(dashboard["metrics"]["excellentPrs"], 0)
+            self.assertEqual(contributors["mystri"]["poor_prs"], 1)
+            self.assertEqual(contributors["old-reviewer"]["scored_prs"], 1)
+            self.assertEqual(contributors["old-reviewer"]["scored_poor"], 1)
+            self.assertNotIn("lrwei0709", contributors)
+
+    def test_export_backfills_decimal_scores_from_existing_evaluation_bodies(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            db_path = root / "review_board.sqlite3"
+            output_path = root / "dashboard-static.json"
+            store = ReviewStore(db_path)
+            store.init_schema()
+            with sqlite3.connect(db_path) as conn:
+                seed_pr(
+                    conn,
+                    pr_number=236,
+                    title="Refactored kl loss",
+                    author="mystri",
+                    merged_at="2026-05-28T19:53:51+08:00",
+                )
+                seed_evaluation(
+                    conn,
+                    pr_number=236,
+                    comment_id=1,
+                    author="lrwei0709",
+                    created_at="2026-05-25T10:10:36+08:00",
+                    score=3,
+                    body="【MR评价】评价分数:3.1, 评价意见：达标",
+                )
+
+            bundle = export_static_bundle(
+                db_path=db_path,
+                output_path=output_path,
+                repo=RepoRef("cann", "torchtitan-npu"),
+            )
+
+            pr = bundle["dashboards"]["month"]["2026-05"]["prs"][0]
+            self.assertEqual(pr["score"], 3.1)
+            with sqlite3.connect(db_path) as conn:
+                stored_score = conn.execute("SELECT score FROM mr_evaluations WHERE comment_id = 1").fetchone()[0]
+            self.assertEqual(stored_score, 3.1)
+
+    def test_export_checkpoints_score_backfill_into_main_database_file(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            db_path = root / "review_board.sqlite3"
+            output_path = root / "dashboard-static.json"
+            store = ReviewStore(db_path)
+            store.init_schema()
+            with sqlite3.connect(db_path) as conn:
+                seed_pr(
+                    conn,
+                    pr_number=236,
+                    title="Refactored kl loss",
+                    author="mystri",
+                    merged_at="2026-05-28T19:53:51+08:00",
+                )
+                seed_evaluation(
+                    conn,
+                    pr_number=236,
+                    comment_id=1,
+                    author="lrwei0709",
+                    created_at="2026-05-25T10:10:36+08:00",
+                    score=3,
+                    body="【MR评价】评价分数:3.1, 评价意见：达标",
+                )
+
+            export_static_bundle(
+                db_path=db_path,
+                output_path=output_path,
+                repo=RepoRef("cann", "torchtitan-npu"),
+            )
+            for suffix in ("-wal", "-shm"):
+                sidecar = Path(f"{db_path}{suffix}")
+                if sidecar.exists():
+                    sidecar.unlink()
+
+            with sqlite3.connect(db_path) as conn:
+                conn.row_factory = sqlite3.Row
+                score_type = [
+                    row["type"]
+                    for row in conn.execute("PRAGMA table_info(mr_evaluations)")
+                    if row["name"] == "score"
+                ][0]
+                stored_score = conn.execute("SELECT score FROM mr_evaluations WHERE comment_id = 1").fetchone()[0]
+            self.assertEqual(score_type, "REAL")
+            self.assertEqual(stored_score, 3.1)
 
     def test_committed_static_json_matches_committed_database_months(self) -> None:
         db_path = Path("data/review_board.sqlite3")

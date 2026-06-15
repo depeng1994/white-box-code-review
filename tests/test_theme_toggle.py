@@ -29,8 +29,10 @@ class ThemeToggleTest(unittest.TestCase):
         js = (DEMO / "app.js").read_text(encoding="utf-8")
 
         self.assertIn("function prioritizeReviewDetails", js)
-        self.assertIn('item.type === "MR评价"', js)
+        self.assertIn('a.type === "MR评价"', js)
+        self.assertIn('b.type === "MR评价"', js)
         self.assertIn("prioritizeReviewDetails(row.detail || [])", js)
+        self.assertIn("pr.reviewer === contributor", js)
         self.assertIn('class="submit-group"', html)
         self.assertIn('class="review-group"', html)
         self.assertIn('class="submit-metric"', js)

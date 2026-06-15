@@ -120,9 +120,15 @@ def compact_text(raw: str) -> str:
     return re.sub(r"\s+", " ", raw).strip()
 
 
-def extract_score(body: str) -> int | None:
-    match = re.search(r"评价分数[:：]\s*([0-9]+)", body)
-    return int(match.group(1)) if match else None
+def extract_score(body: str) -> float | None:
+    match = re.search(r"评价分数[:：]\s*([0-9]+(?:\.[0-9]+)?)", body)
+    return float(match.group(1)) if match else None
+
+
+def score_value(value: Any) -> float | None:
+    if value is None:
+        return None
+    return float(value)
 
 
 def extract_position(detail: dict[str, Any]) -> tuple[str, int | None]:
@@ -284,7 +290,7 @@ class ReviewStore:
                     author TEXT NOT NULL,
                     created_at TEXT,
                     updated_at TEXT,
-                    score INTEGER,
+                    score REAL,
                     body TEXT NOT NULL,
                     is_system_comment INTEGER NOT NULL DEFAULT 0,
                     raw_json TEXT NOT NULL
@@ -310,6 +316,55 @@ class ReviewStore:
                 CREATE INDEX IF NOT EXISTS idx_eval_author ON mr_evaluations (author);
                 """
             )
+            self._migrate_score_column(conn)
+            self.refresh_scores_from_bodies(conn)
+        self.checkpoint()
+
+    def checkpoint(self) -> None:
+        with self.connect() as conn:
+            conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+
+    def _migrate_score_column(self, conn: sqlite3.Connection) -> None:
+        columns = {row["name"]: row for row in conn.execute("PRAGMA table_info(mr_evaluations)")}
+        if columns.get("score") and str(columns["score"]["type"]).upper() == "REAL":
+            return
+        conn.executescript(
+            """
+            ALTER TABLE mr_evaluations RENAME TO mr_evaluations_old;
+
+            CREATE TABLE mr_evaluations (
+                repo TEXT NOT NULL,
+                pr_number INTEGER NOT NULL,
+                comment_id INTEGER PRIMARY KEY,
+                author TEXT NOT NULL,
+                created_at TEXT,
+                updated_at TEXT,
+                score REAL,
+                body TEXT NOT NULL,
+                is_system_comment INTEGER NOT NULL DEFAULT 0,
+                raw_json TEXT NOT NULL
+            );
+
+            INSERT INTO mr_evaluations (
+                repo, pr_number, comment_id, author, created_at, updated_at,
+                score, body, is_system_comment, raw_json
+            )
+            SELECT
+                repo, pr_number, comment_id, author, created_at, updated_at,
+                score, body, is_system_comment, raw_json
+            FROM mr_evaluations_old;
+
+            DROP TABLE mr_evaluations_old;
+            CREATE INDEX IF NOT EXISTS idx_eval_pr ON mr_evaluations (repo, pr_number);
+            CREATE INDEX IF NOT EXISTS idx_eval_author ON mr_evaluations (author);
+            """
+        )
+
+    def refresh_scores_from_bodies(self, conn: sqlite3.Connection) -> None:
+        rows = conn.execute("SELECT comment_id, body FROM mr_evaluations").fetchall()
+        for row in rows:
+            score = extract_score(row["body"])
+            conn.execute("UPDATE mr_evaluations SET score = ? WHERE comment_id = ?", (score, row["comment_id"]))
 
     def begin_sync(self, repo: RepoRef, start: datetime, end: datetime) -> int:
         with self.connect() as conn:
@@ -332,6 +387,7 @@ class ReviewStore:
                 """,
                 (iso(now_tz()), status, pr_count, error, run_id),
             )
+        self.checkpoint()
 
     def upsert_pr(self, conn: sqlite3.Connection, repo: RepoRef, pr: dict[str, Any]) -> None:
         author = ""
@@ -549,7 +605,7 @@ def period_window(period: str, range_label: str | None) -> tuple[datetime, datet
     raise ValueError(f"unsupported period: {period}")
 
 
-def score_level(score: int | None) -> str:
+def score_level(score: float | None) -> str:
     if score is None:
         return "未评分"
     if score < 3:
@@ -559,10 +615,10 @@ def score_level(score: int | None) -> str:
     return "达标"
 
 
-def latest_evaluation(evals: list[sqlite3.Row]) -> sqlite3.Row | None:
+def primary_evaluation(evals: list[sqlite3.Row]) -> sqlite3.Row | None:
     if not evals:
         return None
-    return sorted(evals, key=lambda row: row["created_at"] or "")[-1]
+    return sorted(evals, key=lambda row: (row["created_at"] or "", row["comment_id"] or 0))[0]
 
 
 class DashboardQueries:
@@ -604,8 +660,8 @@ class DashboardQueries:
             total_lines += lines
             reviews = reviews_by_pr.get(number, [])
             evals = evals_by_pr.get(number, [])
-            evaluation = latest_evaluation(evals)
-            score = int(evaluation["score"]) if evaluation and evaluation["score"] is not None else None
+            evaluation = primary_evaluation(evals)
+            score = score_value(evaluation["score"]) if evaluation else None
             if score is not None:
                 rated += 1
                 score_sum += score
@@ -628,10 +684,10 @@ class DashboardQueries:
                 reviewer["review_comments"] += 1
                 reviewer["review_prs_set"].add(number)
 
-            for item in evals:
-                scorer = contributor_map.setdefault(item["author"], empty_contributor(item["author"]))
+            if evaluation:
+                scorer = contributor_map.setdefault(evaluation["author"], empty_contributor(evaluation["author"]))
                 scorer["scored_prs"] += 1
-                item_score = int(item["score"]) if item["score"] is not None else None
+                item_score = score_value(evaluation["score"])
                 scorer["scored_poor"] += int(item_score is not None and item_score < 3)
                 scorer["scored_excellent"] += int(item_score is not None and item_score > 3)
 
