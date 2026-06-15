@@ -42,6 +42,17 @@ class ThemeToggleTest(unittest.TestCase):
         self.assertIn(".contributor-table .submit-metric", css)
         self.assertIn(".contributor-table .review-metric", css)
 
+    def test_review_contribution_includes_poor_score_rate(self) -> None:
+        html = (DEMO / "index.html").read_text(encoding="utf-8")
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
+
+        self.assertIn('<th class="review-group" colspan="7">检视贡献</th>', html)
+        self.assertIn('data-sort="scored_poor_rate"', html)
+        self.assertIn("待改进评分占比", html)
+        self.assertIn('metricLink(row, "scored_poor_rate", percent(row.scored_poor, row.scored_prs))', js)
+        self.assertIn('scored_poor_rate: "打分待改进占比"', js)
+        self.assertIn('["scored_poor", "scored_poor_rate"].includes(metric)', js)
+
 
 if __name__ == "__main__":
     unittest.main()

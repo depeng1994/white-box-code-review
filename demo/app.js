@@ -119,6 +119,7 @@ function numericValue(row, key) {
   if (key === "score") return row.score ?? -1;
   if (key === "poor_rate") return rate(row.poor_prs, row.rated_prs);
   if (key === "excellent_rate") return rate(row.excellent_prs, row.rated_prs);
+  if (key === "scored_poor_rate") return rate(row.scored_poor, row.scored_prs);
   if (key === "scored_excellent_rate") return rate(row.scored_excellent, row.scored_prs);
   return Number(row[key] ?? 0);
 }
@@ -319,6 +320,7 @@ function renderContributorTable() {
       <td class="review-metric">${metricLink(row, "review_prs", formatNumber(row.review_prs))}</td>
       <td class="review-metric">${metricLink(row, "scored_prs", formatNumber(row.scored_prs))}</td>
       <td class="review-metric negative">${metricLink(row, "scored_poor", formatNumber(row.scored_poor))}</td>
+      <td class="review-metric">${metricLink(row, "scored_poor_rate", percent(row.scored_poor, row.scored_prs))}</td>
       <td class="review-metric positive">${metricLink(row, "scored_excellent", formatNumber(row.scored_excellent))}</td>
       <td class="review-metric">${metricLink(row, "scored_excellent_rate", percent(row.scored_excellent, row.scored_prs))}</td>
     `;
@@ -326,7 +328,7 @@ function renderContributorTable() {
   }
 
   if (!rows.length) {
-    contributorBody.innerHTML = `<tr><td colspan="15">当前筛选条件下暂无贡献者数据。</td></tr>`;
+    contributorBody.innerHTML = `<tr><td colspan="16">当前筛选条件下暂无贡献者数据。</td></tr>`;
   }
 }
 
@@ -356,6 +358,7 @@ function metricTitle(metric) {
     review_prs: "检视涉及 PR",
     scored_prs: "打分 PR",
     scored_poor: "打分待改进",
+    scored_poor_rate: "打分待改进占比",
     scored_excellent: "打分优秀",
     scored_excellent_rate: "打分优秀占比",
   }[metric] || metric;
@@ -380,7 +383,7 @@ function filterPrsForMetric(contributor, metric) {
     return prs.filter((pr) => prHasReviewFrom(pr, contributor));
   }
   if (metric === "scored_prs") return prs.filter((pr) => prHasScoreFrom(pr, contributor));
-  if (metric === "scored_poor") {
+  if (["scored_poor", "scored_poor_rate"].includes(metric)) {
     return prs.filter((pr) => prHasScoreFrom(pr, contributor) && poor(pr));
   }
   if (["scored_excellent", "scored_excellent_rate"].includes(metric)) {
