@@ -21,6 +21,7 @@ const themeToggle = document.querySelector("#themeToggle");
 const themeIcon = themeToggle?.querySelector(".theme-icon");
 const themeLabel = themeToggle?.querySelector(".theme-label");
 const themeStorageKey = "reviewBoardTheme";
+const assetVersion = document.documentElement.dataset.assetVersion || "local";
 
 let dashboard = null;
 let ranges = fallbackRanges;
@@ -180,7 +181,7 @@ async function loadDashboard() {
 
 async function loadStaticDashboard() {
   if (!staticBundle) {
-    const response = await fetch("./dashboard-static.json");
+    const response = await fetch(`./dashboard-static.json?v=${encodeURIComponent(assetVersion)}`);
     if (!response.ok) {
       const text = await response.text();
       throw new Error(text || `静态数据加载失败：${response.status}`);

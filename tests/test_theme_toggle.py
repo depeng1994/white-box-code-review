@@ -53,6 +53,19 @@ class ThemeToggleTest(unittest.TestCase):
         self.assertIn('scored_poor_rate: "打分待改进占比"', js)
         self.assertIn('["scored_poor", "scored_poor_rate"].includes(metric)', js)
 
+    def test_static_assets_are_versioned_to_avoid_mixed_html_and_js(self) -> None:
+        html = (DEMO / "index.html").read_text(encoding="utf-8")
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
+        workflow = (ROOT / ".github/workflows/deploy-pages.yml").read_text(encoding="utf-8")
+
+        self.assertIn('data-asset-version="local"', html)
+        self.assertIn('href="./styles.css?v=local"', html)
+        self.assertIn('src="./app.js?v=local"', html)
+        self.assertIn("assetVersion", js)
+        self.assertIn("./dashboard-static.json?v=", js)
+        self.assertIn("scripts/stamp_static_assets.py", workflow)
+        self.assertIn("github.sha", workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
