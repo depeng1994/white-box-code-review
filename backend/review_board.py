@@ -79,6 +79,11 @@ def month_window(month: str | None) -> tuple[datetime, datetime]:
     return start, end
 
 
+def day_window(day: str) -> tuple[datetime, datetime]:
+    start = datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=TZ)
+    return start, start + timedelta(days=1)
+
+
 def user_login(comment: dict[str, Any]) -> str:
     user = comment.get("user")
     if isinstance(user, dict):
@@ -427,6 +432,13 @@ class Collector:
 
     def sync_month(self, month: str | None = None) -> int:
         start, end = month_window(month)
+        return self.sync_window(start, end)
+
+    def sync_day(self, day: str) -> int:
+        start, end = day_window(day)
+        return self.sync_window(start, end)
+
+    def sync_window(self, start: datetime, end: datetime) -> int:
         run_id = self.store.begin_sync(self.repo, start, end)
         pr_count = 0
         try:
@@ -818,6 +830,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
     sync = sub.add_parser("sync", help="sync merged PRs for a month")
     sync.add_argument("--month", help="month in YYYY-MM, defaults to current month")
+    sync.add_argument("--date", help="date in YYYY-MM-DD; sync only PRs merged that day")
 
     serve = sub.add_parser("serve", help="serve API and static dashboard")
     serve.add_argument("--host", default="127.0.0.1")
@@ -844,8 +857,15 @@ def main() -> int:
         return 2
 
     if args.command == "sync":
-        count = collector.sync_month(args.month)  # type: ignore[union-attr]
-        print(f"synced {count} merged PRs for {repo.full_name}")
+        if args.date and args.month:
+            print("error: --date and --month are mutually exclusive", file=sys.stderr)
+            return 2
+        if args.date:
+            count = collector.sync_day(args.date)  # type: ignore[union-attr]
+            print(f"synced {count} merged PRs for {repo.full_name} on {args.date}")
+        else:
+            count = collector.sync_month(args.month)  # type: ignore[union-attr]
+            print(f"synced {count} merged PRs for {repo.full_name}")
         return 0
 
     if args.command == "scheduler":
