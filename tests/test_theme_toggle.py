@@ -49,7 +49,7 @@ class ThemeToggleTest(unittest.TestCase):
         self.assertIn('<th class="review-group" colspan="8">检视贡献</th>', html)
         self.assertIn('data-sort="scored_poor_rate"', html)
         self.assertIn("待改进评分占比", html)
-        self.assertIn('metricLink(row, "scored_poor_rate", percent(row.scored_poor, row.scored_prs))', js)
+        self.assertIn('complianceMetricLink(row, "scored_poor_rate", percent(row.scored_poor, row.scored_prs))', js)
         self.assertIn('scored_poor_rate: "打分待改进占比"', js)
         self.assertIn('["scored_poor", "scored_poor_rate"].includes(metric)', js)
 
@@ -86,6 +86,36 @@ class ThemeToggleTest(unittest.TestCase):
         self.assertIn("renderUserName(row.name)", js)
         self.assertIn("renderUserName(item.author)", js)
         self.assertIn(".committer-badge", css)
+
+    def test_contributor_view_can_filter_by_committer_role(self) -> None:
+        html = (DEMO / "index.html").read_text(encoding="utf-8")
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
+
+        self.assertIn('id="contributorRoleFilter"', html)
+        self.assertIn('value="all"', html)
+        self.assertIn('value="committer"', html)
+        self.assertIn('value="non_committer"', html)
+        self.assertIn("const contributorRoleFilter", js)
+        self.assertIn("function matchesContributorRole", js)
+        self.assertIn('contributorRoleFilter.value === "committer"', js)
+        self.assertIn('contributorRoleFilter.value === "non_committer"', js)
+        self.assertIn(".filter(matchesContributorRole)", js)
+        self.assertIn('contributorRoleFilter.addEventListener("change", renderAll)', js)
+
+    def test_committer_review_score_rates_are_compliance_colored(self) -> None:
+        css = (DEMO / "styles.css").read_text(encoding="utf-8")
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
+
+        self.assertIn("function complianceClass", js)
+        self.assertIn("function complianceMetricLink", js)
+        self.assertIn('metric === "scored_poor_rate"', js)
+        self.assertIn('metric === "scored_excellent_rate"', js)
+        self.assertIn("COMMITTER_USERS.has(row.name)", js)
+        self.assertIn('complianceMetricLink(row, "scored_poor_rate"', js)
+        self.assertIn('complianceMetricLink(row, "scored_excellent_rate"', js)
+        self.assertIn("compliance-alert", css)
+        self.assertIn("compliance-warn", css)
+        self.assertIn("compliance-ok", css)
 
     def test_static_assets_are_versioned_to_avoid_mixed_html_and_js(self) -> None:
         html = (DEMO / "index.html").read_text(encoding="utf-8")

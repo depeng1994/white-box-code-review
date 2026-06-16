@@ -9,6 +9,7 @@ const fallbackRanges = {
 const periodSelect = document.querySelector("#periodSelect");
 const rangeSelect = document.querySelector("#rangeSelect");
 const searchInput = document.querySelector("#searchInput");
+const contributorRoleFilter = document.querySelector("#contributorRoleFilter");
 const prBody = document.querySelector("#prTable tbody");
 const contributorBody = document.querySelector("#contributorTable tbody");
 const drilldownModal = document.querySelector("#drilldownModal");
@@ -134,8 +135,28 @@ function renderUserName(name) {
   return `<span class="user-chip committer-user"><span>${label}</span><span class="committer-badge">Committer</span></span>`;
 }
 
+function matchesContributorRole(row) {
+  if (contributorRoleFilter.value === "committer") return COMMITTER_USERS.has(row.name);
+  if (contributorRoleFilter.value === "non_committer") return !COMMITTER_USERS.has(row.name);
+  return true;
+}
+
 function rate(numerator, denominator) {
   return denominator ? numerator / denominator : 0;
+}
+
+function complianceClass(row, metric) {
+  if (!COMMITTER_USERS.has(row.name)) return "";
+  if (metric === "scored_poor_rate") {
+    const value = rate(row.scored_poor, row.scored_prs);
+    if (value < 0.05) return "compliance-alert";
+    if (value < 0.1) return "compliance-warn";
+    return "compliance-ok";
+  }
+  if (metric === "scored_excellent_rate") {
+    return rate(row.scored_excellent, row.scored_prs) > 0.2 ? "compliance-ok" : "";
+  }
+  return "";
 }
 
 function sortDirection(current, key) {
@@ -334,7 +355,10 @@ function renderPrDetail(row) {
 }
 
 function renderContributorTable() {
-  const rows = sortRows((dashboard?.contributors || []).filter(matchesSearch), contributorSort);
+  const rows = sortRows(
+    (dashboard?.contributors || []).filter(matchesSearch).filter(matchesContributorRole),
+    contributorSort,
+  );
   contributorBody.innerHTML = "";
 
   for (const row of rows) {
@@ -353,9 +377,9 @@ function renderContributorTable() {
       <td class="review-metric">${metricLink(row, "review_prs", formatNumber(row.review_prs))}</td>
       <td class="review-metric">${metricLink(row, "scored_prs", formatNumber(row.scored_prs))}</td>
       <td class="review-metric negative">${metricLink(row, "scored_poor", formatNumber(row.scored_poor))}</td>
-      <td class="review-metric">${metricLink(row, "scored_poor_rate", percent(row.scored_poor, row.scored_prs))}</td>
+      <td class="review-metric">${complianceMetricLink(row, "scored_poor_rate", percent(row.scored_poor, row.scored_prs))}</td>
       <td class="review-metric positive">${metricLink(row, "scored_excellent", formatNumber(row.scored_excellent))}</td>
-      <td class="review-metric">${metricLink(row, "scored_excellent_rate", percent(row.scored_excellent, row.scored_prs))}</td>
+      <td class="review-metric">${complianceMetricLink(row, "scored_excellent_rate", percent(row.scored_excellent, row.scored_prs))}</td>
       <td class="review-metric">${metricLink(row, "nonstandard_prs", formatNumber(row.nonstandard_prs))}</td>
     `;
     contributorBody.appendChild(tr);
@@ -368,6 +392,12 @@ function renderContributorTable() {
 
 function metricLink(row, metric, label) {
   return `<button class="metric-link" type="button" data-contributor="${escapeAttr(row.name)}" data-metric="${metric}">${label}</button>`;
+}
+
+function complianceMetricLink(row, metric, label) {
+  const cls = complianceClass(row, metric);
+  const extraClass = cls ? ` ${cls}` : "";
+  return `<button class="metric-link compliance-link${extraClass}" type="button" data-contributor="${escapeAttr(row.name)}" data-metric="${metric}">${label}</button>`;
 }
 
 function prHasReviewFrom(pr, contributor) {
@@ -491,6 +521,7 @@ rangeSelect.addEventListener("change", async () => {
   await loadDashboard();
 });
 searchInput.addEventListener("input", renderAll);
+contributorRoleFilter.addEventListener("change", renderAll);
 document.addEventListener("click", (event) => {
   const button = event.target.closest(".sort-button");
   if (!button) return;
