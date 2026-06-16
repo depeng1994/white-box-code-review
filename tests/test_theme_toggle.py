@@ -9,20 +9,55 @@ DEMO = ROOT / "demo"
 
 
 class ThemeToggleTest(unittest.TestCase):
+    def test_dashboard_uses_torchtitan_npu_brand_title(self) -> None:
+        html = (DEMO / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn("<title>torchtitan-npu代码白盒检视看板</title>", html)
+        self.assertIn("<h1>torchtitan-npu代码白盒检视看板</h1>", html)
+        self.assertNotIn("代码白盒检视看板 Demo", html)
+
     def test_demo_exposes_light_theme_toggle(self) -> None:
         html = (DEMO / "index.html").read_text(encoding="utf-8")
         css = (DEMO / "styles.css").read_text(encoding="utf-8")
         js = (DEMO / "app.js").read_text(encoding="utf-8")
         js = (DEMO / "app.js").read_text(encoding="utf-8")
 
-        self.assertIn('data-theme="dark"', html)
+        self.assertIn('data-theme="light"', html)
         self.assertIn('id="themeToggle"', html)
+        self.assertIn('aria-label="切换深色主题"', html)
+        self.assertIn('aria-pressed="true"', html)
+        self.assertIn('<span class="theme-label">深色</span>', html)
         self.assertIn('data-theme="light"', css)
         self.assertIn("--bg: #fdfdf7", css.lower())
         self.assertIn("--accent: #d4a27f", css.lower())
         self.assertIn("localStorage", js)
         self.assertIn("reviewBoardTheme", js)
         self.assertIn("themeToggle", js)
+        self.assertIn('document.documentElement.dataset.theme = "light"', html)
+        self.assertIn('return document.documentElement.dataset.theme || "light";', js)
+
+    def test_demo_defaults_to_contributor_view(self) -> None:
+        html = (DEMO / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('class="view-tab active" type="button" data-view="contributor"', html)
+        self.assertIn('id="contributorView" class="view-panel active"', html)
+        self.assertNotIn('class="view-tab active" type="button" data-view="pr"', html)
+        self.assertNotIn('id="prView" class="view-panel active"', html)
+
+    def test_table_headers_can_wrap_to_keep_contributor_view_in_one_screen(self) -> None:
+        css = (DEMO / "styles.css").read_text(encoding="utf-8")
+
+        self.assertIn(".data-table th {", css)
+        self.assertIn("white-space: normal;", css)
+        self.assertIn("overflow-wrap: anywhere;", css)
+        self.assertIn(".data-table td {", css)
+        self.assertIn(".contributor-table {", css)
+        self.assertIn("table-layout: fixed;", css)
+        self.assertNotIn("min-width: 1380px;", css)
+        self.assertIn(".contributor-table .sort-button {", css)
+        self.assertIn("width: 100%;", css)
+        self.assertIn(".metric-link {", css)
+        self.assertIn("min-width: 0;", css)
 
     def test_demo_removes_nonfunctional_chrome(self) -> None:
         html = (DEMO / "index.html").read_text(encoding="utf-8")

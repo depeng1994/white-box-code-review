@@ -46,7 +46,7 @@ let activeDrilldownRows = [];
 function preferredTheme() {
   const saved = localStorage.getItem(themeStorageKey);
   if (saved === "light" || saved === "dark") return saved;
-  return document.documentElement.dataset.theme || "dark";
+  return document.documentElement.dataset.theme || "light";
 }
 
 function applyTheme(theme) {
