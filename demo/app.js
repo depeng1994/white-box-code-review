@@ -263,14 +263,6 @@ function renderMetrics() {
   document.querySelector("#metricScore").textContent = formatScore(metrics.averageScore);
   document.querySelector("#metricPoor").textContent = formatNumber(metrics.poorPrs);
   document.querySelector("#metricExcellent").textContent = formatNumber(metrics.excellentPrs);
-
-  const sync = dashboard?.lastSync;
-  const syncTime = document.querySelector(".sync-time");
-  const syncNote = document.querySelector(".sync-note");
-  if (sync) {
-    syncTime.textContent = normalizeTime(sync.finished_at || sync.started_at);
-    syncNote.textContent = `${sync.status} · ${sync.pr_count} 个 PR · ${normalizeTime(sync.window_start)} 至 ${normalizeTime(sync.window_end)}`;
-  }
 }
 
 function renderPrTable() {

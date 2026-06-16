@@ -13,6 +13,7 @@ class ThemeToggleTest(unittest.TestCase):
         html = (DEMO / "index.html").read_text(encoding="utf-8")
         css = (DEMO / "styles.css").read_text(encoding="utf-8")
         js = (DEMO / "app.js").read_text(encoding="utf-8")
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
 
         self.assertIn('data-theme="dark"', html)
         self.assertIn('id="themeToggle"', html)
@@ -22,6 +23,32 @@ class ThemeToggleTest(unittest.TestCase):
         self.assertIn("localStorage", js)
         self.assertIn("reviewBoardTheme", js)
         self.assertIn("themeToggle", js)
+
+    def test_demo_removes_nonfunctional_chrome(self) -> None:
+        html = (DEMO / "index.html").read_text(encoding="utf-8")
+        css = (DEMO / "styles.css").read_text(encoding="utf-8")
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
+
+        for text in [
+            "WhiteBox Review",
+            "PR Review Intelligence",
+            "PR 明细",
+            "数据刷新",
+            "最近刷新",
+            "导出 CSV",
+            "刷新数据",
+        ]:
+            self.assertNotIn(text, html)
+
+        self.assertNotIn('class="sidebar"', html)
+        self.assertNotIn('class="nav-stack"', html)
+        self.assertNotIn("grid-template-columns: 260px minmax(0, 1fr)", css)
+        self.assertNotIn(".sidebar", css)
+        self.assertNotIn(".brand", css)
+        self.assertNotIn(".nav-item", css)
+        self.assertNotIn(".sync-panel", css)
+        self.assertNotIn(".sync-time", js)
+        self.assertNotIn(".sync-note", js)
 
     def test_pr_detail_and_contributor_groups_are_visually_prioritized(self) -> None:
         html = (DEMO / "index.html").read_text(encoding="utf-8")
