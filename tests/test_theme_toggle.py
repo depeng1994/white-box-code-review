@@ -117,6 +117,20 @@ class ThemeToggleTest(unittest.TestCase):
         self.assertIn("compliance-warn", css)
         self.assertIn("compliance-ok", css)
 
+    def test_pr_number_links_to_source_pull_request(self) -> None:
+        css = (DEMO / "styles.css").read_text(encoding="utf-8")
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
+
+        self.assertIn("function renderPrLink", js)
+        self.assertIn("row.htmlUrl", js)
+        self.assertIn('target="_blank"', js)
+        self.assertIn('rel="noopener noreferrer"', js)
+        self.assertIn('class="pr-link"', js)
+        self.assertIn("${renderPrLink(row)}", js)
+        self.assertIn('event.target.closest(".pr-link")', js)
+        self.assertIn("event.stopPropagation()", js)
+        self.assertIn(".pr-link", css)
+
     def test_static_assets_are_versioned_to_avoid_mixed_html_and_js(self) -> None:
         html = (DEMO / "index.html").read_text(encoding="utf-8")
         js = (DEMO / "app.js").read_text(encoding="utf-8")

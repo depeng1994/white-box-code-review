@@ -135,6 +135,12 @@ function renderUserName(name) {
   return `<span class="user-chip committer-user"><span>${label}</span><span class="committer-badge">Committer</span></span>`;
 }
 
+function renderPrLink(row) {
+  const label = `#${formatNumber(row.id)}`;
+  if (!row.htmlUrl) return label;
+  return `<a class="pr-link" href="${escapeAttr(row.htmlUrl)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+}
+
 function matchesContributorRole(row) {
   if (contributorRoleFilter.value === "committer") return COMMITTER_USERS.has(row.name);
   if (contributorRoleFilter.value === "non_committer") return !COMMITTER_USERS.has(row.name);
@@ -293,7 +299,7 @@ function createPrMainRow(row, selectedId, onSelect) {
   tr.className = row.id === selectedId ? "selected" : "";
     tr.dataset.id = row.id;
     tr.innerHTML = `
-      <td>#${row.id}</td>
+      <td>${renderPrLink(row)}</td>
       <td class="title-cell">${escapeHtml(row.title)}</td>
       <td>${renderUserName(row.author)}</td>
       <td>${normalizeTime(row.mergedAt)}</td>
@@ -303,7 +309,11 @@ function createPrMainRow(row, selectedId, onSelect) {
       <td>${renderUserName(row.reviewer)}</td>
       <td><span class="badge ${cls}">${label}</span></td>
     `;
-    tr.addEventListener("click", () => {
+    tr.addEventListener("click", (event) => {
+    if (event.target.closest(".pr-link")) {
+      event.stopPropagation();
+      return;
+    }
     onSelect(row.id);
     });
   return tr;
