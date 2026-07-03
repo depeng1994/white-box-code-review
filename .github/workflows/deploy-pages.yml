@@ -19,7 +19,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment_retry.outputs.page_url || 'https://depeng1994.github.io/white-box-code-review/' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,4 +41,21 @@ jobs:
 
       - name: Deploy to GitHub Pages
         id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@v5
+        with:
+          timeout: 600000
+
+      - name: Retry GitHub Pages deploy
+        id: deployment_retry
+        if: steps.deployment.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
+        with:
+          timeout: 600000
+
+      - name: Fail when all Pages deploy attempts fail
+        if: always() && steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'
+        run: |
+          echo "Both GitHub Pages deployment attempts failed."
+          exit 1

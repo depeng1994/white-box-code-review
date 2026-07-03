@@ -206,6 +206,17 @@ class ThemeToggleTest(unittest.TestCase):
         self.assertIn("scripts/stamp_static_assets.py", workflow)
         self.assertIn("github.sha", workflow)
 
+    def test_pages_deploy_retries_once_before_failing(self) -> None:
+        workflow = (ROOT / ".github/workflows/deploy-pages.yml").read_text(encoding="utf-8")
+
+        self.assertIn("id: deployment", workflow)
+        self.assertIn("continue-on-error: true", workflow)
+        self.assertIn("id: deployment_retry", workflow)
+        self.assertIn("if: steps.deployment.outcome == 'failure'", workflow)
+        self.assertEqual(workflow.count("timeout: 600000"), 2)
+        self.assertIn("if: always() && steps.deployment.outcome == 'failure' && steps.deployment_retry.outcome == 'failure'", workflow)
+        self.assertIn("Both GitHub Pages deployment attempts failed.", workflow)
+
 
 if __name__ == "__main__":
     unittest.main()
