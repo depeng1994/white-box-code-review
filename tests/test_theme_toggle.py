@@ -44,6 +44,16 @@ class ThemeToggleTest(unittest.TestCase):
         self.assertNotIn('class="view-tab active" type="button" data-view="pr"', html)
         self.assertNotIn('id="prView" class="view-panel active"', html)
 
+    def test_demo_defaults_to_latest_static_week(self) -> None:
+        js = (DEMO / "app.js").read_text(encoding="utf-8")
+
+        self.assertIn("async function initializeDashboard", js)
+        self.assertIn("const bundle = await loadStaticBundle();", js)
+        self.assertIn("ranges = bundle.ranges || fallbackRanges;", js)
+        self.assertIn("populateRanges(false);", js)
+        self.assertIn("initializeDashboard().catch", js)
+        self.assertNotIn('week: ["2026年第25周"]', js)
+
     def test_table_headers_can_wrap_to_keep_contributor_view_in_one_screen(self) -> None:
         css = (DEMO / "styles.css").read_text(encoding="utf-8")
 
@@ -178,6 +188,9 @@ class ThemeToggleTest(unittest.TestCase):
         self.assertIn("compliance-alert", css)
         self.assertIn("compliance-warn", css)
         self.assertIn("compliance-ok", css)
+        self.assertIn("if (value < 0.1) return \"compliance-alert\";", js)
+        self.assertIn("if (value < 0.2) return \"compliance-warn\";", js)
+        self.assertNotIn("if (value < 0.05) return \"compliance-alert\";", js)
 
     def test_pr_number_links_to_source_pull_request(self) -> None:
         css = (DEMO / "styles.css").read_text(encoding="utf-8")

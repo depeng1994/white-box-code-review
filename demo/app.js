@@ -1,5 +1,5 @@
 const fallbackRanges = {
-  week: ["2026年第25周"],
+  week: [],
   month: ["2026-06"],
   quarter: ["2026 Q2"],
   half: ["2026 H1"],
@@ -155,8 +155,8 @@ function complianceClass(row, metric) {
   if (!COMMITTER_USERS.has(row.name)) return "";
   if (metric === "scored_poor_rate") {
     const value = rate(row.scored_poor, row.scored_prs);
-    if (value < 0.05) return "compliance-alert";
-    if (value < 0.1) return "compliance-warn";
+    if (value < 0.1) return "compliance-alert";
+    if (value < 0.2) return "compliance-warn";
     return "compliance-ok";
   }
   if (metric === "scored_excellent_rate") {
@@ -233,7 +233,7 @@ async function loadDashboard() {
   renderAll();
 }
 
-async function loadStaticDashboard() {
+async function loadStaticBundle() {
   if (!staticBundle) {
     const response = await fetch(`./dashboard-static.json?v=${encodeURIComponent(assetVersion)}`);
     if (!response.ok) {
@@ -242,7 +242,11 @@ async function loadStaticDashboard() {
     }
     staticBundle = await response.json();
   }
+  return staticBundle;
+}
 
+async function loadStaticDashboard() {
+  await loadStaticBundle();
   ranges = staticBundle.ranges || fallbackRanges;
   populateRanges(true);
   const period = periodSelect.value;
@@ -560,8 +564,18 @@ document.addEventListener("keydown", (event) => {
 themeToggle?.addEventListener("click", toggleTheme);
 
 applyTheme(preferredTheme());
-populateRanges(false);
-loadDashboard().catch((error) => {
+async function initializeDashboard() {
+  try {
+    const bundle = await loadStaticBundle();
+    ranges = bundle.ranges || fallbackRanges;
+  } catch (error) {
+    ranges = fallbackRanges;
+  }
+  populateRanges(false);
+  await loadDashboard();
+}
+
+initializeDashboard().catch((error) => {
   console.error(error);
   document.querySelector(".content").insertAdjacentHTML(
     "afterbegin",
