@@ -327,6 +327,15 @@ class ReviewStore:
                     raw_json TEXT NOT NULL
                 );
 
+                CREATE TABLE IF NOT EXISTS manual_score_exclusions (
+                    repo TEXT NOT NULL,
+                    pr_number INTEGER NOT NULL,
+                    reviewer TEXT NOT NULL,
+                    reason TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    PRIMARY KEY (repo, pr_number)
+                );
+
                 CREATE TABLE IF NOT EXISTS sync_runs (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     repo TEXT NOT NULL,
@@ -347,6 +356,8 @@ class ReviewStore:
                 CREATE INDEX IF NOT EXISTS idx_eval_author ON mr_evaluations (author);
                 CREATE INDEX IF NOT EXISTS idx_lgtm_pr ON lgtm_comments (repo, pr_number);
                 CREATE INDEX IF NOT EXISTS idx_lgtm_author ON lgtm_comments (author);
+                CREATE INDEX IF NOT EXISTS idx_manual_exclusion_reviewer
+                    ON manual_score_exclusions (reviewer);
                 """
             )
             self._migrate_score_column(conn)
@@ -729,6 +740,13 @@ class DashboardQueries:
             reviews_by_pr = self._group_rows(conn, "review_comments", pr_numbers)
             evals_by_pr = self._group_rows(conn, "mr_evaluations", pr_numbers)
             lgtms_by_pr = self._group_rows(conn, "lgtm_comments", pr_numbers)
+            manual_exclusions = {
+                int(row["pr_number"]): row
+                for row in conn.execute(
+                    "SELECT * FROM manual_score_exclusions WHERE repo = ?",
+                    (self.repo.full_name,),
+                ).fetchall()
+            }
             sync = conn.execute(
                 "SELECT * FROM sync_runs WHERE repo = ? ORDER BY id DESC LIMIT 1",
                 (self.repo.full_name,),
@@ -752,9 +770,24 @@ class DashboardQueries:
             lgtms = lgtms_by_pr.get(number, [])
             evaluation = primary_evaluation(evals)
             lgtm = latest_lgtm(lgtms)
-            score = score_value(evaluation["score"]) if evaluation else None
-            nonstandard = nonstandard_reason(evaluation) if lgtm else ""
-            nonstandard_reviewer = lgtm["author"] if lgtm and nonstandard else ""
+            manual_exclusion = manual_exclusions.get(number)
+            if manual_exclusion:
+                displayed_evaluation = next(
+                    (
+                        row
+                        for row in evals
+                        if row["author"].casefold() == manual_exclusion["reviewer"].casefold()
+                    ),
+                    evaluation,
+                )
+                score = None
+                nonstandard = manual_exclusion["reason"]
+                nonstandard_reviewer = manual_exclusion["reviewer"]
+            else:
+                displayed_evaluation = evaluation
+                score = score_value(evaluation["score"]) if evaluation else None
+                nonstandard = nonstandard_reason(evaluation) if lgtm else ""
+                nonstandard_reviewer = lgtm["author"] if lgtm and nonstandard else ""
             if score is not None:
                 rated += 1
                 score_sum += score
@@ -777,7 +810,7 @@ class DashboardQueries:
                 reviewer["review_comments"] += 1
                 reviewer["review_prs_set"].add(number)
 
-            if evaluation:
+            if evaluation and not manual_exclusion:
                 scorer = contributor_map.setdefault(evaluation["author"], empty_contributor(evaluation["author"]))
                 scorer["scored_prs"] += 1
                 item_score = score_value(evaluation["score"])
@@ -800,9 +833,9 @@ class DashboardQueries:
                     "lines": lines,
                     "reviews": len(reviews),
                     "score": score,
-                    "reviewer": evaluation["author"] if evaluation else "",
+                    "reviewer": displayed_evaluation["author"] if displayed_evaluation else "",
                     "level": score_level(score),
-                    "summary": evaluation["body"] if evaluation else "",
+                    "summary": displayed_evaluation["body"] if displayed_evaluation else "",
                     "nonstandardReviewer": nonstandard_reviewer,
                     "nonstandardReason": nonstandard,
                     "htmlUrl": pr["html_url"],

@@ -198,6 +198,30 @@ def seed_lgtm(
     )
 
 
+def seed_manual_score_exclusion(
+    conn: sqlite3.Connection,
+    *,
+    pr_number: int,
+    reviewer: str,
+    reason: str = "评分异常，手动剔除",
+) -> None:
+    conn.execute(
+        """
+        INSERT INTO manual_score_exclusions (
+            repo, pr_number, reviewer, reason, created_at
+        )
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            "cann/torchtitan-npu",
+            pr_number,
+            reviewer,
+            reason,
+            "2026-07-27T00:00:00+08:00",
+        ),
+    )
+
+
 class StaticExportTest(unittest.TestCase):
     def test_extract_score_preserves_decimal_scores(self) -> None:
         self.assertEqual(extract_score("【MR评价】评价分数:3.1, 评价意见：通过"), 3.1)
@@ -514,6 +538,79 @@ class StaticExportTest(unittest.TestCase):
             self.assertEqual(prs[304]["nonstandardReviewer"], "")
             self.assertEqual(contributors["last-reviewer"]["nonstandard_prs"], 2)
             self.assertNotIn("first-reviewer", contributors)
+
+    def test_manual_score_exclusion_has_highest_priority_for_all_contribution_metrics(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            root = Path(tmpdir)
+            db_path = root / "review_board.sqlite3"
+            store = ReviewStore(db_path)
+            store.init_schema()
+            with sqlite3.connect(db_path) as conn:
+                seed_pr(
+                    conn,
+                    pr_number=305,
+                    title="Manually excluded score",
+                    author="submitter",
+                    merged_at="2026-07-10T10:00:00+08:00",
+                )
+                seed_evaluation(
+                    conn,
+                    pr_number=305,
+                    comment_id=3050,
+                    author="other-reviewer",
+                    created_at="2026-07-10T08:00:00+08:00",
+                    score=2.8,
+                    body="【MR评价】评价分数:2.8, 评价意见：需要改进",
+                )
+                seed_evaluation(
+                    conn,
+                    pr_number=305,
+                    comment_id=3051,
+                    author="score-reviewer",
+                    created_at="2026-07-10T09:00:00+08:00",
+                    score=3.2,
+                    body="【MR评价】评价分数:3.2, 评价意见：优秀",
+                )
+                seed_lgtm(
+                    conn,
+                    pr_number=305,
+                    comment_id=3052,
+                    author="lgtm-reviewer",
+                    created_at="2026-07-10T09:30:00+08:00",
+                )
+                seed_manual_score_exclusion(
+                    conn,
+                    pr_number=305,
+                    reviewer="score-reviewer",
+                )
+
+            dashboard = DashboardQueries(store, RepoRef("cann", "torchtitan-npu")).dashboard(
+                "month",
+                "2026-07",
+            )
+            pr = dashboard["prs"][0]
+            contributors = {item["name"]: item for item in dashboard["contributors"]}
+
+            self.assertIsNone(pr["score"])
+            self.assertEqual(pr["level"], "未评分")
+            self.assertEqual(pr["reviewer"], "score-reviewer")
+            self.assertIn("评价分数:3.2", pr["summary"])
+            self.assertEqual(pr["nonstandardReviewer"], "score-reviewer")
+            self.assertEqual(pr["nonstandardReason"], "评分异常，手动剔除")
+            self.assertEqual(dashboard["metrics"]["ratedPrs"], 0)
+            self.assertIsNone(dashboard["metrics"]["averageScore"])
+            self.assertEqual(dashboard["metrics"]["poorPrs"], 0)
+            self.assertEqual(dashboard["metrics"]["excellentPrs"], 0)
+            self.assertEqual(contributors["submitter"]["rated_prs"], 0)
+            self.assertEqual(contributors["submitter"]["poor_prs"], 0)
+            self.assertEqual(contributors["submitter"]["excellent_prs"], 0)
+            self.assertEqual(contributors["score-reviewer"]["scored_prs"], 0)
+            self.assertEqual(contributors["score-reviewer"]["scored_poor"], 0)
+            self.assertEqual(contributors["score-reviewer"]["scored_excellent"], 0)
+            self.assertEqual(contributors["score-reviewer"]["nonstandard_prs"], 1)
+            self.assertNotIn("lgtm-reviewer", contributors)
 
     def test_collector_extracts_lgtm_comments_and_skips_system_users(self) -> None:
         import tempfile
