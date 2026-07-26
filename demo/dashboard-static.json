@@ -107,15 +107,109 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 10,
-          "lines": 7991,
-          "reviewComments": 30,
-          "ratedPrs": 9,
-          "averageScore": 2.99,
-          "poorPrs": 2,
+          "mergedPrs": 11,
+          "lines": 8477,
+          "reviewComments": 40,
+          "ratedPrs": 10,
+          "averageScore": 2.98,
+          "poorPrs": 3,
           "excellentPrs": 1
         },
         "prs": [
+          {
+            "id": 397,
+            "title": "[feat] MXFP8 utilizes dual-axis quantization with compatibility for activation checkpoint",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-07-24T09:11:23+08:00",
+            "lines": 486,
+            "reviews": 10,
+            "score": 2.9,
+            "reviewer": "panchao-gitcode",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/397",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:19",
+                "body": "请增加下内存报告，修改前后内存变化",
+                "createdAt": "2026-07-20T17:44:40+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mxfp8_grouped_mm.py:62",
+                "body": "dual-axis 开启、AC 开启且未 compile 时，normal forward 走 single-axis，而 recomputation forward 走 dual-axis；GMM 的 weight 路径也存在同样差异。代码注释声称两次 forward 使用相同量化路径，但实际并不一致。即使 scale_alg=1 设计上应等价，也需要在 A5 上验证量化结果、输出、grad、MoE 路由及 loss；否则 checkpoint 重计算可能得到不同值并产生错误梯度。PyTorch 对 checkpoint 的要求也是重计算函数应与原 forward 保持一致。",
+                "createdAt": "2026-07-20T19:22:28+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:147",
+                "body": "AC 的 normal-forward 分支把 x/weight 直接挂到 ctx.x/ctx.w，绕过了 ctx.save_for_backward 的 saved-tensor hooks 和版本检查。非 reentrant activation checkpoint 无法释放这些强引用，等于保留完整激活，可能抵消 AC 的显存收益甚至导致 OOM",
+                "createdAt": "2026-07-20T19:23:34+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:72",
+                "body": "_run_fn_with_dynamo_disabled 原本带有 @torch._disable_dynamo，这里取 __wrapped__ 后用未装饰函数替换，改变了 PyTorch checkpoint 的 compile 配置。最小 probe 已确认 patch 后 recompute 会被 Dynamo 捕获；同时该 patch 在 import torchtitan_npu 时无条件生效，即使 MXFP8 未启用也会影响所有 AC 路径，这里改动符合预期吗？",
+                "createdAt": "2026-07-20T19:47:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/__init__.py:79",
+                "body": "是不是需要补一个双轴量化开启前后的精度比对",
+                "createdAt": "2026-07-20T22:38:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/config/configs.py:181",
+                "body": "这个配置不适合放在TrainingConfig，需要考虑移到ao_npu内部通过NpuQuantizeConvert对外配置，可在后续PR提供。 本PR合入建议直接默认使能双轴量化，删除配置。",
+                "createdAt": "2026-07-22T11:37:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/entry.py:43",
+                "body": "这块代码可以想办法移除么，在低精度convert替换的流程里去感知环境变量",
+                "createdAt": "2026-07-22T17:16:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:126",
+                "body": "mxfp8_dual_axis_forward=False 时，forward 确实是单轴，但 backward 的 grad 仍无条件调用双轴量化。与 PR 描述中“默认关闭保持原有 single-axis 行为”不一致，也意味着关闭开关无法回退新算子。",
+                "createdAt": "2026-07-22T17:50:42+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_ac_config.py:93",
+                "body": "compile.enable=True 不代表 model 一定被 compile，实际还要检查 \"model\" in config.compile.components。例如只 compile loss 时，当前逻辑仍会让 MXFP8 AC 路径退回 backward 重新量化，优化静默失效。这里建议记录 config.compile.enable and \"model\" in config.compile.components。",
+                "createdAt": "2026-07-22T17:52:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:135",
+                "body": "这里在 ctx.saved_tensors 解包前就 pop stack，但非重入 checkpoint 的重计算正是由 saved tensor 解包触发的。首个 backward 会先 pop 空 stack，随后 line 144 才触发 recompute 并 push，当前分支却继续重新量化，导致数据遗留给下一个 linear/下一 step，进而使用错误的 x/weight 计算梯度。最小 probe 已复现 stack 残留及梯度错误。请像 Grouped-MM backward 一样，先解包 ctx.saved_tensors 触发当前轮重计算，再 pop 当前轮数据。",
+                "createdAt": "2026-07-22T17:56:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-07-23T22:29:48+08:00"
+              }
+            ]
+          },
           {
             "id": 456,
             "title": "[feat] Precompute DeepSeek V4 NPU RoPE cache",
@@ -575,12 +669,27 @@
             "rated_prs": 1,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 12,
+            "review_comments": 14,
             "scored_prs": 5,
             "scored_poor": 2,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 5
+            "review_prs": 6
+          },
+          {
+            "name": "panchao-gitcode",
+            "submit_prs": 1,
+            "submit_lines": 518,
+            "received_reviews": 2,
+            "rated_prs": 1,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 8,
+            "scored_prs": 1,
+            "scored_poor": 1,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 3
           },
           {
             "name": "zzyyjj012",
@@ -605,27 +714,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 4,
+            "review_comments": 6,
             "scored_prs": 1,
             "scored_poor": 0,
             "scored_excellent": 1,
             "nonstandard_prs": 0,
-            "review_prs": 2
-          },
-          {
-            "name": "panchao-gitcode",
-            "submit_prs": 1,
-            "submit_lines": 518,
-            "received_reviews": 2,
-            "rated_prs": 1,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 2,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 1,
-            "review_prs": 2
+            "review_prs": 3
           },
           {
             "name": "zcklllyao",
@@ -703,6 +797,21 @@
             "review_prs": 0
           },
           {
+            "name": "zhuofanshen",
+            "submit_prs": 1,
+            "submit_lines": 486,
+            "received_reviews": 10,
+            "rated_prs": 1,
+            "poor_prs": 1,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
             "name": "roadnotstop",
             "submit_prs": 1,
             "submit_lines": 227,
@@ -764,14 +873,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -1756,14 +1865,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -2589,14 +2698,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -3569,14 +3678,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -4876,14 +4985,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -5471,14 +5580,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -6766,14 +6875,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -8268,14 +8377,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -10216,14 +10325,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -11516,14 +11625,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -12216,14 +12325,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -13043,14 +13152,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -13868,14 +13977,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -14136,14 +14245,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -14989,14 +15098,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -15524,14 +15633,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -16648,14 +16757,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -17215,14 +17324,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -17537,14 +17646,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -18450,14 +18559,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -18879,14 +18988,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -19677,14 +19786,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -19910,14 +20019,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -20163,14 +20272,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -20868,14 +20977,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       }
@@ -20936,15 +21045,109 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 44,
-          "lines": 17216,
-          "reviewComments": 138,
-          "ratedPrs": 40,
-          "averageScore": 3.02,
-          "poorPrs": 5,
+          "mergedPrs": 45,
+          "lines": 17702,
+          "reviewComments": 148,
+          "ratedPrs": 41,
+          "averageScore": 3.01,
+          "poorPrs": 6,
           "excellentPrs": 13
         },
         "prs": [
+          {
+            "id": 397,
+            "title": "[feat] MXFP8 utilizes dual-axis quantization with compatibility for activation checkpoint",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-07-24T09:11:23+08:00",
+            "lines": 486,
+            "reviews": 10,
+            "score": 2.9,
+            "reviewer": "panchao-gitcode",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/397",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:19",
+                "body": "请增加下内存报告，修改前后内存变化",
+                "createdAt": "2026-07-20T17:44:40+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mxfp8_grouped_mm.py:62",
+                "body": "dual-axis 开启、AC 开启且未 compile 时，normal forward 走 single-axis，而 recomputation forward 走 dual-axis；GMM 的 weight 路径也存在同样差异。代码注释声称两次 forward 使用相同量化路径，但实际并不一致。即使 scale_alg=1 设计上应等价，也需要在 A5 上验证量化结果、输出、grad、MoE 路由及 loss；否则 checkpoint 重计算可能得到不同值并产生错误梯度。PyTorch 对 checkpoint 的要求也是重计算函数应与原 forward 保持一致。",
+                "createdAt": "2026-07-20T19:22:28+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:147",
+                "body": "AC 的 normal-forward 分支把 x/weight 直接挂到 ctx.x/ctx.w，绕过了 ctx.save_for_backward 的 saved-tensor hooks 和版本检查。非 reentrant activation checkpoint 无法释放这些强引用，等于保留完整激活，可能抵消 AC 的显存收益甚至导致 OOM",
+                "createdAt": "2026-07-20T19:23:34+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:72",
+                "body": "_run_fn_with_dynamo_disabled 原本带有 @torch._disable_dynamo，这里取 __wrapped__ 后用未装饰函数替换，改变了 PyTorch checkpoint 的 compile 配置。最小 probe 已确认 patch 后 recompute 会被 Dynamo 捕获；同时该 patch 在 import torchtitan_npu 时无条件生效，即使 MXFP8 未启用也会影响所有 AC 路径，这里改动符合预期吗？",
+                "createdAt": "2026-07-20T19:47:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/__init__.py:79",
+                "body": "是不是需要补一个双轴量化开启前后的精度比对",
+                "createdAt": "2026-07-20T22:38:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/config/configs.py:181",
+                "body": "这个配置不适合放在TrainingConfig，需要考虑移到ao_npu内部通过NpuQuantizeConvert对外配置，可在后续PR提供。 本PR合入建议直接默认使能双轴量化，删除配置。",
+                "createdAt": "2026-07-22T11:37:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/entry.py:43",
+                "body": "这块代码可以想办法移除么，在低精度convert替换的流程里去感知环境变量",
+                "createdAt": "2026-07-22T17:16:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:126",
+                "body": "mxfp8_dual_axis_forward=False 时，forward 确实是单轴，但 backward 的 grad 仍无条件调用双轴量化。与 PR 描述中“默认关闭保持原有 single-axis 行为”不一致，也意味着关闭开关无法回退新算子。",
+                "createdAt": "2026-07-22T17:50:42+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_ac_config.py:93",
+                "body": "compile.enable=True 不代表 model 一定被 compile，实际还要检查 \"model\" in config.compile.components。例如只 compile loss 时，当前逻辑仍会让 MXFP8 AC 路径退回 backward 重新量化，优化静默失效。这里建议记录 config.compile.enable and \"model\" in config.compile.components。",
+                "createdAt": "2026-07-22T17:52:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:135",
+                "body": "这里在 ctx.saved_tensors 解包前就 pop stack，但非重入 checkpoint 的重计算正是由 saved tensor 解包触发的。首个 backward 会先 pop 空 stack，随后 line 144 才触发 recompute 并 push，当前分支却继续重新量化，导致数据遗留给下一个 linear/下一 step，进而使用错误的 x/weight 计算梯度。最小 probe 已复现 stack 残留及梯度错误。请像 Grouped-MM backward 一样，先解包 ctx.saved_tensors 触发当前轮重计算，再 pop 当前轮数据。",
+                "createdAt": "2026-07-22T17:56:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-07-23T22:29:48+08:00"
+              }
+            ]
+          },
           {
             "id": 456,
             "title": "[feat] Precompute DeepSeek V4 NPU RoPE cache",
@@ -22968,12 +23171,27 @@
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 47,
+            "review_comments": 49,
             "scored_prs": 10,
             "scored_poor": 2,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 22
+            "review_prs": 23
+          },
+          {
+            "name": "depeng1994",
+            "submit_prs": 3,
+            "submit_lines": 1885,
+            "received_reviews": 6,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 2,
+            "review_comments": 21,
+            "scored_prs": 5,
+            "scored_poor": 1,
+            "scored_excellent": 2,
+            "nonstandard_prs": 0,
+            "review_prs": 10
           },
           {
             "name": "zzyyjj012",
@@ -22991,21 +23209,6 @@
             "review_prs": 7
           },
           {
-            "name": "depeng1994",
-            "submit_prs": 3,
-            "submit_lines": 1885,
-            "received_reviews": 6,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 2,
-            "review_comments": 19,
-            "scored_prs": 5,
-            "scored_poor": 1,
-            "scored_excellent": 2,
-            "nonstandard_prs": 0,
-            "review_prs": 9
-          },
-          {
             "name": "lrwei0709",
             "submit_prs": 1,
             "submit_lines": 15,
@@ -23019,6 +23222,21 @@
             "scored_excellent": 4,
             "nonstandard_prs": 1,
             "review_prs": 4
+          },
+          {
+            "name": "panchao-gitcode",
+            "submit_prs": 4,
+            "submit_lines": 1341,
+            "received_reviews": 8,
+            "rated_prs": 4,
+            "poor_prs": 0,
+            "excellent_prs": 2,
+            "review_comments": 11,
+            "scored_prs": 2,
+            "scored_poor": 1,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 6
           },
           {
             "name": "hitwdy",
@@ -23047,21 +23265,6 @@
             "scored_prs": 5,
             "scored_poor": 0,
             "scored_excellent": 5,
-            "nonstandard_prs": 1,
-            "review_prs": 5
-          },
-          {
-            "name": "panchao-gitcode",
-            "submit_prs": 4,
-            "submit_lines": 1341,
-            "received_reviews": 8,
-            "rated_prs": 4,
-            "poor_prs": 0,
-            "excellent_prs": 2,
-            "review_comments": 5,
-            "scored_prs": 1,
-            "scored_poor": 0,
-            "scored_excellent": 0,
             "nonstandard_prs": 1,
             "review_prs": 5
           },
@@ -23133,6 +23336,21 @@
             "rated_prs": 2,
             "poor_prs": 1,
             "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
+            "name": "zhuofanshen",
+            "submit_prs": 3,
+            "submit_lines": 552,
+            "received_reviews": 13,
+            "rated_prs": 3,
+            "poor_prs": 1,
+            "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -23229,21 +23447,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 1
-          },
-          {
-            "name": "zhuofanshen",
-            "submit_prs": 2,
-            "submit_lines": 66,
-            "received_reviews": 3,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 1,
-            "review_comments": 0,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
           },
           {
             "name": "caoshuyang",
@@ -23352,14 +23555,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -27498,14 +27701,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -31511,14 +31714,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -34156,14 +34359,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -35999,14 +36202,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -36975,14 +37178,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -37680,14 +37883,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       }
@@ -37748,15 +37951,109 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 44,
-          "lines": 17216,
-          "reviewComments": 138,
-          "ratedPrs": 40,
-          "averageScore": 3.02,
-          "poorPrs": 5,
+          "mergedPrs": 45,
+          "lines": 17702,
+          "reviewComments": 148,
+          "ratedPrs": 41,
+          "averageScore": 3.01,
+          "poorPrs": 6,
           "excellentPrs": 13
         },
         "prs": [
+          {
+            "id": 397,
+            "title": "[feat] MXFP8 utilizes dual-axis quantization with compatibility for activation checkpoint",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-07-24T09:11:23+08:00",
+            "lines": 486,
+            "reviews": 10,
+            "score": 2.9,
+            "reviewer": "panchao-gitcode",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/397",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:19",
+                "body": "请增加下内存报告，修改前后内存变化",
+                "createdAt": "2026-07-20T17:44:40+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mxfp8_grouped_mm.py:62",
+                "body": "dual-axis 开启、AC 开启且未 compile 时，normal forward 走 single-axis，而 recomputation forward 走 dual-axis；GMM 的 weight 路径也存在同样差异。代码注释声称两次 forward 使用相同量化路径，但实际并不一致。即使 scale_alg=1 设计上应等价，也需要在 A5 上验证量化结果、输出、grad、MoE 路由及 loss；否则 checkpoint 重计算可能得到不同值并产生错误梯度。PyTorch 对 checkpoint 的要求也是重计算函数应与原 forward 保持一致。",
+                "createdAt": "2026-07-20T19:22:28+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:147",
+                "body": "AC 的 normal-forward 分支把 x/weight 直接挂到 ctx.x/ctx.w，绕过了 ctx.save_for_backward 的 saved-tensor hooks 和版本检查。非 reentrant activation checkpoint 无法释放这些强引用，等于保留完整激活，可能抵消 AC 的显存收益甚至导致 OOM",
+                "createdAt": "2026-07-20T19:23:34+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:72",
+                "body": "_run_fn_with_dynamo_disabled 原本带有 @torch._disable_dynamo，这里取 __wrapped__ 后用未装饰函数替换，改变了 PyTorch checkpoint 的 compile 配置。最小 probe 已确认 patch 后 recompute 会被 Dynamo 捕获；同时该 patch 在 import torchtitan_npu 时无条件生效，即使 MXFP8 未启用也会影响所有 AC 路径，这里改动符合预期吗？",
+                "createdAt": "2026-07-20T19:47:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/__init__.py:79",
+                "body": "是不是需要补一个双轴量化开启前后的精度比对",
+                "createdAt": "2026-07-20T22:38:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/config/configs.py:181",
+                "body": "这个配置不适合放在TrainingConfig，需要考虑移到ao_npu内部通过NpuQuantizeConvert对外配置，可在后续PR提供。 本PR合入建议直接默认使能双轴量化，删除配置。",
+                "createdAt": "2026-07-22T11:37:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/entry.py:43",
+                "body": "这块代码可以想办法移除么，在低精度convert替换的流程里去感知环境变量",
+                "createdAt": "2026-07-22T17:16:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:126",
+                "body": "mxfp8_dual_axis_forward=False 时，forward 确实是单轴，但 backward 的 grad 仍无条件调用双轴量化。与 PR 描述中“默认关闭保持原有 single-axis 行为”不一致，也意味着关闭开关无法回退新算子。",
+                "createdAt": "2026-07-22T17:50:42+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_ac_config.py:93",
+                "body": "compile.enable=True 不代表 model 一定被 compile，实际还要检查 \"model\" in config.compile.components。例如只 compile loss 时，当前逻辑仍会让 MXFP8 AC 路径退回 backward 重新量化，优化静默失效。这里建议记录 config.compile.enable and \"model\" in config.compile.components。",
+                "createdAt": "2026-07-22T17:52:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:135",
+                "body": "这里在 ctx.saved_tensors 解包前就 pop stack，但非重入 checkpoint 的重计算正是由 saved tensor 解包触发的。首个 backward 会先 pop 空 stack，随后 line 144 才触发 recompute 并 push，当前分支却继续重新量化，导致数据遗留给下一个 linear/下一 step，进而使用错误的 x/weight 计算梯度。最小 probe 已复现 stack 残留及梯度错误。请像 Grouped-MM backward 一样，先解包 ctx.saved_tensors 触发当前轮重计算，再 pop 当前轮数据。",
+                "createdAt": "2026-07-22T17:56:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-07-23T22:29:48+08:00"
+              }
+            ]
+          },
           {
             "id": 456,
             "title": "[feat] Precompute DeepSeek V4 NPU RoPE cache",
@@ -39780,12 +40077,27 @@
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 47,
+            "review_comments": 49,
             "scored_prs": 10,
             "scored_poor": 2,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 22
+            "review_prs": 23
+          },
+          {
+            "name": "depeng1994",
+            "submit_prs": 3,
+            "submit_lines": 1885,
+            "received_reviews": 6,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 2,
+            "review_comments": 21,
+            "scored_prs": 5,
+            "scored_poor": 1,
+            "scored_excellent": 2,
+            "nonstandard_prs": 0,
+            "review_prs": 10
           },
           {
             "name": "zzyyjj012",
@@ -39803,21 +40115,6 @@
             "review_prs": 7
           },
           {
-            "name": "depeng1994",
-            "submit_prs": 3,
-            "submit_lines": 1885,
-            "received_reviews": 6,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 2,
-            "review_comments": 19,
-            "scored_prs": 5,
-            "scored_poor": 1,
-            "scored_excellent": 2,
-            "nonstandard_prs": 0,
-            "review_prs": 9
-          },
-          {
             "name": "lrwei0709",
             "submit_prs": 1,
             "submit_lines": 15,
@@ -39831,6 +40128,21 @@
             "scored_excellent": 4,
             "nonstandard_prs": 1,
             "review_prs": 4
+          },
+          {
+            "name": "panchao-gitcode",
+            "submit_prs": 4,
+            "submit_lines": 1341,
+            "received_reviews": 8,
+            "rated_prs": 4,
+            "poor_prs": 0,
+            "excellent_prs": 2,
+            "review_comments": 11,
+            "scored_prs": 2,
+            "scored_poor": 1,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 6
           },
           {
             "name": "hitwdy",
@@ -39859,21 +40171,6 @@
             "scored_prs": 5,
             "scored_poor": 0,
             "scored_excellent": 5,
-            "nonstandard_prs": 1,
-            "review_prs": 5
-          },
-          {
-            "name": "panchao-gitcode",
-            "submit_prs": 4,
-            "submit_lines": 1341,
-            "received_reviews": 8,
-            "rated_prs": 4,
-            "poor_prs": 0,
-            "excellent_prs": 2,
-            "review_comments": 5,
-            "scored_prs": 1,
-            "scored_poor": 0,
-            "scored_excellent": 0,
             "nonstandard_prs": 1,
             "review_prs": 5
           },
@@ -39945,6 +40242,21 @@
             "rated_prs": 2,
             "poor_prs": 1,
             "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
+            "name": "zhuofanshen",
+            "submit_prs": 3,
+            "submit_lines": 552,
+            "received_reviews": 13,
+            "rated_prs": 3,
+            "poor_prs": 1,
+            "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -40041,21 +40353,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 1
-          },
-          {
-            "name": "zhuofanshen",
-            "submit_prs": 2,
-            "submit_lines": 66,
-            "received_reviews": 3,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 1,
-            "review_comments": 0,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
           },
           {
             "name": "caoshuyang",
@@ -40164,14 +40461,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -50345,14 +50642,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -53396,14 +53693,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       }
@@ -53464,15 +53761,109 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 44,
-          "lines": 17216,
-          "reviewComments": 138,
-          "ratedPrs": 40,
-          "averageScore": 3.02,
-          "poorPrs": 5,
+          "mergedPrs": 45,
+          "lines": 17702,
+          "reviewComments": 148,
+          "ratedPrs": 41,
+          "averageScore": 3.01,
+          "poorPrs": 6,
           "excellentPrs": 13
         },
         "prs": [
+          {
+            "id": 397,
+            "title": "[feat] MXFP8 utilizes dual-axis quantization with compatibility for activation checkpoint",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-07-24T09:11:23+08:00",
+            "lines": 486,
+            "reviews": 10,
+            "score": 2.9,
+            "reviewer": "panchao-gitcode",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/397",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:19",
+                "body": "请增加下内存报告，修改前后内存变化",
+                "createdAt": "2026-07-20T17:44:40+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mxfp8_grouped_mm.py:62",
+                "body": "dual-axis 开启、AC 开启且未 compile 时，normal forward 走 single-axis，而 recomputation forward 走 dual-axis；GMM 的 weight 路径也存在同样差异。代码注释声称两次 forward 使用相同量化路径，但实际并不一致。即使 scale_alg=1 设计上应等价，也需要在 A5 上验证量化结果、输出、grad、MoE 路由及 loss；否则 checkpoint 重计算可能得到不同值并产生错误梯度。PyTorch 对 checkpoint 的要求也是重计算函数应与原 forward 保持一致。",
+                "createdAt": "2026-07-20T19:22:28+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:147",
+                "body": "AC 的 normal-forward 分支把 x/weight 直接挂到 ctx.x/ctx.w，绕过了 ctx.save_for_backward 的 saved-tensor hooks 和版本检查。非 reentrant activation checkpoint 无法释放这些强引用，等于保留完整激活，可能抵消 AC 的显存收益甚至导致 OOM",
+                "createdAt": "2026-07-20T19:23:34+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:72",
+                "body": "_run_fn_with_dynamo_disabled 原本带有 @torch._disable_dynamo，这里取 __wrapped__ 后用未装饰函数替换，改变了 PyTorch checkpoint 的 compile 配置。最小 probe 已确认 patch 后 recompute 会被 Dynamo 捕获；同时该 patch 在 import torchtitan_npu 时无条件生效，即使 MXFP8 未启用也会影响所有 AC 路径，这里改动符合预期吗？",
+                "createdAt": "2026-07-20T19:47:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/__init__.py:79",
+                "body": "是不是需要补一个双轴量化开启前后的精度比对",
+                "createdAt": "2026-07-20T22:38:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/config/configs.py:181",
+                "body": "这个配置不适合放在TrainingConfig，需要考虑移到ao_npu内部通过NpuQuantizeConvert对外配置，可在后续PR提供。 本PR合入建议直接默认使能双轴量化，删除配置。",
+                "createdAt": "2026-07-22T11:37:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/entry.py:43",
+                "body": "这块代码可以想办法移除么，在低精度convert替换的流程里去感知环境变量",
+                "createdAt": "2026-07-22T17:16:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:126",
+                "body": "mxfp8_dual_axis_forward=False 时，forward 确实是单轴，但 backward 的 grad 仍无条件调用双轴量化。与 PR 描述中“默认关闭保持原有 single-axis 行为”不一致，也意味着关闭开关无法回退新算子。",
+                "createdAt": "2026-07-22T17:50:42+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_ac_config.py:93",
+                "body": "compile.enable=True 不代表 model 一定被 compile，实际还要检查 \"model\" in config.compile.components。例如只 compile loss 时，当前逻辑仍会让 MXFP8 AC 路径退回 backward 重新量化，优化静默失效。这里建议记录 config.compile.enable and \"model\" in config.compile.components。",
+                "createdAt": "2026-07-22T17:52:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:135",
+                "body": "这里在 ctx.saved_tensors 解包前就 pop stack，但非重入 checkpoint 的重计算正是由 saved tensor 解包触发的。首个 backward 会先 pop 空 stack，随后 line 144 才触发 recompute 并 push，当前分支却继续重新量化，导致数据遗留给下一个 linear/下一 step，进而使用错误的 x/weight 计算梯度。最小 probe 已复现 stack 残留及梯度错误。请像 Grouped-MM backward 一样，先解包 ctx.saved_tensors 触发当前轮重计算，再 pop 当前轮数据。",
+                "createdAt": "2026-07-22T17:56:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-07-23T22:29:48+08:00"
+              }
+            ]
+          },
           {
             "id": 456,
             "title": "[feat] Precompute DeepSeek V4 NPU RoPE cache",
@@ -55496,12 +55887,27 @@
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 47,
+            "review_comments": 49,
             "scored_prs": 10,
             "scored_poor": 2,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 22
+            "review_prs": 23
+          },
+          {
+            "name": "depeng1994",
+            "submit_prs": 3,
+            "submit_lines": 1885,
+            "received_reviews": 6,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 2,
+            "review_comments": 21,
+            "scored_prs": 5,
+            "scored_poor": 1,
+            "scored_excellent": 2,
+            "nonstandard_prs": 0,
+            "review_prs": 10
           },
           {
             "name": "zzyyjj012",
@@ -55519,21 +55925,6 @@
             "review_prs": 7
           },
           {
-            "name": "depeng1994",
-            "submit_prs": 3,
-            "submit_lines": 1885,
-            "received_reviews": 6,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 2,
-            "review_comments": 19,
-            "scored_prs": 5,
-            "scored_poor": 1,
-            "scored_excellent": 2,
-            "nonstandard_prs": 0,
-            "review_prs": 9
-          },
-          {
             "name": "lrwei0709",
             "submit_prs": 1,
             "submit_lines": 15,
@@ -55547,6 +55938,21 @@
             "scored_excellent": 4,
             "nonstandard_prs": 1,
             "review_prs": 4
+          },
+          {
+            "name": "panchao-gitcode",
+            "submit_prs": 4,
+            "submit_lines": 1341,
+            "received_reviews": 8,
+            "rated_prs": 4,
+            "poor_prs": 0,
+            "excellent_prs": 2,
+            "review_comments": 11,
+            "scored_prs": 2,
+            "scored_poor": 1,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 6
           },
           {
             "name": "hitwdy",
@@ -55575,21 +55981,6 @@
             "scored_prs": 5,
             "scored_poor": 0,
             "scored_excellent": 5,
-            "nonstandard_prs": 1,
-            "review_prs": 5
-          },
-          {
-            "name": "panchao-gitcode",
-            "submit_prs": 4,
-            "submit_lines": 1341,
-            "received_reviews": 8,
-            "rated_prs": 4,
-            "poor_prs": 0,
-            "excellent_prs": 2,
-            "review_comments": 5,
-            "scored_prs": 1,
-            "scored_poor": 0,
-            "scored_excellent": 0,
             "nonstandard_prs": 1,
             "review_prs": 5
           },
@@ -55661,6 +56052,21 @@
             "rated_prs": 2,
             "poor_prs": 1,
             "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
+            "name": "zhuofanshen",
+            "submit_prs": 3,
+            "submit_lines": 552,
+            "received_reviews": 13,
+            "rated_prs": 3,
+            "poor_prs": 1,
+            "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -55757,21 +56163,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 1
-          },
-          {
-            "name": "zhuofanshen",
-            "submit_prs": 2,
-            "submit_lines": 66,
-            "received_reviews": 3,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 1,
-            "review_comments": 0,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
           },
           {
             "name": "caoshuyang",
@@ -55880,14 +56271,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       },
@@ -68823,14 +69214,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       }
@@ -68891,15 +69282,109 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 338,
-          "lines": 289441,
-          "reviewComments": 954,
-          "ratedPrs": 250,
+          "mergedPrs": 339,
+          "lines": 289927,
+          "reviewComments": 964,
+          "ratedPrs": 251,
           "averageScore": 3.02,
-          "poorPrs": 15,
+          "poorPrs": 16,
           "excellentPrs": 51
         },
         "prs": [
+          {
+            "id": 397,
+            "title": "[feat] MXFP8 utilizes dual-axis quantization with compatibility for activation checkpoint",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-07-24T09:11:23+08:00",
+            "lines": 486,
+            "reviews": 10,
+            "score": 2.9,
+            "reviewer": "panchao-gitcode",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/397",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:19",
+                "body": "请增加下内存报告，修改前后内存变化",
+                "createdAt": "2026-07-20T17:44:40+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mxfp8_grouped_mm.py:62",
+                "body": "dual-axis 开启、AC 开启且未 compile 时，normal forward 走 single-axis，而 recomputation forward 走 dual-axis；GMM 的 weight 路径也存在同样差异。代码注释声称两次 forward 使用相同量化路径，但实际并不一致。即使 scale_alg=1 设计上应等价，也需要在 A5 上验证量化结果、输出、grad、MoE 路由及 loss；否则 checkpoint 重计算可能得到不同值并产生错误梯度。PyTorch 对 checkpoint 的要求也是重计算函数应与原 forward 保持一致。",
+                "createdAt": "2026-07-20T19:22:28+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:147",
+                "body": "AC 的 normal-forward 分支把 x/weight 直接挂到 ctx.x/ctx.w，绕过了 ctx.save_for_backward 的 saved-tensor hooks 和版本检查。非 reentrant activation checkpoint 无法释放这些强引用，等于保留完整激活，可能抵消 AC 的显存收益甚至导致 OOM",
+                "createdAt": "2026-07-20T19:23:34+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchao_npu/activation_checkpoint_state.py:72",
+                "body": "_run_fn_with_dynamo_disabled 原本带有 @torch._disable_dynamo，这里取 __wrapped__ 后用未装饰函数替换，改变了 PyTorch checkpoint 的 compile 配置。最小 probe 已确认 patch 后 recompute 会被 Dynamo 捕获；同时该 patch 在 import torchtitan_npu 时无条件生效，即使 MXFP8 未启用也会影响所有 AC 路径，这里改动符合预期吗？",
+                "createdAt": "2026-07-20T19:47:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/__init__.py:79",
+                "body": "是不是需要补一个双轴量化开启前后的精度比对",
+                "createdAt": "2026-07-20T22:38:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/config/configs.py:181",
+                "body": "这个配置不适合放在TrainingConfig，需要考虑移到ao_npu内部通过NpuQuantizeConvert对外配置，可在后续PR提供。 本PR合入建议直接默认使能双轴量化，删除配置。",
+                "createdAt": "2026-07-22T11:37:47+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/entry.py:43",
+                "body": "这块代码可以想办法移除么，在低精度convert替换的流程里去感知环境变量",
+                "createdAt": "2026-07-22T17:16:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:126",
+                "body": "mxfp8_dual_axis_forward=False 时，forward 确实是单轴，但 backward 的 grad 仍无条件调用双轴量化。与 PR 描述中“默认关闭保持原有 single-axis 行为”不一致，也意味着关闭开关无法回退新算子。",
+                "createdAt": "2026-07-22T17:50:42+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_ac_config.py:93",
+                "body": "compile.enable=True 不代表 model 一定被 compile，实际还要检查 \"model\" in config.compile.components。例如只 compile loss 时，当前逻辑仍会让 MXFP8 AC 路径退回 backward 重新量化，优化静默失效。这里建议记录 config.compile.enable and \"model\" in config.compile.components。",
+                "createdAt": "2026-07-22T17:52:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchao_npu/mx_linear.py:135",
+                "body": "这里在 ctx.saved_tensors 解包前就 pop stack，但非重入 checkpoint 的重计算正是由 saved tensor 解包触发的。首个 backward 会先 pop 空 stack，随后 line 144 才触发 recompute 并 push，当前分支却继续重新量化，导致数据遗留给下一个 linear/下一 step，进而使用错误的 x/weight 计算梯度。最小 probe 已复现 stack 残留及梯度错误。请像 Grouped-MM backward 一样，先解包 ctx.saved_tensors 触发当前轮重计算，再 pop 当前轮数据。",
+                "createdAt": "2026-07-22T17:56:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9 评价意见：整体质量表现良好，验证的充分性与覆盖面上略有欠缺 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-07-23T22:29:48+08:00"
+              }
+            ]
+          },
           {
             "id": 456,
             "title": "[feat] Precompute DeepSeek V4 NPU RoPE cache",
@@ -83202,12 +83687,12 @@
             "rated_prs": 22,
             "poor_prs": 0,
             "excellent_prs": 5,
-            "review_comments": 329,
+            "review_comments": 331,
             "scored_prs": 64,
             "scored_poor": 6,
             "scored_excellent": 13,
             "nonstandard_prs": 18,
-            "review_prs": 114
+            "review_prs": 115
           },
           {
             "name": "lrwei0709",
@@ -83232,12 +83717,12 @@
             "rated_prs": 8,
             "poor_prs": 0,
             "excellent_prs": 3,
-            "review_comments": 111,
-            "scored_prs": 29,
-            "scored_poor": 0,
+            "review_comments": 117,
+            "scored_prs": 30,
+            "scored_poor": 1,
             "scored_excellent": 7,
             "nonstandard_prs": 7,
-            "review_prs": 48
+            "review_prs": 49
           },
           {
             "name": "depeng1994",
@@ -83247,12 +83732,12 @@
             "rated_prs": 4,
             "poor_prs": 0,
             "excellent_prs": 2,
-            "review_comments": 113,
+            "review_comments": 115,
             "scored_prs": 14,
             "scored_poor": 3,
             "scored_excellent": 3,
             "nonstandard_prs": 11,
-            "review_prs": 50
+            "review_prs": 51
           },
           {
             "name": "mystri",
@@ -83541,11 +84026,11 @@
           },
           {
             "name": "zhuofanshen",
-            "submit_prs": 4,
-            "submit_lines": 1228,
-            "received_reviews": 16,
-            "rated_prs": 3,
-            "poor_prs": 0,
+            "submit_prs": 5,
+            "submit_lines": 1714,
+            "received_reviews": 26,
+            "rated_prs": 4,
+            "poor_prs": 1,
             "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
@@ -83886,14 +84371,14 @@
           }
         ],
         "lastSync": {
-          "id": 52,
+          "id": 53,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-07-26T10:58:17.040498+08:00",
-          "finished_at": "2026-07-26T10:58:23.704923+08:00",
-          "window_start": "2026-07-23T00:00:00+08:00",
-          "window_end": "2026-07-24T00:00:00+08:00",
+          "started_at": "2026-07-26T10:58:33.863368+08:00",
+          "finished_at": "2026-07-26T10:58:43.340272+08:00",
+          "window_start": "2026-07-24T00:00:00+08:00",
+          "window_end": "2026-07-25T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 1,
           "error": null
         }
       }
