@@ -34,9 +34,19 @@ export GITCODE_API_TOKEN="your-token"
 .venv/bin/python scripts/daily_refresh_and_push.py --once --dry-run
 ```
 
-放到 tmux 常驻：
+日更进程由现有 PM2 服务栈托管。启动或恢复全部服务：
 
 ```bash
-tmux new -s review-board-daily -c /mnt/workspace/work/white-box-code-review \
-  '.venv/bin/python scripts/daily_refresh_and_push.py 2>&1 | tee -a data/daily_refresh.log'
+/mnt/workspace/work/solution-design/cloudcli-services/start.sh
 ```
+
+查看状态和日志：
+
+```bash
+PM2_HOME=/home/developer/.pm2-cloudcli \
+  /home/developer/.nvm/versions/node/v22.22.3/bin/pm2 status review-board-daily
+tail -f /home/developer/.cloudcli-stack/logs/review-board-daily.out.log
+```
+
+PM2 会在进程异常退出后自动拉起它。`bootstrap-home.sh` 和 CodeArts
+启动入口都会调用上述服务启动脚本，用于环境重启后的恢复。
