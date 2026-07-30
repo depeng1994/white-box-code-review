@@ -4,12 +4,32 @@ import tempfile
 import unittest
 from datetime import datetime
 from pathlib import Path
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 from scripts import daily_refresh_and_push
 
 
 class DailyRefreshTest(unittest.TestCase):
+    def test_default_runner_removes_pm2_node_ipc_environment(self) -> None:
+        with (
+            patch.dict(
+                daily_refresh_and_push.os.environ,
+                {
+                    "NODE_CHANNEL_FD": "3",
+                    "NODE_CHANNEL_SERIALIZATION_MODE": "json",
+                },
+            ),
+            patch.object(daily_refresh_and_push.subprocess, "run") as run,
+        ):
+            run.return_value.stdout = ""
+
+            daily_refresh_and_push.default_runner(["node", "--check", "demo/app.js"], Path("."))
+
+        child_env = run.call_args.kwargs["env"]
+        self.assertNotIn("NODE_CHANNEL_FD", child_env)
+        self.assertNotIn("NODE_CHANNEL_SERIALIZATION_MODE", child_env)
+
     def test_seconds_until_next_midnight_uses_local_next_day(self) -> None:
         current = datetime(2026, 6, 16, 23, 59, 30, tzinfo=ZoneInfo("Asia/Shanghai"))
 

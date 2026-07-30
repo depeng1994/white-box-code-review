@@ -57,9 +57,15 @@ def seconds_until_next_midnight(current: datetime | None = None) -> float:
 
 def default_runner(cmd: list[str], cwd: Path) -> str:
     log("$ " + " ".join(cmd))
+    child_env = os.environ.copy()
+    # PM2 exposes its Node IPC channel to the shell wrapper. Passing that stale
+    # descriptor to a nested Node process makes libuv abort during startup.
+    child_env.pop("NODE_CHANNEL_FD", None)
+    child_env.pop("NODE_CHANNEL_SERIALIZATION_MODE", None)
     completed = subprocess.run(
         cmd,
         cwd=cwd,
+        env=child_env,
         check=True,
         text=True,
         stdout=subprocess.PIPE,
