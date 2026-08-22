@@ -117,15 +117,349 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 23,
-          "lines": 12796,
-          "reviewComments": 95,
-          "ratedPrs": 23,
+          "mergedPrs": 27,
+          "lines": 15597,
+          "reviewComments": 130,
+          "ratedPrs": 26,
           "averageScore": 3.01,
-          "poorPrs": 2,
-          "excellentPrs": 4
+          "poorPrs": 3,
+          "excellentPrs": 5
         },
         "prs": [
+          {
+            "id": 530,
+            "title": "[feat]: Backport pre-W2 router score absorption",
+            "author": "mystri",
+            "mergedAt": "2026-08-22T21:39:49+08:00",
+            "lines": 1703,
+            "reviews": 21,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/530",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:16",
+                "body": "名字需要修改，cann->ascendc",
+                "createdAt": "2026-08-18T17:40:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:4",
+                "body": "更新上游PR，记得刷新对应issue：https://gitcode.com/cann/torchtitan-npu/issues/104",
+                "createdAt": "2026-08-18T18:01:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": ".ci/smoke_test.sh:58",
+                "body": "更新下pr描述，格式有问题",
+                "createdAt": "2026-08-19T21:46:10+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:405",
+                "body": "你这对所有模型（DSV3、qwen3、gpt_oss、DSV4、DSV3.2）都会生效啊，为啥PR描述里说upstream DSV3 不被全局改写？check一下",
+                "createdAt": "2026-08-20T09:04:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:368",
+                "body": "这里修改了bf16，PR里提供一下修改前后的精度曲线",
+                "createdAt": "2026-08-20T09:14:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:257",
+                "body": "这个地方能不能考虑整合到dispatch中，用一套流程，不要写if/else。如果可能，甚至可以作为TokenDispatcher基类上的配置项，保留原本代码确保torchtitan原有流程（可能涉及训推一致）功能正常",
+                "createdAt": "2026-08-20T11:24:37+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:226",
+                "body": "直接复用上游RoutedExperts.init，只增加字段是不是更好",
+                "createdAt": "2026-08-20T14:19:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:298",
+                "body": "按照正常的方式patch会有什么问题",
+                "createdAt": "2026-08-21T11:22:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:206",
+                "body": "这个地方能不能用`self._permute`解决，后续替换融合算子也方便",
+                "createdAt": "2026-08-21T11:24:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:307",
+                "body": "这个地方能不能直接调用LocalTokenDispatcher的combine？",
+                "createdAt": "2026-08-21T11:27:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:218",
+                "body": "topk_scores_experts_sorted_N / routed_scores_R会同时被用到吗",
+                "createdAt": "2026-08-21T11:29:20+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:275",
+                "body": "能不能按照完整的类进行替换，继承+覆写forward+直接替换类",
+                "createdAt": "2026-08-21T11:31:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:378",
+                "body": "这个地方是不是不要写死，可能应该参考swiglu_limit增加一个参数？",
+                "createdAt": "2026-08-21T11:35:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:403",
+                "body": "能否考虑直接替换类，像其他地方一样",
+                "createdAt": "2026-08-21T11:35:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "scripts/run_train.sh:62",
+                "body": "刷新下代码基线，这些部分应该已经被去掉了",
+                "createdAt": "2026-08-22T09:32:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:32",
+                "body": "要不要考虑把选项和对应的值写在一行里？",
+                "createdAt": "2026-08-22T09:37:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:370",
+                "body": "可以去掉这个hasattr么",
+                "createdAt": "2026-08-22T09:39:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:273",
+                "body": "可以直接写成一个inner_experts调用",
+                "createdAt": "2026-08-22T09:40:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:57",
+                "body": "去掉这层封装，我们要求替换patch的时候直接写完整路径",
+                "createdAt": "2026-08-22T10:05:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:339",
+                "body": "避免使用这种_install_dispatcher封装，直接替换",
+                "createdAt": "2026-08-22T10:07:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:257",
+                "body": "别抄这一大段，用super()._permute",
+                "createdAt": "2026-08-22T18:48:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 608,
+            "title": "[feat] use NPU MoE rerouting in EP token dispatcher override",
+            "author": "sun_xuexin",
+            "mergedAt": "2026-08-22T18:57:42+08:00",
+            "lines": 310,
+            "reviews": 5,
+            "score": 3.0,
+            "reviewer": "lrwei0709",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/608",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:103",
+                "body": "严重(S1): forward 只有 3 个输入，但这里返回了 6 个梯度位；autograd 会判定返回值个数不匹配，EP>1 combine 的反向路径会直接失败。",
+                "createdAt": "2026-08-20T19:28:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:57",
+                "body": "内部实现，改成_NPUMoeTokenUnpermute吧，下面也一样",
+                "createdAt": "2026-08-20T21:02:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:120",
+                "body": "override分支用不到per_token_scales，直接删掉吧，后续调用点也同步删掉",
+                "createdAt": "2026-08-20T22:45:21+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:18",
+                "body": "对外脚本和冒烟用例增加使能，增加冒烟默认compile",
+                "createdAt": "2026-08-21T17:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/ops/ascendc/moe_re_routing.py:1",
+                "body": "文件名跟moe_dispatch.py统一一下吧",
+                "createdAt": "2026-08-22T16:12:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:27:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 616,
+            "title": "【feat】支持 Qwen 3.6 CP",
+            "author": "botcanlearn",
+            "mergedAt": "2026-08-22T17:58:29+08:00",
+            "lines": 298,
+            "reviews": 5,
+            "score": 2.9,
+            "reviewer": "lrwei0709",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/616",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:20",
+                "body": "严重(S1): 这里把 causal mask 固定为 2048，但 long-text 配置把 seq_len 提到 32768；CP 后单卡仍会处理完整序列，这个常量无法覆盖目标长度，长序列注意力会出现范围不匹配。",
+                "createdAt": "2026-08-22T17:35:35+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/parallelize.py:71",
+                "body": "后续考虑修改：自定义`attention_metadata`的环节后续使用统一接口，避免对model单独挂载forward_pre_hook，后续修改。之后尝试直接复用上游parallelize函数",
+                "createdAt": "2026-08-22T17:46:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:37",
+                "body": "后续考虑修改：ulysses风格的CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:82",
+                "body": "后续考虑修改：ulysses风格CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:94",
+                "body": "后续考虑修改：开启CP后，没开启conv融合算子，这个是不是需要看下？",
+                "createdAt": "2026-08-22T17:50:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T17:53:27+08:00"
+              }
+            ]
+          },
+          {
+            "id": 594,
+            "title": "[feat] GMM replace BMM in Muon optimizer",
+            "author": "YueGuoDora",
+            "mergedAt": "2026-08-22T15:51:28+08:00",
+            "lines": 490,
+            "reviews": 4,
+            "score": 3.1,
+            "reviewer": "panchao-gitcode",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/594",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:602",
+                "body": "先做stack，后做pad，可以减少stack的次数",
+                "createdAt": "2026-08-19T20:35:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:731",
+                "body": "这里默认去最大值，那后续完全无法配置？",
+                "createdAt": "2026-08-20T19:42:22+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:486",
+                "body": "这里注释的2-4个是不是不对",
+                "createdAt": "2026-08-20T19:58:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhaowei1936",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:48",
+                "body": "这几个规格是如何确定的，算法？经验值？",
+                "createdAt": "2026-08-21T09:45:34+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:45:38+08:00"
+              }
+            ]
+          },
           {
             "id": 611,
             "title": "fix: 刷新0轴stride以避免A5 LI算子认为存在0轴不连续问题",
@@ -1367,12 +1701,12 @@
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 23,
-            "scored_prs": 10,
-            "scored_poor": 1,
+            "review_comments": 44,
+            "scored_prs": 12,
+            "scored_poor": 2,
             "scored_excellent": 2,
-            "nonstandard_prs": 0,
-            "review_prs": 5
+            "nonstandard_prs": 1,
+            "review_prs": 7
           },
           {
             "name": "xuyujun",
@@ -1382,12 +1716,12 @@
             "rated_prs": 3,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 17,
+            "review_comments": 21,
             "scored_prs": 3,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 10
+            "review_prs": 12
           },
           {
             "name": "hitwdy",
@@ -1412,12 +1746,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 10,
-            "scored_prs": 5,
+            "review_comments": 16,
+            "scored_prs": 6,
             "scored_poor": 1,
-            "scored_excellent": 2,
+            "scored_excellent": 3,
             "nonstandard_prs": 0,
-            "review_prs": 7
+            "review_prs": 10
           },
           {
             "name": "Messi8",
@@ -1427,12 +1761,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 11,
+            "review_comments": 13,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 10
+            "review_prs": 12
           },
           {
             "name": "depeng1994",
@@ -1442,12 +1776,27 @@
             "rated_prs": 1,
             "poor_prs": 0,
             "excellent_prs": 1,
-            "review_comments": 7,
+            "review_comments": 8,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 5
+            "review_prs": 6
+          },
+          {
+            "name": "zhaowei1936",
+            "submit_prs": 3,
+            "submit_lines": 87,
+            "received_reviews": 4,
+            "rated_prs": 3,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 1,
+            "scored_prs": 1,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 1
           },
           {
             "name": "zzyyjj012",
@@ -1463,21 +1812,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 2
-          },
-          {
-            "name": "zhaowei1936",
-            "submit_prs": 3,
-            "submit_lines": 87,
-            "received_reviews": 4,
-            "rated_prs": 3,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 0,
-            "scored_prs": 1,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
           },
           {
             "name": "caoshuyang",
@@ -1510,6 +1844,21 @@
             "review_prs": 1
           },
           {
+            "name": "mystri",
+            "submit_prs": 2,
+            "submit_lines": 4857,
+            "received_reviews": 29,
+            "rated_prs": 1,
+            "poor_prs": 0,
+            "excellent_prs": 1,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
             "name": "zcklllyao",
             "submit_prs": 2,
             "submit_lines": 826,
@@ -1525,13 +1874,13 @@
             "review_prs": 0
           },
           {
-            "name": "rui-zhang",
+            "name": "sun_xuexin",
             "submit_prs": 2,
-            "submit_lines": 70,
-            "received_reviews": 5,
+            "submit_lines": 602,
+            "received_reviews": 7,
             "rated_prs": 2,
             "poor_prs": 0,
-            "excellent_prs": 0,
+            "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -1540,13 +1889,13 @@
             "review_prs": 0
           },
           {
-            "name": "mystri",
-            "submit_prs": 1,
-            "submit_lines": 3154,
-            "received_reviews": 8,
-            "rated_prs": 1,
+            "name": "rui-zhang",
+            "submit_prs": 2,
+            "submit_lines": 70,
+            "received_reviews": 5,
+            "rated_prs": 2,
             "poor_prs": 0,
-            "excellent_prs": 1,
+            "excellent_prs": 0,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -1585,13 +1934,28 @@
             "review_prs": 0
           },
           {
-            "name": "sun_xuexin",
+            "name": "YueGuoDora",
             "submit_prs": 1,
-            "submit_lines": 292,
-            "received_reviews": 2,
+            "submit_lines": 490,
+            "received_reviews": 4,
             "rated_prs": 1,
             "poor_prs": 0,
             "excellent_prs": 1,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
+            "name": "botcanlearn",
+            "submit_prs": 1,
+            "submit_lines": 298,
+            "received_reviews": 5,
+            "rated_prs": 1,
+            "poor_prs": 1,
+            "excellent_prs": 0,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -1661,14 +2025,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -3429,14 +3793,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -4821,14 +5185,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -5390,14 +5754,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -6296,14 +6660,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -7293,14 +7657,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -8131,14 +8495,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -9116,14 +9480,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -10428,14 +10792,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -11028,14 +11392,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -12328,14 +12692,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -13835,14 +14199,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -15788,14 +16152,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -17093,14 +17457,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -17798,14 +18162,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -18630,14 +18994,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -19460,14 +19824,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -19733,14 +20097,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -20591,14 +20955,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -21131,14 +21495,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -22260,14 +22624,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -22832,14 +23196,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -23159,14 +23523,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -24077,14 +24441,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -24511,14 +24875,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -25314,14 +25678,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -25552,14 +25916,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -25810,14 +26174,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -26520,14 +26884,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       }
@@ -26593,15 +26957,349 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 66,
-          "lines": 53767,
-          "reviewComments": 304,
-          "ratedPrs": 59,
+          "mergedPrs": 70,
+          "lines": 56568,
+          "reviewComments": 339,
+          "ratedPrs": 62,
           "averageScore": 3.01,
-          "poorPrs": 5,
-          "excellentPrs": 9
+          "poorPrs": 6,
+          "excellentPrs": 10
         },
         "prs": [
+          {
+            "id": 530,
+            "title": "[feat]: Backport pre-W2 router score absorption",
+            "author": "mystri",
+            "mergedAt": "2026-08-22T21:39:49+08:00",
+            "lines": 1703,
+            "reviews": 21,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/530",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:16",
+                "body": "名字需要修改，cann->ascendc",
+                "createdAt": "2026-08-18T17:40:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:4",
+                "body": "更新上游PR，记得刷新对应issue：https://gitcode.com/cann/torchtitan-npu/issues/104",
+                "createdAt": "2026-08-18T18:01:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": ".ci/smoke_test.sh:58",
+                "body": "更新下pr描述，格式有问题",
+                "createdAt": "2026-08-19T21:46:10+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:405",
+                "body": "你这对所有模型（DSV3、qwen3、gpt_oss、DSV4、DSV3.2）都会生效啊，为啥PR描述里说upstream DSV3 不被全局改写？check一下",
+                "createdAt": "2026-08-20T09:04:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:368",
+                "body": "这里修改了bf16，PR里提供一下修改前后的精度曲线",
+                "createdAt": "2026-08-20T09:14:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:257",
+                "body": "这个地方能不能考虑整合到dispatch中，用一套流程，不要写if/else。如果可能，甚至可以作为TokenDispatcher基类上的配置项，保留原本代码确保torchtitan原有流程（可能涉及训推一致）功能正常",
+                "createdAt": "2026-08-20T11:24:37+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:226",
+                "body": "直接复用上游RoutedExperts.init，只增加字段是不是更好",
+                "createdAt": "2026-08-20T14:19:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:298",
+                "body": "按照正常的方式patch会有什么问题",
+                "createdAt": "2026-08-21T11:22:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:206",
+                "body": "这个地方能不能用`self._permute`解决，后续替换融合算子也方便",
+                "createdAt": "2026-08-21T11:24:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:307",
+                "body": "这个地方能不能直接调用LocalTokenDispatcher的combine？",
+                "createdAt": "2026-08-21T11:27:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:218",
+                "body": "topk_scores_experts_sorted_N / routed_scores_R会同时被用到吗",
+                "createdAt": "2026-08-21T11:29:20+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:275",
+                "body": "能不能按照完整的类进行替换，继承+覆写forward+直接替换类",
+                "createdAt": "2026-08-21T11:31:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:378",
+                "body": "这个地方是不是不要写死，可能应该参考swiglu_limit增加一个参数？",
+                "createdAt": "2026-08-21T11:35:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:403",
+                "body": "能否考虑直接替换类，像其他地方一样",
+                "createdAt": "2026-08-21T11:35:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "scripts/run_train.sh:62",
+                "body": "刷新下代码基线，这些部分应该已经被去掉了",
+                "createdAt": "2026-08-22T09:32:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:32",
+                "body": "要不要考虑把选项和对应的值写在一行里？",
+                "createdAt": "2026-08-22T09:37:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:370",
+                "body": "可以去掉这个hasattr么",
+                "createdAt": "2026-08-22T09:39:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:273",
+                "body": "可以直接写成一个inner_experts调用",
+                "createdAt": "2026-08-22T09:40:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:57",
+                "body": "去掉这层封装，我们要求替换patch的时候直接写完整路径",
+                "createdAt": "2026-08-22T10:05:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:339",
+                "body": "避免使用这种_install_dispatcher封装，直接替换",
+                "createdAt": "2026-08-22T10:07:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:257",
+                "body": "别抄这一大段，用super()._permute",
+                "createdAt": "2026-08-22T18:48:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 608,
+            "title": "[feat] use NPU MoE rerouting in EP token dispatcher override",
+            "author": "sun_xuexin",
+            "mergedAt": "2026-08-22T18:57:42+08:00",
+            "lines": 310,
+            "reviews": 5,
+            "score": 3.0,
+            "reviewer": "lrwei0709",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/608",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:103",
+                "body": "严重(S1): forward 只有 3 个输入，但这里返回了 6 个梯度位；autograd 会判定返回值个数不匹配，EP>1 combine 的反向路径会直接失败。",
+                "createdAt": "2026-08-20T19:28:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:57",
+                "body": "内部实现，改成_NPUMoeTokenUnpermute吧，下面也一样",
+                "createdAt": "2026-08-20T21:02:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:120",
+                "body": "override分支用不到per_token_scales，直接删掉吧，后续调用点也同步删掉",
+                "createdAt": "2026-08-20T22:45:21+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:18",
+                "body": "对外脚本和冒烟用例增加使能，增加冒烟默认compile",
+                "createdAt": "2026-08-21T17:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/ops/ascendc/moe_re_routing.py:1",
+                "body": "文件名跟moe_dispatch.py统一一下吧",
+                "createdAt": "2026-08-22T16:12:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:27:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 616,
+            "title": "【feat】支持 Qwen 3.6 CP",
+            "author": "botcanlearn",
+            "mergedAt": "2026-08-22T17:58:29+08:00",
+            "lines": 298,
+            "reviews": 5,
+            "score": 2.9,
+            "reviewer": "lrwei0709",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/616",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:20",
+                "body": "严重(S1): 这里把 causal mask 固定为 2048，但 long-text 配置把 seq_len 提到 32768；CP 后单卡仍会处理完整序列，这个常量无法覆盖目标长度，长序列注意力会出现范围不匹配。",
+                "createdAt": "2026-08-22T17:35:35+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/parallelize.py:71",
+                "body": "后续考虑修改：自定义`attention_metadata`的环节后续使用统一接口，避免对model单独挂载forward_pre_hook，后续修改。之后尝试直接复用上游parallelize函数",
+                "createdAt": "2026-08-22T17:46:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:37",
+                "body": "后续考虑修改：ulysses风格的CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:82",
+                "body": "后续考虑修改：ulysses风格CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:94",
+                "body": "后续考虑修改：开启CP后，没开启conv融合算子，这个是不是需要看下？",
+                "createdAt": "2026-08-22T17:50:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T17:53:27+08:00"
+              }
+            ]
+          },
+          {
+            "id": 594,
+            "title": "[feat] GMM replace BMM in Muon optimizer",
+            "author": "YueGuoDora",
+            "mergedAt": "2026-08-22T15:51:28+08:00",
+            "lines": 490,
+            "reviews": 4,
+            "score": 3.1,
+            "reviewer": "panchao-gitcode",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/594",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:602",
+                "body": "先做stack，后做pad，可以减少stack的次数",
+                "createdAt": "2026-08-19T20:35:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:731",
+                "body": "这里默认去最大值，那后续完全无法配置？",
+                "createdAt": "2026-08-20T19:42:22+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:486",
+                "body": "这里注释的2-4个是不是不对",
+                "createdAt": "2026-08-20T19:58:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhaowei1936",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:48",
+                "body": "这几个规格是如何确定的，算法？经验值？",
+                "createdAt": "2026-08-21T09:45:34+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:45:38+08:00"
+              }
+            ]
+          },
           {
             "id": 611,
             "title": "fix: 刷新0轴stride以避免A5 LI算子认为存在0轴不连续问题",
@@ -30295,12 +30993,12 @@
             "rated_prs": 9,
             "poor_prs": 0,
             "excellent_prs": 1,
-            "review_comments": 111,
+            "review_comments": 115,
             "scored_prs": 16,
             "scored_poor": 3,
             "scored_excellent": 1,
             "nonstandard_prs": 1,
-            "review_prs": 33
+            "review_prs": 35
           },
           {
             "name": "lrwei0709",
@@ -30310,12 +31008,27 @@
             "rated_prs": 3,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 64,
-            "scored_prs": 19,
-            "scored_poor": 1,
+            "review_comments": 85,
+            "scored_prs": 21,
+            "scored_poor": 2,
             "scored_excellent": 3,
-            "nonstandard_prs": 1,
-            "review_prs": 10
+            "nonstandard_prs": 2,
+            "review_prs": 12
+          },
+          {
+            "name": "panchao-gitcode",
+            "submit_prs": 3,
+            "submit_lines": 3384,
+            "received_reviews": 7,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 1,
+            "review_comments": 26,
+            "scored_prs": 8,
+            "scored_poor": 1,
+            "scored_excellent": 4,
+            "nonstandard_prs": 0,
+            "review_prs": 16
           },
           {
             "name": "hitwdy",
@@ -30333,21 +31046,6 @@
             "review_prs": 8
           },
           {
-            "name": "panchao-gitcode",
-            "submit_prs": 3,
-            "submit_lines": 3384,
-            "received_reviews": 7,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 1,
-            "review_comments": 20,
-            "scored_prs": 7,
-            "scored_poor": 1,
-            "scored_excellent": 3,
-            "nonstandard_prs": 0,
-            "review_prs": 13
-          },
-          {
             "name": "depeng1994",
             "submit_prs": 3,
             "submit_lines": 2687,
@@ -30355,12 +31053,12 @@
             "rated_prs": 3,
             "poor_prs": 0,
             "excellent_prs": 2,
-            "review_comments": 24,
+            "review_comments": 25,
             "scored_prs": 1,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 10
+            "review_prs": 11
           },
           {
             "name": "zzyyjj012",
@@ -30400,12 +31098,12 @@
             "rated_prs": 3,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 10,
+            "review_comments": 11,
             "scored_prs": 3,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 5
+            "review_prs": 6
           },
           {
             "name": "Messi8",
@@ -30415,12 +31113,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 12,
+            "review_comments": 14,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 11
+            "review_prs": 13
           },
           {
             "name": "zcklllyao",
@@ -30453,6 +31151,21 @@
             "review_prs": 0
           },
           {
+            "name": "mystri",
+            "submit_prs": 4,
+            "submit_lines": 5315,
+            "received_reviews": 31,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 1,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
             "name": "caoshuyang",
             "submit_prs": 3,
             "submit_lines": 1155,
@@ -30468,12 +31181,12 @@
             "review_prs": 1
           },
           {
-            "name": "mystri",
-            "submit_prs": 3,
-            "submit_lines": 3612,
-            "received_reviews": 10,
-            "rated_prs": 2,
-            "poor_prs": 0,
+            "name": "botcanlearn",
+            "submit_prs": 4,
+            "submit_lines": 882,
+            "received_reviews": 13,
+            "rated_prs": 3,
+            "poor_prs": 1,
             "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
@@ -30498,13 +31211,13 @@
             "review_prs": 0
           },
           {
-            "name": "botcanlearn",
-            "submit_prs": 3,
-            "submit_lines": 584,
-            "received_reviews": 8,
-            "rated_prs": 2,
+            "name": "weixin_69877254",
+            "submit_prs": 2,
+            "submit_lines": 3122,
+            "received_reviews": 36,
+            "rated_prs": 1,
             "poor_prs": 0,
-            "excellent_prs": 1,
+            "excellent_prs": 0,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -30513,13 +31226,13 @@
             "review_prs": 0
           },
           {
-            "name": "weixin_69877254",
+            "name": "sun_xuexin",
             "submit_prs": 2,
-            "submit_lines": 3122,
-            "received_reviews": 36,
-            "rated_prs": 1,
+            "submit_lines": 602,
+            "received_reviews": 7,
+            "rated_prs": 2,
             "poor_prs": 0,
-            "excellent_prs": 0,
+            "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -30618,10 +31331,10 @@
             "review_prs": 0
           },
           {
-            "name": "sun_xuexin",
+            "name": "YueGuoDora",
             "submit_prs": 1,
-            "submit_lines": 292,
-            "received_reviews": 2,
+            "submit_lines": 490,
+            "received_reviews": 4,
             "rated_prs": 1,
             "poor_prs": 0,
             "excellent_prs": 1,
@@ -30724,14 +31437,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -33694,14 +34407,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -37845,14 +38558,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -41863,14 +42576,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -44513,14 +45226,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -46361,14 +47074,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -47342,14 +48055,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -48052,14 +48765,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       }
@@ -48125,15 +48838,349 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 120,
-          "lines": 295389,
-          "reviewComments": 480,
-          "ratedPrs": 96,
+          "mergedPrs": 124,
+          "lines": 298190,
+          "reviewComments": 515,
+          "ratedPrs": 99,
           "averageScore": 3.01,
-          "poorPrs": 11,
-          "excellentPrs": 17
+          "poorPrs": 12,
+          "excellentPrs": 18
         },
         "prs": [
+          {
+            "id": 530,
+            "title": "[feat]: Backport pre-W2 router score absorption",
+            "author": "mystri",
+            "mergedAt": "2026-08-22T21:39:49+08:00",
+            "lines": 1703,
+            "reviews": 21,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/530",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:16",
+                "body": "名字需要修改，cann->ascendc",
+                "createdAt": "2026-08-18T17:40:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:4",
+                "body": "更新上游PR，记得刷新对应issue：https://gitcode.com/cann/torchtitan-npu/issues/104",
+                "createdAt": "2026-08-18T18:01:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": ".ci/smoke_test.sh:58",
+                "body": "更新下pr描述，格式有问题",
+                "createdAt": "2026-08-19T21:46:10+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:405",
+                "body": "你这对所有模型（DSV3、qwen3、gpt_oss、DSV4、DSV3.2）都会生效啊，为啥PR描述里说upstream DSV3 不被全局改写？check一下",
+                "createdAt": "2026-08-20T09:04:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:368",
+                "body": "这里修改了bf16，PR里提供一下修改前后的精度曲线",
+                "createdAt": "2026-08-20T09:14:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:257",
+                "body": "这个地方能不能考虑整合到dispatch中，用一套流程，不要写if/else。如果可能，甚至可以作为TokenDispatcher基类上的配置项，保留原本代码确保torchtitan原有流程（可能涉及训推一致）功能正常",
+                "createdAt": "2026-08-20T11:24:37+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:226",
+                "body": "直接复用上游RoutedExperts.init，只增加字段是不是更好",
+                "createdAt": "2026-08-20T14:19:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:298",
+                "body": "按照正常的方式patch会有什么问题",
+                "createdAt": "2026-08-21T11:22:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:206",
+                "body": "这个地方能不能用`self._permute`解决，后续替换融合算子也方便",
+                "createdAt": "2026-08-21T11:24:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:307",
+                "body": "这个地方能不能直接调用LocalTokenDispatcher的combine？",
+                "createdAt": "2026-08-21T11:27:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:218",
+                "body": "topk_scores_experts_sorted_N / routed_scores_R会同时被用到吗",
+                "createdAt": "2026-08-21T11:29:20+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:275",
+                "body": "能不能按照完整的类进行替换，继承+覆写forward+直接替换类",
+                "createdAt": "2026-08-21T11:31:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:378",
+                "body": "这个地方是不是不要写死，可能应该参考swiglu_limit增加一个参数？",
+                "createdAt": "2026-08-21T11:35:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:403",
+                "body": "能否考虑直接替换类，像其他地方一样",
+                "createdAt": "2026-08-21T11:35:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "scripts/run_train.sh:62",
+                "body": "刷新下代码基线，这些部分应该已经被去掉了",
+                "createdAt": "2026-08-22T09:32:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:32",
+                "body": "要不要考虑把选项和对应的值写在一行里？",
+                "createdAt": "2026-08-22T09:37:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:370",
+                "body": "可以去掉这个hasattr么",
+                "createdAt": "2026-08-22T09:39:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:273",
+                "body": "可以直接写成一个inner_experts调用",
+                "createdAt": "2026-08-22T09:40:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:57",
+                "body": "去掉这层封装，我们要求替换patch的时候直接写完整路径",
+                "createdAt": "2026-08-22T10:05:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:339",
+                "body": "避免使用这种_install_dispatcher封装，直接替换",
+                "createdAt": "2026-08-22T10:07:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:257",
+                "body": "别抄这一大段，用super()._permute",
+                "createdAt": "2026-08-22T18:48:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 608,
+            "title": "[feat] use NPU MoE rerouting in EP token dispatcher override",
+            "author": "sun_xuexin",
+            "mergedAt": "2026-08-22T18:57:42+08:00",
+            "lines": 310,
+            "reviews": 5,
+            "score": 3.0,
+            "reviewer": "lrwei0709",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/608",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:103",
+                "body": "严重(S1): forward 只有 3 个输入，但这里返回了 6 个梯度位；autograd 会判定返回值个数不匹配，EP>1 combine 的反向路径会直接失败。",
+                "createdAt": "2026-08-20T19:28:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:57",
+                "body": "内部实现，改成_NPUMoeTokenUnpermute吧，下面也一样",
+                "createdAt": "2026-08-20T21:02:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:120",
+                "body": "override分支用不到per_token_scales，直接删掉吧，后续调用点也同步删掉",
+                "createdAt": "2026-08-20T22:45:21+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:18",
+                "body": "对外脚本和冒烟用例增加使能，增加冒烟默认compile",
+                "createdAt": "2026-08-21T17:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/ops/ascendc/moe_re_routing.py:1",
+                "body": "文件名跟moe_dispatch.py统一一下吧",
+                "createdAt": "2026-08-22T16:12:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:27:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 616,
+            "title": "【feat】支持 Qwen 3.6 CP",
+            "author": "botcanlearn",
+            "mergedAt": "2026-08-22T17:58:29+08:00",
+            "lines": 298,
+            "reviews": 5,
+            "score": 2.9,
+            "reviewer": "lrwei0709",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/616",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:20",
+                "body": "严重(S1): 这里把 causal mask 固定为 2048，但 long-text 配置把 seq_len 提到 32768；CP 后单卡仍会处理完整序列，这个常量无法覆盖目标长度，长序列注意力会出现范围不匹配。",
+                "createdAt": "2026-08-22T17:35:35+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/parallelize.py:71",
+                "body": "后续考虑修改：自定义`attention_metadata`的环节后续使用统一接口，避免对model单独挂载forward_pre_hook，后续修改。之后尝试直接复用上游parallelize函数",
+                "createdAt": "2026-08-22T17:46:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:37",
+                "body": "后续考虑修改：ulysses风格的CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:82",
+                "body": "后续考虑修改：ulysses风格CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:94",
+                "body": "后续考虑修改：开启CP后，没开启conv融合算子，这个是不是需要看下？",
+                "createdAt": "2026-08-22T17:50:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T17:53:27+08:00"
+              }
+            ]
+          },
+          {
+            "id": 594,
+            "title": "[feat] GMM replace BMM in Muon optimizer",
+            "author": "YueGuoDora",
+            "mergedAt": "2026-08-22T15:51:28+08:00",
+            "lines": 490,
+            "reviews": 4,
+            "score": 3.1,
+            "reviewer": "panchao-gitcode",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/594",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:602",
+                "body": "先做stack，后做pad，可以减少stack的次数",
+                "createdAt": "2026-08-19T20:35:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:731",
+                "body": "这里默认去最大值，那后续完全无法配置？",
+                "createdAt": "2026-08-20T19:42:22+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:486",
+                "body": "这里注释的2-4个是不是不对",
+                "createdAt": "2026-08-20T19:58:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhaowei1936",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:48",
+                "body": "这几个规格是如何确定的，算法？经验值？",
+                "createdAt": "2026-08-21T09:45:34+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:45:38+08:00"
+              }
+            ]
+          },
           {
             "id": 611,
             "title": "fix: 刷新0轴stride以避免A5 LI算子认为存在0轴不连续问题",
@@ -54293,12 +55340,12 @@
             "rated_prs": 11,
             "poor_prs": 0,
             "excellent_prs": 1,
-            "review_comments": 163,
+            "review_comments": 167,
             "scored_prs": 25,
             "scored_poor": 5,
             "scored_excellent": 1,
             "nonstandard_prs": 3,
-            "review_prs": 58
+            "review_prs": 60
           },
           {
             "name": "lrwei0709",
@@ -54308,12 +55355,27 @@
             "rated_prs": 4,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 74,
-            "scored_prs": 29,
-            "scored_poor": 2,
+            "review_comments": 95,
+            "scored_prs": 31,
+            "scored_poor": 3,
             "scored_excellent": 7,
-            "nonstandard_prs": 3,
-            "review_prs": 14
+            "nonstandard_prs": 4,
+            "review_prs": 16
+          },
+          {
+            "name": "panchao-gitcode",
+            "submit_prs": 7,
+            "submit_lines": 4725,
+            "received_reviews": 15,
+            "rated_prs": 6,
+            "poor_prs": 0,
+            "excellent_prs": 3,
+            "review_comments": 43,
+            "scored_prs": 11,
+            "scored_poor": 2,
+            "scored_excellent": 4,
+            "nonstandard_prs": 1,
+            "review_prs": 24
           },
           {
             "name": "depeng1994",
@@ -54323,12 +55385,12 @@
             "rated_prs": 5,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 47,
+            "review_comments": 48,
             "scored_prs": 6,
             "scored_poor": 1,
             "scored_excellent": 2,
             "nonstandard_prs": 0,
-            "review_prs": 21
+            "review_prs": 22
           },
           {
             "name": "zzyyjj012",
@@ -54344,21 +55406,6 @@
             "scored_excellent": 2,
             "nonstandard_prs": 8,
             "review_prs": 17
-          },
-          {
-            "name": "panchao-gitcode",
-            "submit_prs": 7,
-            "submit_lines": 4725,
-            "received_reviews": 15,
-            "rated_prs": 6,
-            "poor_prs": 0,
-            "excellent_prs": 3,
-            "review_comments": 37,
-            "scored_prs": 10,
-            "scored_poor": 2,
-            "scored_excellent": 3,
-            "nonstandard_prs": 1,
-            "review_prs": 21
           },
           {
             "name": "hitwdy",
@@ -54383,12 +55430,12 @@
             "rated_prs": 4,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 19,
+            "review_comments": 20,
             "scored_prs": 7,
             "scored_poor": 1,
             "scored_excellent": 1,
             "nonstandard_prs": 4,
-            "review_prs": 9
+            "review_prs": 10
           },
           {
             "name": "zhong_lin",
@@ -54413,18 +55460,18 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 15,
+            "review_comments": 17,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 14
+            "review_prs": 16
           },
           {
             "name": "mystri",
-            "submit_prs": 5,
-            "submit_lines": 4582,
-            "received_reviews": 21,
+            "submit_prs": 6,
+            "submit_lines": 6285,
+            "received_reviews": 42,
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 1,
@@ -54556,13 +55603,13 @@
             "review_prs": 1
           },
           {
-            "name": "roadnotstop",
-            "submit_prs": 3,
-            "submit_lines": 1032,
-            "received_reviews": 16,
-            "rated_prs": 2,
+            "name": "botcanlearn",
+            "submit_prs": 4,
+            "submit_lines": 882,
+            "received_reviews": 13,
+            "rated_prs": 3,
             "poor_prs": 1,
-            "excellent_prs": 0,
+            "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -54571,13 +55618,13 @@
             "review_prs": 0
           },
           {
-            "name": "botcanlearn",
+            "name": "roadnotstop",
             "submit_prs": 3,
-            "submit_lines": 584,
-            "received_reviews": 8,
+            "submit_lines": 1032,
+            "received_reviews": 16,
             "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 1,
+            "poor_prs": 1,
+            "excellent_prs": 0,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -54614,6 +55661,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 1
+          },
+          {
+            "name": "sun_xuexin",
+            "submit_prs": 2,
+            "submit_lines": 602,
+            "received_reviews": 7,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 1,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
           },
           {
             "name": "gcw_bImVmzsb",
@@ -54721,10 +55783,10 @@
             "review_prs": 0
           },
           {
-            "name": "sun_xuexin",
+            "name": "YueGuoDora",
             "submit_prs": 1,
-            "submit_lines": 292,
-            "received_reviews": 2,
+            "submit_lines": 490,
+            "received_reviews": 4,
             "rated_prs": 1,
             "poor_prs": 0,
             "excellent_prs": 1,
@@ -54872,14 +55934,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -65058,14 +66120,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -68114,14 +69176,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       }
@@ -68187,15 +69249,349 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 120,
-          "lines": 295389,
-          "reviewComments": 480,
-          "ratedPrs": 96,
+          "mergedPrs": 124,
+          "lines": 298190,
+          "reviewComments": 515,
+          "ratedPrs": 99,
           "averageScore": 3.01,
-          "poorPrs": 11,
-          "excellentPrs": 17
+          "poorPrs": 12,
+          "excellentPrs": 18
         },
         "prs": [
+          {
+            "id": 530,
+            "title": "[feat]: Backport pre-W2 router score absorption",
+            "author": "mystri",
+            "mergedAt": "2026-08-22T21:39:49+08:00",
+            "lines": 1703,
+            "reviews": 21,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/530",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:16",
+                "body": "名字需要修改，cann->ascendc",
+                "createdAt": "2026-08-18T17:40:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:4",
+                "body": "更新上游PR，记得刷新对应issue：https://gitcode.com/cann/torchtitan-npu/issues/104",
+                "createdAt": "2026-08-18T18:01:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": ".ci/smoke_test.sh:58",
+                "body": "更新下pr描述，格式有问题",
+                "createdAt": "2026-08-19T21:46:10+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:405",
+                "body": "你这对所有模型（DSV3、qwen3、gpt_oss、DSV4、DSV3.2）都会生效啊，为啥PR描述里说upstream DSV3 不被全局改写？check一下",
+                "createdAt": "2026-08-20T09:04:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:368",
+                "body": "这里修改了bf16，PR里提供一下修改前后的精度曲线",
+                "createdAt": "2026-08-20T09:14:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:257",
+                "body": "这个地方能不能考虑整合到dispatch中，用一套流程，不要写if/else。如果可能，甚至可以作为TokenDispatcher基类上的配置项，保留原本代码确保torchtitan原有流程（可能涉及训推一致）功能正常",
+                "createdAt": "2026-08-20T11:24:37+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:226",
+                "body": "直接复用上游RoutedExperts.init，只增加字段是不是更好",
+                "createdAt": "2026-08-20T14:19:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:298",
+                "body": "按照正常的方式patch会有什么问题",
+                "createdAt": "2026-08-21T11:22:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:206",
+                "body": "这个地方能不能用`self._permute`解决，后续替换融合算子也方便",
+                "createdAt": "2026-08-21T11:24:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:307",
+                "body": "这个地方能不能直接调用LocalTokenDispatcher的combine？",
+                "createdAt": "2026-08-21T11:27:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:218",
+                "body": "topk_scores_experts_sorted_N / routed_scores_R会同时被用到吗",
+                "createdAt": "2026-08-21T11:29:20+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:275",
+                "body": "能不能按照完整的类进行替换，继承+覆写forward+直接替换类",
+                "createdAt": "2026-08-21T11:31:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:378",
+                "body": "这个地方是不是不要写死，可能应该参考swiglu_limit增加一个参数？",
+                "createdAt": "2026-08-21T11:35:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:403",
+                "body": "能否考虑直接替换类，像其他地方一样",
+                "createdAt": "2026-08-21T11:35:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "scripts/run_train.sh:62",
+                "body": "刷新下代码基线，这些部分应该已经被去掉了",
+                "createdAt": "2026-08-22T09:32:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:32",
+                "body": "要不要考虑把选项和对应的值写在一行里？",
+                "createdAt": "2026-08-22T09:37:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:370",
+                "body": "可以去掉这个hasattr么",
+                "createdAt": "2026-08-22T09:39:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:273",
+                "body": "可以直接写成一个inner_experts调用",
+                "createdAt": "2026-08-22T09:40:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:57",
+                "body": "去掉这层封装，我们要求替换patch的时候直接写完整路径",
+                "createdAt": "2026-08-22T10:05:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:339",
+                "body": "避免使用这种_install_dispatcher封装，直接替换",
+                "createdAt": "2026-08-22T10:07:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:257",
+                "body": "别抄这一大段，用super()._permute",
+                "createdAt": "2026-08-22T18:48:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 608,
+            "title": "[feat] use NPU MoE rerouting in EP token dispatcher override",
+            "author": "sun_xuexin",
+            "mergedAt": "2026-08-22T18:57:42+08:00",
+            "lines": 310,
+            "reviews": 5,
+            "score": 3.0,
+            "reviewer": "lrwei0709",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/608",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:103",
+                "body": "严重(S1): forward 只有 3 个输入，但这里返回了 6 个梯度位；autograd 会判定返回值个数不匹配，EP>1 combine 的反向路径会直接失败。",
+                "createdAt": "2026-08-20T19:28:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:57",
+                "body": "内部实现，改成_NPUMoeTokenUnpermute吧，下面也一样",
+                "createdAt": "2026-08-20T21:02:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:120",
+                "body": "override分支用不到per_token_scales，直接删掉吧，后续调用点也同步删掉",
+                "createdAt": "2026-08-20T22:45:21+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:18",
+                "body": "对外脚本和冒烟用例增加使能，增加冒烟默认compile",
+                "createdAt": "2026-08-21T17:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/ops/ascendc/moe_re_routing.py:1",
+                "body": "文件名跟moe_dispatch.py统一一下吧",
+                "createdAt": "2026-08-22T16:12:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:27:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 616,
+            "title": "【feat】支持 Qwen 3.6 CP",
+            "author": "botcanlearn",
+            "mergedAt": "2026-08-22T17:58:29+08:00",
+            "lines": 298,
+            "reviews": 5,
+            "score": 2.9,
+            "reviewer": "lrwei0709",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/616",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:20",
+                "body": "严重(S1): 这里把 causal mask 固定为 2048，但 long-text 配置把 seq_len 提到 32768；CP 后单卡仍会处理完整序列，这个常量无法覆盖目标长度，长序列注意力会出现范围不匹配。",
+                "createdAt": "2026-08-22T17:35:35+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/parallelize.py:71",
+                "body": "后续考虑修改：自定义`attention_metadata`的环节后续使用统一接口，避免对model单独挂载forward_pre_hook，后续修改。之后尝试直接复用上游parallelize函数",
+                "createdAt": "2026-08-22T17:46:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:37",
+                "body": "后续考虑修改：ulysses风格的CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:82",
+                "body": "后续考虑修改：ulysses风格CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:94",
+                "body": "后续考虑修改：开启CP后，没开启conv融合算子，这个是不是需要看下？",
+                "createdAt": "2026-08-22T17:50:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T17:53:27+08:00"
+              }
+            ]
+          },
+          {
+            "id": 594,
+            "title": "[feat] GMM replace BMM in Muon optimizer",
+            "author": "YueGuoDora",
+            "mergedAt": "2026-08-22T15:51:28+08:00",
+            "lines": 490,
+            "reviews": 4,
+            "score": 3.1,
+            "reviewer": "panchao-gitcode",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/594",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:602",
+                "body": "先做stack，后做pad，可以减少stack的次数",
+                "createdAt": "2026-08-19T20:35:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:731",
+                "body": "这里默认去最大值，那后续完全无法配置？",
+                "createdAt": "2026-08-20T19:42:22+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:486",
+                "body": "这里注释的2-4个是不是不对",
+                "createdAt": "2026-08-20T19:58:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhaowei1936",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:48",
+                "body": "这几个规格是如何确定的，算法？经验值？",
+                "createdAt": "2026-08-21T09:45:34+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:45:38+08:00"
+              }
+            ]
+          },
           {
             "id": 611,
             "title": "fix: 刷新0轴stride以避免A5 LI算子认为存在0轴不连续问题",
@@ -74355,12 +75751,12 @@
             "rated_prs": 11,
             "poor_prs": 0,
             "excellent_prs": 1,
-            "review_comments": 163,
+            "review_comments": 167,
             "scored_prs": 25,
             "scored_poor": 5,
             "scored_excellent": 1,
             "nonstandard_prs": 3,
-            "review_prs": 58
+            "review_prs": 60
           },
           {
             "name": "lrwei0709",
@@ -74370,12 +75766,27 @@
             "rated_prs": 4,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 74,
-            "scored_prs": 29,
-            "scored_poor": 2,
+            "review_comments": 95,
+            "scored_prs": 31,
+            "scored_poor": 3,
             "scored_excellent": 7,
-            "nonstandard_prs": 3,
-            "review_prs": 14
+            "nonstandard_prs": 4,
+            "review_prs": 16
+          },
+          {
+            "name": "panchao-gitcode",
+            "submit_prs": 7,
+            "submit_lines": 4725,
+            "received_reviews": 15,
+            "rated_prs": 6,
+            "poor_prs": 0,
+            "excellent_prs": 3,
+            "review_comments": 43,
+            "scored_prs": 11,
+            "scored_poor": 2,
+            "scored_excellent": 4,
+            "nonstandard_prs": 1,
+            "review_prs": 24
           },
           {
             "name": "depeng1994",
@@ -74385,12 +75796,12 @@
             "rated_prs": 5,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 47,
+            "review_comments": 48,
             "scored_prs": 6,
             "scored_poor": 1,
             "scored_excellent": 2,
             "nonstandard_prs": 0,
-            "review_prs": 21
+            "review_prs": 22
           },
           {
             "name": "zzyyjj012",
@@ -74406,21 +75817,6 @@
             "scored_excellent": 2,
             "nonstandard_prs": 8,
             "review_prs": 17
-          },
-          {
-            "name": "panchao-gitcode",
-            "submit_prs": 7,
-            "submit_lines": 4725,
-            "received_reviews": 15,
-            "rated_prs": 6,
-            "poor_prs": 0,
-            "excellent_prs": 3,
-            "review_comments": 37,
-            "scored_prs": 10,
-            "scored_poor": 2,
-            "scored_excellent": 3,
-            "nonstandard_prs": 1,
-            "review_prs": 21
           },
           {
             "name": "hitwdy",
@@ -74445,12 +75841,12 @@
             "rated_prs": 4,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 19,
+            "review_comments": 20,
             "scored_prs": 7,
             "scored_poor": 1,
             "scored_excellent": 1,
             "nonstandard_prs": 4,
-            "review_prs": 9
+            "review_prs": 10
           },
           {
             "name": "zhong_lin",
@@ -74475,18 +75871,18 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 15,
+            "review_comments": 17,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 14
+            "review_prs": 16
           },
           {
             "name": "mystri",
-            "submit_prs": 5,
-            "submit_lines": 4582,
-            "received_reviews": 21,
+            "submit_prs": 6,
+            "submit_lines": 6285,
+            "received_reviews": 42,
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 1,
@@ -74618,13 +76014,13 @@
             "review_prs": 1
           },
           {
-            "name": "roadnotstop",
-            "submit_prs": 3,
-            "submit_lines": 1032,
-            "received_reviews": 16,
-            "rated_prs": 2,
+            "name": "botcanlearn",
+            "submit_prs": 4,
+            "submit_lines": 882,
+            "received_reviews": 13,
+            "rated_prs": 3,
             "poor_prs": 1,
-            "excellent_prs": 0,
+            "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -74633,13 +76029,13 @@
             "review_prs": 0
           },
           {
-            "name": "botcanlearn",
+            "name": "roadnotstop",
             "submit_prs": 3,
-            "submit_lines": 584,
-            "received_reviews": 8,
+            "submit_lines": 1032,
+            "received_reviews": 16,
             "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 1,
+            "poor_prs": 1,
+            "excellent_prs": 0,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -74676,6 +76072,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 1
+          },
+          {
+            "name": "sun_xuexin",
+            "submit_prs": 2,
+            "submit_lines": 602,
+            "received_reviews": 7,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 1,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
           },
           {
             "name": "gcw_bImVmzsb",
@@ -74783,10 +76194,10 @@
             "review_prs": 0
           },
           {
-            "name": "sun_xuexin",
+            "name": "YueGuoDora",
             "submit_prs": 1,
-            "submit_lines": 292,
-            "received_reviews": 2,
+            "submit_lines": 490,
+            "received_reviews": 4,
             "rated_prs": 1,
             "poor_prs": 0,
             "excellent_prs": 1,
@@ -74934,14 +76345,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       },
@@ -87882,14 +89293,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       }
@@ -87955,15 +89366,349 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 414,
-          "lines": 567614,
-          "reviewComments": 1296,
-          "ratedPrs": 306,
+          "mergedPrs": 418,
+          "lines": 570415,
+          "reviewComments": 1331,
+          "ratedPrs": 309,
           "averageScore": 3.02,
-          "poorPrs": 21,
-          "excellentPrs": 55
+          "poorPrs": 22,
+          "excellentPrs": 56
         },
         "prs": [
+          {
+            "id": 530,
+            "title": "[feat]: Backport pre-W2 router score absorption",
+            "author": "mystri",
+            "mergedAt": "2026-08-22T21:39:49+08:00",
+            "lines": 1703,
+            "reviews": 21,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/530",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:16",
+                "body": "名字需要修改，cann->ascendc",
+                "createdAt": "2026-08-18T17:40:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:4",
+                "body": "更新上游PR，记得刷新对应issue：https://gitcode.com/cann/torchtitan-npu/issues/104",
+                "createdAt": "2026-08-18T18:01:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": ".ci/smoke_test.sh:58",
+                "body": "更新下pr描述，格式有问题",
+                "createdAt": "2026-08-19T21:46:10+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:405",
+                "body": "你这对所有模型（DSV3、qwen3、gpt_oss、DSV4、DSV3.2）都会生效啊，为啥PR描述里说upstream DSV3 不被全局改写？check一下",
+                "createdAt": "2026-08-20T09:04:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:368",
+                "body": "这里修改了bf16，PR里提供一下修改前后的精度曲线",
+                "createdAt": "2026-08-20T09:14:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:257",
+                "body": "这个地方能不能考虑整合到dispatch中，用一套流程，不要写if/else。如果可能，甚至可以作为TokenDispatcher基类上的配置项，保留原本代码确保torchtitan原有流程（可能涉及训推一致）功能正常",
+                "createdAt": "2026-08-20T11:24:37+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:226",
+                "body": "直接复用上游RoutedExperts.init，只增加字段是不是更好",
+                "createdAt": "2026-08-20T14:19:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:298",
+                "body": "按照正常的方式patch会有什么问题",
+                "createdAt": "2026-08-21T11:22:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:206",
+                "body": "这个地方能不能用`self._permute`解决，后续替换融合算子也方便",
+                "createdAt": "2026-08-21T11:24:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:307",
+                "body": "这个地方能不能直接调用LocalTokenDispatcher的combine？",
+                "createdAt": "2026-08-21T11:27:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:218",
+                "body": "topk_scores_experts_sorted_N / routed_scores_R会同时被用到吗",
+                "createdAt": "2026-08-21T11:29:20+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:275",
+                "body": "能不能按照完整的类进行替换，继承+覆写forward+直接替换类",
+                "createdAt": "2026-08-21T11:31:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:378",
+                "body": "这个地方是不是不要写死，可能应该参考swiglu_limit增加一个参数？",
+                "createdAt": "2026-08-21T11:35:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:403",
+                "body": "能否考虑直接替换类，像其他地方一样",
+                "createdAt": "2026-08-21T11:35:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "scripts/run_train.sh:62",
+                "body": "刷新下代码基线，这些部分应该已经被去掉了",
+                "createdAt": "2026-08-22T09:32:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/integration_tests/deepseek_v3_2.py:32",
+                "body": "要不要考虑把选项和对应的值写在一行里？",
+                "createdAt": "2026-08-22T09:37:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:370",
+                "body": "可以去掉这个hasattr么",
+                "createdAt": "2026-08-22T09:39:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/moe.py:273",
+                "body": "可以直接写成一个inner_experts调用",
+                "createdAt": "2026-08-22T09:40:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:57",
+                "body": "去掉这层封装，我们要求替换patch的时候直接写完整路径",
+                "createdAt": "2026-08-22T10:05:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:339",
+                "body": "避免使用这种_install_dispatcher封装，直接替换",
+                "createdAt": "2026-08-22T10:07:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/token_dispatcher.py:257",
+                "body": "别抄这一大段，用super()._permute",
+                "createdAt": "2026-08-22T18:48:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 608,
+            "title": "[feat] use NPU MoE rerouting in EP token dispatcher override",
+            "author": "sun_xuexin",
+            "mergedAt": "2026-08-22T18:57:42+08:00",
+            "lines": 310,
+            "reviews": 5,
+            "score": 3.0,
+            "reviewer": "lrwei0709",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/608",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:103",
+                "body": "严重(S1): forward 只有 3 个输入，但这里返回了 6 个梯度位；autograd 会判定返回值个数不匹配，EP>1 combine 的反向路径会直接失败。",
+                "createdAt": "2026-08-20T19:28:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:57",
+                "body": "内部实现，改成_NPUMoeTokenUnpermute吧，下面也一样",
+                "createdAt": "2026-08-20T21:02:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:120",
+                "body": "override分支用不到per_token_scales，直接删掉吧，后续调用点也同步删掉",
+                "createdAt": "2026-08-20T22:45:21+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/token_dispatcher.py:18",
+                "body": "对外脚本和冒烟用例增加使能，增加冒烟默认compile",
+                "createdAt": "2026-08-21T17:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/ops/ascendc/moe_re_routing.py:1",
+                "body": "文件名跟moe_dispatch.py统一一下吧",
+                "createdAt": "2026-08-22T16:12:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:27:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 616,
+            "title": "【feat】支持 Qwen 3.6 CP",
+            "author": "botcanlearn",
+            "mergedAt": "2026-08-22T17:58:29+08:00",
+            "lines": 298,
+            "reviews": 5,
+            "score": 2.9,
+            "reviewer": "lrwei0709",
+            "level": "待改进",
+            "summary": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/616",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:20",
+                "body": "严重(S1): 这里把 causal mask 固定为 2048，但 long-text 配置把 seq_len 提到 32768；CP 后单卡仍会处理完整序列，这个常量无法覆盖目标长度，长序列注意力会出现范围不匹配。",
+                "createdAt": "2026-08-22T17:35:35+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/parallelize.py:71",
+                "body": "后续考虑修改：自定义`attention_metadata`的环节后续使用统一接口，避免对model单独挂载forward_pre_hook，后续修改。之后尝试直接复用上游parallelize函数",
+                "createdAt": "2026-08-22T17:46:17+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/varlen_attention.py:37",
+                "body": "后续考虑修改：ulysses风格的CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:19+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:82",
+                "body": "后续考虑修改：ulysses风格CP按照上游范式通过ShardingConfig实现，可以参考https://github.com/pytorch/torchtitan/pull/3978",
+                "createdAt": "2026-08-22T17:49:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/override/qwen3_5/gated_delta.py:94",
+                "body": "后续考虑修改：开启CP后，没开启conv融合算子，这个是不是需要看下？",
+                "createdAt": "2026-08-22T17:50:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "lrwei0709",
+                "path": "",
+                "body": "【MR评价】评价分数:2.9, 评价意见：CP当前采用forward侵入式修改实现通信，后续考虑统一成ShardingConfig在框架中表达ulysses语义，可参考[上游方式](https://github.com/pytorch/torchtitan/pull/3978)。当前CP场景未开启conv融合算子，后续考虑修改 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T17:53:27+08:00"
+              }
+            ]
+          },
+          {
+            "id": 594,
+            "title": "[feat] GMM replace BMM in Muon optimizer",
+            "author": "YueGuoDora",
+            "mergedAt": "2026-08-22T15:51:28+08:00",
+            "lines": 490,
+            "reviews": 4,
+            "score": 3.1,
+            "reviewer": "panchao-gitcode",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/594",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "panchao-gitcode",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:602",
+                "body": "先做stack，后做pad，可以减少stack的次数",
+                "createdAt": "2026-08-19T20:35:43+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:731",
+                "body": "这里默认去最大值，那后续完全无法配置？",
+                "createdAt": "2026-08-20T19:42:22+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:486",
+                "body": "这里注释的2-4个是不是不对",
+                "createdAt": "2026-08-20T19:58:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhaowei1936",
+                "path": "torchtitan_npu/patches/optimizer/muon_optimizer.py:48",
+                "body": "这几个规格是如何确定的，算法？经验值？",
+                "createdAt": "2026-08-21T09:45:34+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "panchao-gitcode",
+                "path": "",
+                "body": "【MR评价】评价分数:3.1 评价意见：muon优化器BMM合并GMM，改动合理，性能提升明显，验证充分 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-08-22T15:45:38+08:00"
+              }
+            ]
+          },
           {
             "id": 611,
             "title": "fix: 刷新0轴stride以避免A5 LI算子认为存在0轴不连续问题",
@@ -106402,12 +108147,12 @@
             "rated_prs": 31,
             "poor_prs": 0,
             "excellent_prs": 6,
-            "review_comments": 445,
+            "review_comments": 449,
             "scored_prs": 79,
             "scored_poor": 9,
             "scored_excellent": 14,
             "nonstandard_prs": 21,
-            "review_prs": 150
+            "review_prs": 152
           },
           {
             "name": "lrwei0709",
@@ -106417,12 +108162,12 @@
             "rated_prs": 15,
             "poor_prs": 0,
             "excellent_prs": 5,
-            "review_comments": 168,
-            "scored_prs": 126,
-            "scored_poor": 6,
+            "review_comments": 189,
+            "scored_prs": 128,
+            "scored_poor": 7,
             "scored_excellent": 20,
-            "nonstandard_prs": 52,
-            "review_prs": 41
+            "nonstandard_prs": 53,
+            "review_prs": 43
           },
           {
             "name": "panchao-gitcode",
@@ -106432,12 +108177,12 @@
             "rated_prs": 10,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 143,
-            "scored_prs": 38,
+            "review_comments": 149,
+            "scored_prs": 39,
             "scored_poor": 2,
-            "scored_excellent": 10,
+            "scored_excellent": 11,
             "nonstandard_prs": 7,
-            "review_prs": 64
+            "review_prs": 67
           },
           {
             "name": "depeng1994",
@@ -106447,12 +108192,12 @@
             "rated_prs": 7,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 141,
+            "review_comments": 142,
             "scored_prs": 15,
             "scored_poor": 3,
             "scored_excellent": 3,
             "nonstandard_prs": 11,
-            "review_prs": 62
+            "review_prs": 63
           },
           {
             "name": "hitwdy",
@@ -106486,9 +108231,9 @@
           },
           {
             "name": "mystri",
-            "submit_prs": 40,
-            "submit_lines": 180052,
-            "received_reviews": 175,
+            "submit_prs": 41,
+            "submit_lines": 181755,
+            "received_reviews": 196,
             "rated_prs": 29,
             "poor_prs": 1,
             "excellent_prs": 8,
@@ -106522,12 +108267,12 @@
             "rated_prs": 12,
             "poor_prs": 1,
             "excellent_prs": 0,
-            "review_comments": 35,
+            "review_comments": 36,
             "scored_prs": 25,
             "scored_poor": 1,
             "scored_excellent": 5,
             "nonstandard_prs": 12,
-            "review_prs": 23
+            "review_prs": 24
           },
           {
             "name": "zhanghz1",
@@ -106590,6 +108335,21 @@
             "review_prs": 0
           },
           {
+            "name": "Messi8",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 17,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 16
+          },
+          {
             "name": "dty_30041779",
             "submit_prs": 16,
             "submit_lines": 222,
@@ -106603,21 +108363,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
-          },
-          {
-            "name": "Messi8",
-            "submit_prs": 0,
-            "submit_lines": 0,
-            "received_reviews": 0,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 15,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 14
           },
           {
             "name": "MissingPompeii",
@@ -106846,9 +108591,24 @@
           },
           {
             "name": "botcanlearn",
-            "submit_prs": 3,
-            "submit_lines": 584,
-            "received_reviews": 8,
+            "submit_prs": 4,
+            "submit_lines": 882,
+            "received_reviews": 13,
+            "rated_prs": 3,
+            "poor_prs": 1,
+            "excellent_prs": 1,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
+            "name": "sun_xuexin",
+            "submit_prs": 2,
+            "submit_lines": 602,
+            "received_reviews": 7,
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 1,
@@ -106867,6 +108627,21 @@
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
+            "name": "YueGuoDora",
+            "submit_prs": 2,
+            "submit_lines": 512,
+            "received_reviews": 8,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 1,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -107025,21 +108800,6 @@
             "review_prs": 0
           },
           {
-            "name": "sun_xuexin",
-            "submit_prs": 1,
-            "submit_lines": 292,
-            "received_reviews": 2,
-            "rated_prs": 1,
-            "poor_prs": 0,
-            "excellent_prs": 1,
-            "review_comments": 0,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
-          },
-          {
             "name": "weijie11",
             "submit_prs": 1,
             "submit_lines": 87,
@@ -107104,21 +108864,6 @@
             "submit_prs": 1,
             "submit_lines": 60,
             "received_reviews": 1,
-            "rated_prs": 1,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 0,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
-          },
-          {
-            "name": "YueGuoDora",
-            "submit_prs": 1,
-            "submit_lines": 22,
-            "received_reviews": 4,
             "rated_prs": 1,
             "poor_prs": 0,
             "excellent_prs": 0,
@@ -107266,14 +109011,14 @@
           }
         ],
         "lastSync": {
-          "id": 82,
+          "id": 83,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-08-22T00:00:07.099649+08:00",
-          "finished_at": "2026-08-22T00:00:19.370514+08:00",
-          "window_start": "2026-08-21T00:00:00+08:00",
-          "window_end": "2026-08-22T00:00:00+08:00",
+          "started_at": "2026-08-23T00:00:06.964933+08:00",
+          "finished_at": "2026-08-23T00:00:38.300137+08:00",
+          "window_start": "2026-08-22T00:00:00+08:00",
+          "window_end": "2026-08-23T00:00:00+08:00",
           "status": "success",
-          "pr_count": 2,
+          "pr_count": 4,
           "error": null
         }
       }
