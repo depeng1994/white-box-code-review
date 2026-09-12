@@ -24,14 +24,23 @@ const themeLabel = themeToggle?.querySelector(".theme-label");
 const themeStorageKey = "reviewBoardTheme";
 const assetVersion = document.documentElement.dataset.assetVersion || "local";
 const COMMITTER_USERS = new Set([
+  "JaydenChu",
+  "XDaoHong",
   "depeng1994",
-  "zhong_lin",
+  "gcw_w18ytwbi",
+  "hwcaifubi",
   "lrwei0709",
-  "zzyyjj012",
-  "xuyujun",
+  "luanchaowei",
   "panchao-gitcode",
-  "zhaowei1936",
+  "shengnan666",
+  "wanghui0",
+  "xingzhixiong",
+  "xuyujun",
   "zhanghz1",
+  "zhaowei1936",
+  "zhong_lin",
+  "zhuofanshen",
+  "zzyyjj012",
 ]);
 
 let dashboard = null;

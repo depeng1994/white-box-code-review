@@ -28,6 +28,7 @@ class RefreshConfig:
     repo: str = "torchtitan-npu"
     db: Path = Path("data/review_board.sqlite3")
     static_json: Path = Path("demo/dashboard-static.json")
+    app_js: Path = Path("demo/app.js")
     remote: str = "origin"
     branch: str = "main"
     dry_run: bool = False
@@ -86,6 +87,7 @@ def run_once(
     python = rel(config.python)
     db = rel(config.db)
     static_json = rel(config.static_json)
+    app_js = rel(config.app_js)
 
     log(f"refresh started for {target.isoformat()} ({month})")
     if not os.environ.get(config.token_env):
@@ -123,11 +125,12 @@ def run_once(
         ],
         config.root,
     )
+    runner([python, "scripts/sync_committers.py", "--app-js", app_js], config.root)
     runner([python, "-m", "unittest", "tests.test_static_export", "tests.test_theme_toggle"], config.root)
     runner(["node", "--check", "demo/app.js"], config.root)
     runner(["git", "diff", "--check"], config.root)
 
-    status = runner(["git", "status", "--porcelain", "--", db, static_json], config.root)
+    status = runner(["git", "status", "--porcelain", "--", db, static_json, config.app_js.as_posix()], config.root)
     if not status.strip():
         log("no dashboard data changes to commit")
         return RefreshResult(target, month, changed=False)
@@ -137,7 +140,7 @@ def run_once(
         log(f"dry-run: would commit and push: {message}")
         return RefreshResult(target, month, changed=True)
 
-    runner(["git", "add", db, static_json], config.root)
+    runner(["git", "add", db, static_json, config.app_js.as_posix()], config.root)
     runner(["git", "commit", "-m", message], config.root)
     runner(["git", "push", config.remote, config.branch], config.root)
     log(f"refresh pushed for {target.isoformat()}")
@@ -164,6 +167,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--owner", default=RefreshConfig.owner)
     parser.add_argument("--repo", default=RefreshConfig.repo)
     parser.add_argument("--db", type=Path, default=RefreshConfig.db)
+    parser.add_argument("--app-js", type=Path, default=RefreshConfig.app_js)
     parser.add_argument("--static-json", type=Path, default=RefreshConfig.static_json)
     parser.add_argument("--remote", default=RefreshConfig.remote)
     parser.add_argument("--branch", default=RefreshConfig.branch)
@@ -183,6 +187,7 @@ def main() -> int:
         repo=args.repo,
         db=args.db,
         static_json=args.static_json,
+        app_js=args.app_js,
         remote=args.remote,
         branch=args.branch,
         dry_run=args.dry_run,

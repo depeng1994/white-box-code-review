@@ -100,7 +100,7 @@ class DailyRefreshTest(unittest.TestCase):
             ],
             calls,
         )
-        self.assertIn(["git", "add", "data/review_board.sqlite3", "demo/dashboard-static.json"], calls)
+        self.assertIn(["git", "add", "data/review_board.sqlite3", "demo/dashboard-static.json", "demo/app.js"], calls)
         self.assertIn(["git", "commit", "-m", "data: refresh review board 2026-06-15"], calls)
         self.assertIn(["git", "push", "origin", "main"], calls)
 
