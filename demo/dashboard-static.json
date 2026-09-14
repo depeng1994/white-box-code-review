@@ -2,6 +2,7 @@
   "repo": "cann/torchtitan-npu",
   "ranges": {
     "week": [
+      "2026年第38周",
       "2026年第37周",
       "2026年第36周",
       "2026年第35周",
@@ -61,12 +62,416 @@
   },
   "dashboards": {
     "week": {
+      "2026年第38周": {
+        "repo": "cann/torchtitan-npu",
+        "period": "week",
+        "range": "2026年第38周",
+        "ranges": {
+          "week": [
+            "2026年第38周",
+            "2026年第37周",
+            "2026年第36周",
+            "2026年第35周",
+            "2026年第34周",
+            "2026年第33周",
+            "2026年第32周",
+            "2026年第31周",
+            "2026年第30周",
+            "2026年第29周",
+            "2026年第28周",
+            "2026年第27周",
+            "2026年第26周",
+            "2026年第25周",
+            "2026年第24周",
+            "2026年第23周",
+            "2026年第22周",
+            "2026年第21周",
+            "2026年第20周",
+            "2026年第19周",
+            "2026年第18周",
+            "2026年第17周",
+            "2026年第16周",
+            "2026年第15周",
+            "2026年第14周",
+            "2026年第13周",
+            "2026年第12周",
+            "2026年第11周",
+            "2026年第10周",
+            "2026年第09周",
+            "2026年第07周",
+            "2026年第06周",
+            "2026年第05周"
+          ],
+          "month": [
+            "2026-09",
+            "2026-08",
+            "2026-07",
+            "2026-06",
+            "2026-05",
+            "2026-04",
+            "2026-03",
+            "2026-02",
+            "2026-01"
+          ],
+          "quarter": [
+            "2026 Q3",
+            "2026 Q2",
+            "2026 Q1"
+          ],
+          "half": [
+            "2026 H2",
+            "2026 H1"
+          ],
+          "year": [
+            "2026 全年"
+          ]
+        },
+        "metrics": {
+          "mergedPrs": 2,
+          "lines": 1396,
+          "reviewComments": 24,
+          "ratedPrs": 1,
+          "averageScore": 3.0,
+          "poorPrs": 0,
+          "excellentPrs": 0
+        },
+        "prs": [
+          {
+            "id": 800,
+            "title": "[feat] unify TorchAO quantization converter for LI and metadata",
+            "author": "zhaoxi1029",
+            "mergedAt": "2026-09-14T21:05:09+08:00",
+            "lines": 885,
+            "reviews": 18,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "zhuofanshen",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/800",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "原子级量化操作建议放到experiments/torchao-npu/torchao_npu/quantization/quant_primitives下，与mx量化、block_mx量化保持一致",
+                "createdAt": "2026-09-14T10:10:27+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:25",
+                "body": "此函数过度封装了。",
+                "createdAt": "2026-09-14T10:13:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap.py:17",
+                "body": "仍然不建议定义ModuleSwapConfig这个基类，因为一个module的权重很可能不止一个，也可能一个都没有。其接受的激活也可能不止一个。因此 ModuleSwapConfig中的activation_config和 weight_config很可能不具有可复用性。建议直接定义QuantLightningIndexerConfig然后提供quantize_需要的handler。",
+                "createdAt": "2026-09-14T10:24:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:37",
+                "body": "固定的量化配置组合建议移出功能支持代码，放在converter里。QuantLightningIndexerConfig的``__post_init__``里只检查用户指定的q，k量化配置是不是受支持。",
+                "createdAt": "2026-09-14T10:26:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:65",
+                "body": "建议去掉quant_mode。用户可以直接指定q、k量化配置。QuantLightningIndexerConfig在``__post_init__``中做配置的合法性检查。",
+                "createdAt": "2026-09-14T10:30:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:40",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:41+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:72",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:103",
+                "body": "过度封装建议去掉。",
+                "createdAt": "2026-09-14T10:36:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:94",
+                "body": "可以把HiF8QuantizeConfig合并进FP8QuantizeConfig。其中elem_dtype的类型为``torch.dtype | int``。``__post_init__``中通过检查只接受e4m3和e5m2以及hif8三种FP8格式。新增一个@property变量npu_elem_dtype，返回torch_npu下整型表示的数据类型，可参考MXQuantizeConfig。另外，FP8QuantizeConfig应再增加一个变量granularity，接受torchao中定义的Granularity类，并在 ``__post_init__``中通过检查表明目前只支持pertensor。同理，可以增添npu_granularity这个属性将Granularity翻译为torch_npu.npu_dynamic_quant接受的参数。 另外，torch_npu.npu_dynamic_quant有一个dst_type_max参数，也应该在FP8QuantizeConfig中暴露给用户，并在``__post_init__``中做合法性检查。",
+                "createdAt": "2026-09-14T10:47:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:18",
+                "body": "不支持HiF8吗？另外LIQuantization建议改名为LIQuantizationDtype",
+                "createdAt": "2026-09-14T10:51:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:114",
+                "body": "同样的改名，并在doc中补充使用说明",
+                "createdAt": "2026-09-14T11:02:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:35",
+                "body": "应改成在FP8QuantizeConfig中引入的npm_elem_dtype这个属性。另外，应该传入在FP8QuantizeConfig中定义的npu_granularity属性，和dst_type_max类变量，以保证FP8QuantizeConfig中所有的配置都生效。",
+                "createdAt": "2026-09-14T11:27:45+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:32",
+                "body": "torch_npu.npu_dynamic_quant是否跟npu_dynamic_mx_quant一样对输入张量的内存连续性有要求？是否会在输入不满足要求的情况下触发额外的内存操作。",
+                "createdAt": "2026-09-14T11:31:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/transform.py:51",
+                "body": "Module替换这个操作的handler的注册和派发在torchao的quantize_里已经完全实现了。应该直接利用这个机制，不用重新再写一遍派发。ParaSwapConfig需要自己写派发的原因是quantize_没过对parameter的遍历和派发机制。",
+                "createdAt": "2026-09-14T11:35:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "与其他两种fp8使用相同的算子，接受相同的配置。在HiF8QuantizeConfig合并到FP8QuantizeConfig之后，fp8_quantize的功能完全覆盖quantize_hifloat8，可以考虑删除该函数。",
+                "createdAt": "2026-09-14T12:47:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "torchtitan_npu/config/configs.py:122",
+                "body": "这里的校验是不是在通过 TrainerEx 启动训练时不会生效？ 对应torchtitan_npu/extensions/trainer.py:59-74 ``` TrainerEx.__init__() ├── 读取 quantization_config ├── 判断 enable_quantized_training └── 只有 True 时才调用 apply_quantization_converter() ``` 这个时候如果配置enable_quantized_training = False li_quantization = \"fp8\"，也不会执行validate内的校验吧",
+                "createdAt": "2026-09-14T13:08:36+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "interfaces/torchao_converter.py:307",
+                "body": "如果自定义自定义 compression ratio，这里当self.config.li_kernel_config.cmp_ratio not in metadata.plan时，会直接报错。 建议改为： ``` ratio = self.config.li_kernel_config.cmp_ratio plan = metadata.plans.get(ratio) if plan is None: raise ValueError( f\"LI compression ratio {ratio} is not present in attention metadata\" ) ```",
+                "createdAt": "2026-09-14T14:02:05+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantized_modules/lightning_indexer_metadata.py:22",
+                "body": "建议在``__post_init__``中检查传入配置的合法性。",
+                "createdAt": "2026-09-14T14:05:08+08:00"
+              }
+            ]
+          },
+          {
+            "id": 780,
+            "title": "feat: add DeepSeek-V4 Flash A5 launcher",
+            "author": "hitwdy",
+            "mergedAt": "2026-09-14T11:57:03+08:00",
+            "lines": 511,
+            "reviews": 6,
+            "score": 3.0,
+            "reviewer": "xuyujun",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/780",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:48",
+                "body": "按调用A3脚本实现",
+                "createdAt": "2026-09-11T16:15:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:41",
+                "body": "这里为啥跟A3有差异？",
+                "createdAt": "2026-09-11T18:09:08+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:58",
+                "body": "swap的修改也落到A3的脚本里吧，作为base",
+                "createdAt": "2026-09-11T18:09:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_mini_1p_cpt_2k_a3.sh:107",
+                "body": "这里单独提出来是为啥干啥？",
+                "createdAt": "2026-09-12T16:37:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a5.sh:41",
+                "body": "这边需要增加选择重计算配置吗？",
+                "createdAt": "2026-09-12T17:11:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:138",
+                "body": "建议在所有 base 启动脚本末尾统一追加 \"CLI_OVERRIDES\"，由上层 A5 脚本定义这个差异参数。这样可利用 CLI 后置覆盖前值的语义复用 A3，避免为 RoPE 等单独引入环境变量 `bash scripts/run_train.sh \\ $HF_ASSETS_ARGS \\ $DATALOADER_ARGS \\ $PARALLELISM_ARGS \\ $TRAINING_ARGS \\ $DEBUG_ARGS \\ $OPTIMIZER_ARGS \\ $PROFILER_ARGS \\ $COMM_ARGS \\ $CHECKPOINT_ARGS \\ --override.imports \"${NPU_OPS_OVERRIDES[@]}\" $OPTIMIZER_OVERRIDES \\ $CLI_OVERRIDES \\ \"$@\"`",
+                "createdAt": "2026-09-12T17:30:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "xuyujun",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+                "createdAt": "2026-09-14T11:52:11+08:00"
+              }
+            ]
+          }
+        ],
+        "contributors": [
+          {
+            "name": "caoshuyang",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 13,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 1
+          },
+          {
+            "name": "depeng1994",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 5,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 1
+          },
+          {
+            "name": "wanghui0",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 3,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 1
+          },
+          {
+            "name": "zhuofanshen",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 2,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 1
+          },
+          {
+            "name": "xuyujun",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 1,
+            "scored_prs": 1,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 1
+          },
+          {
+            "name": "zhaoxi1029",
+            "submit_prs": 1,
+            "submit_lines": 885,
+            "received_reviews": 18,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
+            "name": "hitwdy",
+            "submit_prs": 1,
+            "submit_lines": 511,
+            "received_reviews": 6,
+            "rated_prs": 1,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          }
+        ],
+        "lastSync": {
+          "id": 106,
+          "repo": "cann/torchtitan-npu",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
+          "status": "success",
+          "pr_count": 2,
+          "error": null
+        }
+      },
       "2026年第37周": {
         "repo": "cann/torchtitan-npu",
         "period": "week",
         "range": "2026年第37周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -2530,14 +2935,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -2547,6 +2952,7 @@
         "range": "2026年第36周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -3810,14 +4216,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -3827,6 +4233,7 @@
         "range": "2026年第35周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -5706,14 +6113,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -5723,6 +6130,7 @@
         "range": "2026年第34周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -7689,14 +8097,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -7706,6 +8114,7 @@
         "range": "2026年第33周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -9461,14 +9870,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -9478,6 +9887,7 @@
         "range": "2026年第32周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -10857,14 +11267,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -10874,6 +11284,7 @@
         "range": "2026年第31周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -11430,14 +11841,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -11447,6 +11858,7 @@
         "range": "2026年第30周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -12340,14 +12752,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -12357,6 +12769,7 @@
         "range": "2026年第29周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -13341,14 +13754,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -13358,6 +13771,7 @@
         "range": "2026年第28周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -14183,14 +14597,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -14200,6 +14614,7 @@
         "range": "2026年第27周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -15172,14 +15587,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -15189,6 +15604,7 @@
         "range": "2026年第26周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -16488,14 +16904,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -16505,6 +16921,7 @@
         "range": "2026年第25周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -17092,14 +17509,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -17109,6 +17526,7 @@
         "range": "2026年第24周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -18396,14 +18814,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -18413,6 +18831,7 @@
         "range": "2026年第23周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -19907,14 +20326,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -19924,6 +20343,7 @@
         "range": "2026年第22周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -21864,14 +22284,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -21881,6 +22301,7 @@
         "range": "2026年第21周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -23173,14 +23594,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -23190,6 +23611,7 @@
         "range": "2026年第20周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -23882,14 +24304,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -23899,6 +24321,7 @@
         "range": "2026年第19周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -24718,14 +25141,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -24735,6 +25158,7 @@
         "range": "2026年第18周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -25552,14 +25976,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -25569,6 +25993,7 @@
         "range": "2026年第17周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -25829,14 +26254,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -25846,6 +26271,7 @@
         "range": "2026年第16周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -26691,14 +27117,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -26708,6 +27134,7 @@
         "range": "2026年第15周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -27235,14 +27662,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -27252,6 +27679,7 @@
         "range": "2026年第14周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -28368,14 +28796,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -28385,6 +28813,7 @@
         "range": "2026年第13周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -28944,14 +29373,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -28961,6 +29390,7 @@
         "range": "2026年第12周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -29275,14 +29705,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -29292,6 +29722,7 @@
         "range": "2026年第11周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -30197,14 +30628,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -30214,6 +30645,7 @@
         "range": "2026年第10周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -30635,14 +31067,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -30652,6 +31084,7 @@
         "range": "2026年第09周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -31442,14 +31875,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -31459,6 +31892,7 @@
         "range": "2026年第07周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -31684,14 +32118,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -31701,6 +32135,7 @@
         "range": "2026年第06周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -31946,14 +32381,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -31963,6 +32398,7 @@
         "range": "2026年第05周",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -32660,14 +33096,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       }
@@ -32679,6 +33115,7 @@
         "range": "2026-09",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -32737,15 +33174,224 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 51,
-          "lines": 278282,
-          "reviewComments": 223,
-          "ratedPrs": 31,
+          "mergedPrs": 53,
+          "lines": 279678,
+          "reviewComments": 247,
+          "ratedPrs": 32,
           "averageScore": 2.98,
           "poorPrs": 6,
           "excellentPrs": 1
         },
         "prs": [
+          {
+            "id": 800,
+            "title": "[feat] unify TorchAO quantization converter for LI and metadata",
+            "author": "zhaoxi1029",
+            "mergedAt": "2026-09-14T21:05:09+08:00",
+            "lines": 885,
+            "reviews": 18,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "zhuofanshen",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/800",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "原子级量化操作建议放到experiments/torchao-npu/torchao_npu/quantization/quant_primitives下，与mx量化、block_mx量化保持一致",
+                "createdAt": "2026-09-14T10:10:27+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:25",
+                "body": "此函数过度封装了。",
+                "createdAt": "2026-09-14T10:13:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap.py:17",
+                "body": "仍然不建议定义ModuleSwapConfig这个基类，因为一个module的权重很可能不止一个，也可能一个都没有。其接受的激活也可能不止一个。因此 ModuleSwapConfig中的activation_config和 weight_config很可能不具有可复用性。建议直接定义QuantLightningIndexerConfig然后提供quantize_需要的handler。",
+                "createdAt": "2026-09-14T10:24:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:37",
+                "body": "固定的量化配置组合建议移出功能支持代码，放在converter里。QuantLightningIndexerConfig的``__post_init__``里只检查用户指定的q，k量化配置是不是受支持。",
+                "createdAt": "2026-09-14T10:26:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:65",
+                "body": "建议去掉quant_mode。用户可以直接指定q、k量化配置。QuantLightningIndexerConfig在``__post_init__``中做配置的合法性检查。",
+                "createdAt": "2026-09-14T10:30:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:40",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:41+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:72",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:103",
+                "body": "过度封装建议去掉。",
+                "createdAt": "2026-09-14T10:36:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:94",
+                "body": "可以把HiF8QuantizeConfig合并进FP8QuantizeConfig。其中elem_dtype的类型为``torch.dtype | int``。``__post_init__``中通过检查只接受e4m3和e5m2以及hif8三种FP8格式。新增一个@property变量npu_elem_dtype，返回torch_npu下整型表示的数据类型，可参考MXQuantizeConfig。另外，FP8QuantizeConfig应再增加一个变量granularity，接受torchao中定义的Granularity类，并在 ``__post_init__``中通过检查表明目前只支持pertensor。同理，可以增添npu_granularity这个属性将Granularity翻译为torch_npu.npu_dynamic_quant接受的参数。 另外，torch_npu.npu_dynamic_quant有一个dst_type_max参数，也应该在FP8QuantizeConfig中暴露给用户，并在``__post_init__``中做合法性检查。",
+                "createdAt": "2026-09-14T10:47:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:18",
+                "body": "不支持HiF8吗？另外LIQuantization建议改名为LIQuantizationDtype",
+                "createdAt": "2026-09-14T10:51:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:114",
+                "body": "同样的改名，并在doc中补充使用说明",
+                "createdAt": "2026-09-14T11:02:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:35",
+                "body": "应改成在FP8QuantizeConfig中引入的npm_elem_dtype这个属性。另外，应该传入在FP8QuantizeConfig中定义的npu_granularity属性，和dst_type_max类变量，以保证FP8QuantizeConfig中所有的配置都生效。",
+                "createdAt": "2026-09-14T11:27:45+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:32",
+                "body": "torch_npu.npu_dynamic_quant是否跟npu_dynamic_mx_quant一样对输入张量的内存连续性有要求？是否会在输入不满足要求的情况下触发额外的内存操作。",
+                "createdAt": "2026-09-14T11:31:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/transform.py:51",
+                "body": "Module替换这个操作的handler的注册和派发在torchao的quantize_里已经完全实现了。应该直接利用这个机制，不用重新再写一遍派发。ParaSwapConfig需要自己写派发的原因是quantize_没过对parameter的遍历和派发机制。",
+                "createdAt": "2026-09-14T11:35:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "与其他两种fp8使用相同的算子，接受相同的配置。在HiF8QuantizeConfig合并到FP8QuantizeConfig之后，fp8_quantize的功能完全覆盖quantize_hifloat8，可以考虑删除该函数。",
+                "createdAt": "2026-09-14T12:47:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "torchtitan_npu/config/configs.py:122",
+                "body": "这里的校验是不是在通过 TrainerEx 启动训练时不会生效？ 对应torchtitan_npu/extensions/trainer.py:59-74 ``` TrainerEx.__init__() ├── 读取 quantization_config ├── 判断 enable_quantized_training └── 只有 True 时才调用 apply_quantization_converter() ``` 这个时候如果配置enable_quantized_training = False li_quantization = \"fp8\"，也不会执行validate内的校验吧",
+                "createdAt": "2026-09-14T13:08:36+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "interfaces/torchao_converter.py:307",
+                "body": "如果自定义自定义 compression ratio，这里当self.config.li_kernel_config.cmp_ratio not in metadata.plan时，会直接报错。 建议改为： ``` ratio = self.config.li_kernel_config.cmp_ratio plan = metadata.plans.get(ratio) if plan is None: raise ValueError( f\"LI compression ratio {ratio} is not present in attention metadata\" ) ```",
+                "createdAt": "2026-09-14T14:02:05+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantized_modules/lightning_indexer_metadata.py:22",
+                "body": "建议在``__post_init__``中检查传入配置的合法性。",
+                "createdAt": "2026-09-14T14:05:08+08:00"
+              }
+            ]
+          },
+          {
+            "id": 780,
+            "title": "feat: add DeepSeek-V4 Flash A5 launcher",
+            "author": "hitwdy",
+            "mergedAt": "2026-09-14T11:57:03+08:00",
+            "lines": 511,
+            "reviews": 6,
+            "score": 3.0,
+            "reviewer": "xuyujun",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/780",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:48",
+                "body": "按调用A3脚本实现",
+                "createdAt": "2026-09-11T16:15:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:41",
+                "body": "这里为啥跟A3有差异？",
+                "createdAt": "2026-09-11T18:09:08+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:58",
+                "body": "swap的修改也落到A3的脚本里吧，作为base",
+                "createdAt": "2026-09-11T18:09:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_mini_1p_cpt_2k_a3.sh:107",
+                "body": "这里单独提出来是为啥干啥？",
+                "createdAt": "2026-09-12T16:37:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a5.sh:41",
+                "body": "这边需要增加选择重计算配置吗？",
+                "createdAt": "2026-09-12T17:11:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:138",
+                "body": "建议在所有 base 启动脚本末尾统一追加 \"CLI_OVERRIDES\"，由上层 A5 脚本定义这个差异参数。这样可利用 CLI 后置覆盖前值的语义复用 A3，避免为 RoPE 等单独引入环境变量 `bash scripts/run_train.sh \\ $HF_ASSETS_ARGS \\ $DATALOADER_ARGS \\ $PARALLELISM_ARGS \\ $TRAINING_ARGS \\ $DEBUG_ARGS \\ $OPTIMIZER_ARGS \\ $PROFILER_ARGS \\ $COMM_ARGS \\ $CHECKPOINT_ARGS \\ --override.imports \"${NPU_OPS_OVERRIDES[@]}\" $OPTIMIZER_OVERRIDES \\ $CLI_OVERRIDES \\ \"$@\"`",
+                "createdAt": "2026-09-12T17:30:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "xuyujun",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+                "createdAt": "2026-09-14T11:52:11+08:00"
+              }
+            ]
+          },
           {
             "id": 801,
             "title": "fix: support Muon with context parallelism",
@@ -35405,12 +36051,27 @@
             "rated_prs": 3,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 30,
-            "scored_prs": 19,
+            "review_comments": 31,
+            "scored_prs": 20,
             "scored_poor": 4,
             "scored_excellent": 1,
             "nonstandard_prs": 7,
-            "review_prs": 17
+            "review_prs": 18
+          },
+          {
+            "name": "depeng1994",
+            "submit_prs": 1,
+            "submit_lines": 90,
+            "received_reviews": 0,
+            "rated_prs": 1,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 34,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 11
           },
           {
             "name": "hwcaifubi",
@@ -35428,21 +36089,6 @@
             "review_prs": 3
           },
           {
-            "name": "depeng1994",
-            "submit_prs": 1,
-            "submit_lines": 90,
-            "received_reviews": 0,
-            "rated_prs": 1,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 29,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 10
-          },
-          {
             "name": "Messi8",
             "submit_prs": 0,
             "submit_lines": 0,
@@ -35456,6 +36102,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 14
+          },
+          {
+            "name": "caoshuyang",
+            "submit_prs": 1,
+            "submit_lines": 1164,
+            "received_reviews": 2,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 15,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 2
           },
           {
             "name": "panchao-gitcode",
@@ -35518,6 +36179,36 @@
             "review_prs": 1
           },
           {
+            "name": "wanghui0",
+            "submit_prs": 1,
+            "submit_lines": 20,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 5,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 2
+          },
+          {
+            "name": "hitwdy",
+            "submit_prs": 3,
+            "submit_lines": 620,
+            "received_reviews": 9,
+            "rated_prs": 1,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 1,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 1
+          },
+          {
             "name": "gcw_bImVmzsb",
             "submit_prs": 3,
             "submit_lines": 5878,
@@ -35533,49 +36224,34 @@
             "review_prs": 0
           },
           {
-            "name": "caoshuyang",
-            "submit_prs": 1,
-            "submit_lines": 1164,
-            "received_reviews": 2,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 2,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 1
-          },
-          {
-            "name": "hitwdy",
-            "submit_prs": 2,
-            "submit_lines": 109,
-            "received_reviews": 3,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 1,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 1
-          },
-          {
-            "name": "wanghui0",
-            "submit_prs": 1,
-            "submit_lines": 20,
+            "name": "zhuofanshen",
+            "submit_prs": 0,
+            "submit_lines": 0,
             "received_reviews": 0,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 2,
+            "review_comments": 3,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 1,
-            "review_prs": 1
+            "nonstandard_prs": 3,
+            "review_prs": 2
+          },
+          {
+            "name": "zhaoxi1029",
+            "submit_prs": 2,
+            "submit_lines": 1456,
+            "received_reviews": 19,
+            "rated_prs": 1,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
           },
           {
             "name": "YueGuoDora",
@@ -35689,21 +36365,6 @@
             "received_reviews": 10,
             "rated_prs": 1,
             "poor_prs": 1,
-            "excellent_prs": 0,
-            "review_comments": 0,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
-          },
-          {
-            "name": "zhaoxi1029",
-            "submit_prs": 1,
-            "submit_lines": 571,
-            "received_reviews": 1,
-            "rated_prs": 1,
-            "poor_prs": 0,
             "excellent_prs": 0,
             "review_comments": 0,
             "scored_prs": 0,
@@ -35953,21 +36614,6 @@
             "review_prs": 0
           },
           {
-            "name": "zhuofanshen",
-            "submit_prs": 0,
-            "submit_lines": 0,
-            "received_reviews": 0,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 1,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 2,
-            "review_prs": 1
-          },
-          {
             "name": "Larry_liuyi",
             "submit_prs": 0,
             "submit_lines": 0,
@@ -35999,14 +36645,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -36016,6 +36662,7 @@
         "range": "2026-08",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -42262,14 +42909,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -42279,6 +42926,7 @@
         "range": "2026-07",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -45236,14 +45884,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -45253,6 +45901,7 @@
         "range": "2026-06",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -49391,14 +50040,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -49408,6 +50057,7 @@
         "range": "2026-05",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -53413,14 +54063,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -53430,6 +54080,7 @@
         "range": "2026-04",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -56067,14 +56718,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -56084,6 +56735,7 @@
         "range": "2026-03",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -57919,14 +58571,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -57936,6 +58588,7 @@
         "range": "2026-02",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -58904,14 +59557,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -58921,6 +59574,7 @@
         "range": "2026-01",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -59618,14 +60272,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       }
@@ -59637,6 +60291,7 @@
         "range": "2026 Q3",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -59695,15 +60350,224 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 205,
-          "lines": 591435,
-          "reviewComments": 869,
-          "ratedPrs": 154,
+          "mergedPrs": 207,
+          "lines": 592831,
+          "reviewComments": 893,
+          "ratedPrs": 155,
           "averageScore": 3.0,
           "poorPrs": 19,
           "excellentPrs": 22
         },
         "prs": [
+          {
+            "id": 800,
+            "title": "[feat] unify TorchAO quantization converter for LI and metadata",
+            "author": "zhaoxi1029",
+            "mergedAt": "2026-09-14T21:05:09+08:00",
+            "lines": 885,
+            "reviews": 18,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "zhuofanshen",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/800",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "原子级量化操作建议放到experiments/torchao-npu/torchao_npu/quantization/quant_primitives下，与mx量化、block_mx量化保持一致",
+                "createdAt": "2026-09-14T10:10:27+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:25",
+                "body": "此函数过度封装了。",
+                "createdAt": "2026-09-14T10:13:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap.py:17",
+                "body": "仍然不建议定义ModuleSwapConfig这个基类，因为一个module的权重很可能不止一个，也可能一个都没有。其接受的激活也可能不止一个。因此 ModuleSwapConfig中的activation_config和 weight_config很可能不具有可复用性。建议直接定义QuantLightningIndexerConfig然后提供quantize_需要的handler。",
+                "createdAt": "2026-09-14T10:24:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:37",
+                "body": "固定的量化配置组合建议移出功能支持代码，放在converter里。QuantLightningIndexerConfig的``__post_init__``里只检查用户指定的q，k量化配置是不是受支持。",
+                "createdAt": "2026-09-14T10:26:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:65",
+                "body": "建议去掉quant_mode。用户可以直接指定q、k量化配置。QuantLightningIndexerConfig在``__post_init__``中做配置的合法性检查。",
+                "createdAt": "2026-09-14T10:30:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:40",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:41+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:72",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:103",
+                "body": "过度封装建议去掉。",
+                "createdAt": "2026-09-14T10:36:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:94",
+                "body": "可以把HiF8QuantizeConfig合并进FP8QuantizeConfig。其中elem_dtype的类型为``torch.dtype | int``。``__post_init__``中通过检查只接受e4m3和e5m2以及hif8三种FP8格式。新增一个@property变量npu_elem_dtype，返回torch_npu下整型表示的数据类型，可参考MXQuantizeConfig。另外，FP8QuantizeConfig应再增加一个变量granularity，接受torchao中定义的Granularity类，并在 ``__post_init__``中通过检查表明目前只支持pertensor。同理，可以增添npu_granularity这个属性将Granularity翻译为torch_npu.npu_dynamic_quant接受的参数。 另外，torch_npu.npu_dynamic_quant有一个dst_type_max参数，也应该在FP8QuantizeConfig中暴露给用户，并在``__post_init__``中做合法性检查。",
+                "createdAt": "2026-09-14T10:47:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:18",
+                "body": "不支持HiF8吗？另外LIQuantization建议改名为LIQuantizationDtype",
+                "createdAt": "2026-09-14T10:51:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:114",
+                "body": "同样的改名，并在doc中补充使用说明",
+                "createdAt": "2026-09-14T11:02:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:35",
+                "body": "应改成在FP8QuantizeConfig中引入的npm_elem_dtype这个属性。另外，应该传入在FP8QuantizeConfig中定义的npu_granularity属性，和dst_type_max类变量，以保证FP8QuantizeConfig中所有的配置都生效。",
+                "createdAt": "2026-09-14T11:27:45+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:32",
+                "body": "torch_npu.npu_dynamic_quant是否跟npu_dynamic_mx_quant一样对输入张量的内存连续性有要求？是否会在输入不满足要求的情况下触发额外的内存操作。",
+                "createdAt": "2026-09-14T11:31:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/transform.py:51",
+                "body": "Module替换这个操作的handler的注册和派发在torchao的quantize_里已经完全实现了。应该直接利用这个机制，不用重新再写一遍派发。ParaSwapConfig需要自己写派发的原因是quantize_没过对parameter的遍历和派发机制。",
+                "createdAt": "2026-09-14T11:35:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "与其他两种fp8使用相同的算子，接受相同的配置。在HiF8QuantizeConfig合并到FP8QuantizeConfig之后，fp8_quantize的功能完全覆盖quantize_hifloat8，可以考虑删除该函数。",
+                "createdAt": "2026-09-14T12:47:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "torchtitan_npu/config/configs.py:122",
+                "body": "这里的校验是不是在通过 TrainerEx 启动训练时不会生效？ 对应torchtitan_npu/extensions/trainer.py:59-74 ``` TrainerEx.__init__() ├── 读取 quantization_config ├── 判断 enable_quantized_training └── 只有 True 时才调用 apply_quantization_converter() ``` 这个时候如果配置enable_quantized_training = False li_quantization = \"fp8\"，也不会执行validate内的校验吧",
+                "createdAt": "2026-09-14T13:08:36+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "interfaces/torchao_converter.py:307",
+                "body": "如果自定义自定义 compression ratio，这里当self.config.li_kernel_config.cmp_ratio not in metadata.plan时，会直接报错。 建议改为： ``` ratio = self.config.li_kernel_config.cmp_ratio plan = metadata.plans.get(ratio) if plan is None: raise ValueError( f\"LI compression ratio {ratio} is not present in attention metadata\" ) ```",
+                "createdAt": "2026-09-14T14:02:05+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantized_modules/lightning_indexer_metadata.py:22",
+                "body": "建议在``__post_init__``中检查传入配置的合法性。",
+                "createdAt": "2026-09-14T14:05:08+08:00"
+              }
+            ]
+          },
+          {
+            "id": 780,
+            "title": "feat: add DeepSeek-V4 Flash A5 launcher",
+            "author": "hitwdy",
+            "mergedAt": "2026-09-14T11:57:03+08:00",
+            "lines": 511,
+            "reviews": 6,
+            "score": 3.0,
+            "reviewer": "xuyujun",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/780",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:48",
+                "body": "按调用A3脚本实现",
+                "createdAt": "2026-09-11T16:15:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:41",
+                "body": "这里为啥跟A3有差异？",
+                "createdAt": "2026-09-11T18:09:08+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:58",
+                "body": "swap的修改也落到A3的脚本里吧，作为base",
+                "createdAt": "2026-09-11T18:09:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_mini_1p_cpt_2k_a3.sh:107",
+                "body": "这里单独提出来是为啥干啥？",
+                "createdAt": "2026-09-12T16:37:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a5.sh:41",
+                "body": "这边需要增加选择重计算配置吗？",
+                "createdAt": "2026-09-12T17:11:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:138",
+                "body": "建议在所有 base 启动脚本末尾统一追加 \"CLI_OVERRIDES\"，由上层 A5 脚本定义这个差异参数。这样可利用 CLI 后置覆盖前值的语义复用 A3，避免为 RoPE 等单独引入环境变量 `bash scripts/run_train.sh \\ $HF_ASSETS_ARGS \\ $DATALOADER_ARGS \\ $PARALLELISM_ARGS \\ $TRAINING_ARGS \\ $DEBUG_ARGS \\ $OPTIMIZER_ARGS \\ $PROFILER_ARGS \\ $COMM_ARGS \\ $CHECKPOINT_ARGS \\ --override.imports \"${NPU_OPS_OVERRIDES[@]}\" $OPTIMIZER_OVERRIDES \\ $CLI_OVERRIDES \\ \"$@\"`",
+                "createdAt": "2026-09-12T17:30:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "xuyujun",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+                "createdAt": "2026-09-14T11:52:11+08:00"
+              }
+            ]
+          },
           {
             "id": 801,
             "title": "fix: support Muon with context parallelism",
@@ -70464,12 +71328,12 @@
             "rated_prs": 20,
             "poor_prs": 0,
             "excellent_prs": 1,
-            "review_comments": 221,
-            "scored_prs": 51,
+            "review_comments": 222,
+            "scored_prs": 52,
             "scored_poor": 9,
             "scored_excellent": 4,
             "nonstandard_prs": 12,
-            "review_prs": 84
+            "review_prs": 85
           },
           {
             "name": "lrwei0709",
@@ -70494,12 +71358,12 @@
             "rated_prs": 6,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 113,
+            "review_comments": 118,
             "scored_prs": 14,
             "scored_poor": 1,
             "scored_excellent": 3,
             "nonstandard_prs": 1,
-            "review_prs": 44
+            "review_prs": 45
           },
           {
             "name": "panchao-gitcode",
@@ -70533,10 +71397,10 @@
           },
           {
             "name": "hitwdy",
-            "submit_prs": 20,
-            "submit_lines": 13451,
-            "received_reviews": 64,
-            "rated_prs": 13,
+            "submit_prs": 21,
+            "submit_lines": 13962,
+            "received_reviews": 70,
+            "rated_prs": 14,
             "poor_prs": 0,
             "excellent_prs": 1,
             "review_comments": 40,
@@ -70629,12 +71493,12 @@
             "rated_prs": 5,
             "poor_prs": 0,
             "excellent_prs": 2,
-            "review_comments": 4,
+            "review_comments": 17,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 3
+            "review_prs": 4
           },
           {
             "name": "zhuofanshen",
@@ -70644,12 +71508,12 @@
             "rated_prs": 4,
             "poor_prs": 1,
             "excellent_prs": 0,
-            "review_comments": 5,
+            "review_comments": 7,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 2,
-            "review_prs": 2
+            "nonstandard_prs": 3,
+            "review_prs": 3
           },
           {
             "name": "tanghaoran7",
@@ -70695,6 +71559,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
+          },
+          {
+            "name": "wanghui0",
+            "submit_prs": 3,
+            "submit_lines": 702,
+            "received_reviews": 15,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 5,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 2
           },
           {
             "name": "weixin_69877254",
@@ -70757,21 +71636,6 @@
             "review_prs": 1
           },
           {
-            "name": "wanghui0",
-            "submit_prs": 3,
-            "submit_lines": 702,
-            "received_reviews": 15,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 2,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 1,
-            "review_prs": 1
-          },
-          {
             "name": "zhangjianshe",
             "submit_prs": 1,
             "submit_lines": 553,
@@ -70785,6 +71649,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 1
+          },
+          {
+            "name": "zhaoxi1029",
+            "submit_prs": 4,
+            "submit_lines": 1689,
+            "received_reviews": 32,
+            "rated_prs": 3,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
           },
           {
             "name": "YueGuoDora",
@@ -70838,21 +71717,6 @@
             "received_reviews": 16,
             "rated_prs": 2,
             "poor_prs": 1,
-            "excellent_prs": 0,
-            "review_comments": 0,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
-          },
-          {
-            "name": "zhaoxi1029",
-            "submit_prs": 3,
-            "submit_lines": 804,
-            "received_reviews": 14,
-            "rated_prs": 3,
-            "poor_prs": 0,
             "excellent_prs": 0,
             "review_comments": 0,
             "scored_prs": 0,
@@ -71373,14 +72237,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -71390,6 +72254,7 @@
         "range": "2026 Q2",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -81563,14 +82428,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -81580,6 +82445,7 @@
         "range": "2026 Q1",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -84623,14 +85489,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       }
@@ -84642,6 +85508,7 @@
         "range": "2026 H2",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -84700,15 +85567,224 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 205,
-          "lines": 591435,
-          "reviewComments": 869,
-          "ratedPrs": 154,
+          "mergedPrs": 207,
+          "lines": 592831,
+          "reviewComments": 893,
+          "ratedPrs": 155,
           "averageScore": 3.0,
           "poorPrs": 19,
           "excellentPrs": 22
         },
         "prs": [
+          {
+            "id": 800,
+            "title": "[feat] unify TorchAO quantization converter for LI and metadata",
+            "author": "zhaoxi1029",
+            "mergedAt": "2026-09-14T21:05:09+08:00",
+            "lines": 885,
+            "reviews": 18,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "zhuofanshen",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/800",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "原子级量化操作建议放到experiments/torchao-npu/torchao_npu/quantization/quant_primitives下，与mx量化、block_mx量化保持一致",
+                "createdAt": "2026-09-14T10:10:27+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:25",
+                "body": "此函数过度封装了。",
+                "createdAt": "2026-09-14T10:13:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap.py:17",
+                "body": "仍然不建议定义ModuleSwapConfig这个基类，因为一个module的权重很可能不止一个，也可能一个都没有。其接受的激活也可能不止一个。因此 ModuleSwapConfig中的activation_config和 weight_config很可能不具有可复用性。建议直接定义QuantLightningIndexerConfig然后提供quantize_需要的handler。",
+                "createdAt": "2026-09-14T10:24:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:37",
+                "body": "固定的量化配置组合建议移出功能支持代码，放在converter里。QuantLightningIndexerConfig的``__post_init__``里只检查用户指定的q，k量化配置是不是受支持。",
+                "createdAt": "2026-09-14T10:26:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:65",
+                "body": "建议去掉quant_mode。用户可以直接指定q、k量化配置。QuantLightningIndexerConfig在``__post_init__``中做配置的合法性检查。",
+                "createdAt": "2026-09-14T10:30:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:40",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:41+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:72",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:103",
+                "body": "过度封装建议去掉。",
+                "createdAt": "2026-09-14T10:36:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:94",
+                "body": "可以把HiF8QuantizeConfig合并进FP8QuantizeConfig。其中elem_dtype的类型为``torch.dtype | int``。``__post_init__``中通过检查只接受e4m3和e5m2以及hif8三种FP8格式。新增一个@property变量npu_elem_dtype，返回torch_npu下整型表示的数据类型，可参考MXQuantizeConfig。另外，FP8QuantizeConfig应再增加一个变量granularity，接受torchao中定义的Granularity类，并在 ``__post_init__``中通过检查表明目前只支持pertensor。同理，可以增添npu_granularity这个属性将Granularity翻译为torch_npu.npu_dynamic_quant接受的参数。 另外，torch_npu.npu_dynamic_quant有一个dst_type_max参数，也应该在FP8QuantizeConfig中暴露给用户，并在``__post_init__``中做合法性检查。",
+                "createdAt": "2026-09-14T10:47:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:18",
+                "body": "不支持HiF8吗？另外LIQuantization建议改名为LIQuantizationDtype",
+                "createdAt": "2026-09-14T10:51:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:114",
+                "body": "同样的改名，并在doc中补充使用说明",
+                "createdAt": "2026-09-14T11:02:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:35",
+                "body": "应改成在FP8QuantizeConfig中引入的npm_elem_dtype这个属性。另外，应该传入在FP8QuantizeConfig中定义的npu_granularity属性，和dst_type_max类变量，以保证FP8QuantizeConfig中所有的配置都生效。",
+                "createdAt": "2026-09-14T11:27:45+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:32",
+                "body": "torch_npu.npu_dynamic_quant是否跟npu_dynamic_mx_quant一样对输入张量的内存连续性有要求？是否会在输入不满足要求的情况下触发额外的内存操作。",
+                "createdAt": "2026-09-14T11:31:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/transform.py:51",
+                "body": "Module替换这个操作的handler的注册和派发在torchao的quantize_里已经完全实现了。应该直接利用这个机制，不用重新再写一遍派发。ParaSwapConfig需要自己写派发的原因是quantize_没过对parameter的遍历和派发机制。",
+                "createdAt": "2026-09-14T11:35:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "与其他两种fp8使用相同的算子，接受相同的配置。在HiF8QuantizeConfig合并到FP8QuantizeConfig之后，fp8_quantize的功能完全覆盖quantize_hifloat8，可以考虑删除该函数。",
+                "createdAt": "2026-09-14T12:47:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "torchtitan_npu/config/configs.py:122",
+                "body": "这里的校验是不是在通过 TrainerEx 启动训练时不会生效？ 对应torchtitan_npu/extensions/trainer.py:59-74 ``` TrainerEx.__init__() ├── 读取 quantization_config ├── 判断 enable_quantized_training └── 只有 True 时才调用 apply_quantization_converter() ``` 这个时候如果配置enable_quantized_training = False li_quantization = \"fp8\"，也不会执行validate内的校验吧",
+                "createdAt": "2026-09-14T13:08:36+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "interfaces/torchao_converter.py:307",
+                "body": "如果自定义自定义 compression ratio，这里当self.config.li_kernel_config.cmp_ratio not in metadata.plan时，会直接报错。 建议改为： ``` ratio = self.config.li_kernel_config.cmp_ratio plan = metadata.plans.get(ratio) if plan is None: raise ValueError( f\"LI compression ratio {ratio} is not present in attention metadata\" ) ```",
+                "createdAt": "2026-09-14T14:02:05+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantized_modules/lightning_indexer_metadata.py:22",
+                "body": "建议在``__post_init__``中检查传入配置的合法性。",
+                "createdAt": "2026-09-14T14:05:08+08:00"
+              }
+            ]
+          },
+          {
+            "id": 780,
+            "title": "feat: add DeepSeek-V4 Flash A5 launcher",
+            "author": "hitwdy",
+            "mergedAt": "2026-09-14T11:57:03+08:00",
+            "lines": 511,
+            "reviews": 6,
+            "score": 3.0,
+            "reviewer": "xuyujun",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/780",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:48",
+                "body": "按调用A3脚本实现",
+                "createdAt": "2026-09-11T16:15:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:41",
+                "body": "这里为啥跟A3有差异？",
+                "createdAt": "2026-09-11T18:09:08+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:58",
+                "body": "swap的修改也落到A3的脚本里吧，作为base",
+                "createdAt": "2026-09-11T18:09:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_mini_1p_cpt_2k_a3.sh:107",
+                "body": "这里单独提出来是为啥干啥？",
+                "createdAt": "2026-09-12T16:37:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a5.sh:41",
+                "body": "这边需要增加选择重计算配置吗？",
+                "createdAt": "2026-09-12T17:11:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:138",
+                "body": "建议在所有 base 启动脚本末尾统一追加 \"CLI_OVERRIDES\"，由上层 A5 脚本定义这个差异参数。这样可利用 CLI 后置覆盖前值的语义复用 A3，避免为 RoPE 等单独引入环境变量 `bash scripts/run_train.sh \\ $HF_ASSETS_ARGS \\ $DATALOADER_ARGS \\ $PARALLELISM_ARGS \\ $TRAINING_ARGS \\ $DEBUG_ARGS \\ $OPTIMIZER_ARGS \\ $PROFILER_ARGS \\ $COMM_ARGS \\ $CHECKPOINT_ARGS \\ --override.imports \"${NPU_OPS_OVERRIDES[@]}\" $OPTIMIZER_OVERRIDES \\ $CLI_OVERRIDES \\ \"$@\"`",
+                "createdAt": "2026-09-12T17:30:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "xuyujun",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+                "createdAt": "2026-09-14T11:52:11+08:00"
+              }
+            ]
+          },
           {
             "id": 801,
             "title": "fix: support Muon with context parallelism",
@@ -95469,12 +96545,12 @@
             "rated_prs": 20,
             "poor_prs": 0,
             "excellent_prs": 1,
-            "review_comments": 221,
-            "scored_prs": 51,
+            "review_comments": 222,
+            "scored_prs": 52,
             "scored_poor": 9,
             "scored_excellent": 4,
             "nonstandard_prs": 12,
-            "review_prs": 84
+            "review_prs": 85
           },
           {
             "name": "lrwei0709",
@@ -95499,12 +96575,12 @@
             "rated_prs": 6,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 113,
+            "review_comments": 118,
             "scored_prs": 14,
             "scored_poor": 1,
             "scored_excellent": 3,
             "nonstandard_prs": 1,
-            "review_prs": 44
+            "review_prs": 45
           },
           {
             "name": "panchao-gitcode",
@@ -95538,10 +96614,10 @@
           },
           {
             "name": "hitwdy",
-            "submit_prs": 20,
-            "submit_lines": 13451,
-            "received_reviews": 64,
-            "rated_prs": 13,
+            "submit_prs": 21,
+            "submit_lines": 13962,
+            "received_reviews": 70,
+            "rated_prs": 14,
             "poor_prs": 0,
             "excellent_prs": 1,
             "review_comments": 40,
@@ -95634,12 +96710,12 @@
             "rated_prs": 5,
             "poor_prs": 0,
             "excellent_prs": 2,
-            "review_comments": 4,
+            "review_comments": 17,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 3
+            "review_prs": 4
           },
           {
             "name": "zhuofanshen",
@@ -95649,12 +96725,12 @@
             "rated_prs": 4,
             "poor_prs": 1,
             "excellent_prs": 0,
-            "review_comments": 5,
+            "review_comments": 7,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 2,
-            "review_prs": 2
+            "nonstandard_prs": 3,
+            "review_prs": 3
           },
           {
             "name": "tanghaoran7",
@@ -95700,6 +96776,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
+          },
+          {
+            "name": "wanghui0",
+            "submit_prs": 3,
+            "submit_lines": 702,
+            "received_reviews": 15,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 5,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 2
           },
           {
             "name": "weixin_69877254",
@@ -95762,21 +96853,6 @@
             "review_prs": 1
           },
           {
-            "name": "wanghui0",
-            "submit_prs": 3,
-            "submit_lines": 702,
-            "received_reviews": 15,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 2,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 1,
-            "review_prs": 1
-          },
-          {
             "name": "zhangjianshe",
             "submit_prs": 1,
             "submit_lines": 553,
@@ -95790,6 +96866,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 1
+          },
+          {
+            "name": "zhaoxi1029",
+            "submit_prs": 4,
+            "submit_lines": 1689,
+            "received_reviews": 32,
+            "rated_prs": 3,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
           },
           {
             "name": "YueGuoDora",
@@ -95843,21 +96934,6 @@
             "received_reviews": 16,
             "rated_prs": 2,
             "poor_prs": 1,
-            "excellent_prs": 0,
-            "review_comments": 0,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
-          },
-          {
-            "name": "zhaoxi1029",
-            "submit_prs": 3,
-            "submit_lines": 804,
-            "received_reviews": 14,
-            "rated_prs": 3,
-            "poor_prs": 0,
             "excellent_prs": 0,
             "review_comments": 0,
             "scored_prs": 0,
@@ -96378,14 +97454,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       },
@@ -96395,6 +97471,7 @@
         "range": "2026 H1",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -109330,14 +110407,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       }
@@ -109349,6 +110426,7 @@
         "range": "2026 全年",
         "ranges": {
           "week": [
+            "2026年第38周",
             "2026年第37周",
             "2026年第36周",
             "2026年第35周",
@@ -109407,15 +110485,224 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 499,
-          "lines": 863660,
-          "reviewComments": 1685,
-          "ratedPrs": 364,
+          "mergedPrs": 501,
+          "lines": 865056,
+          "reviewComments": 1709,
+          "ratedPrs": 365,
           "averageScore": 3.01,
           "poorPrs": 29,
           "excellentPrs": 60
         },
         "prs": [
+          {
+            "id": 800,
+            "title": "[feat] unify TorchAO quantization converter for LI and metadata",
+            "author": "zhaoxi1029",
+            "mergedAt": "2026-09-14T21:05:09+08:00",
+            "lines": 885,
+            "reviews": 18,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "zhuofanshen",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/800",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "原子级量化操作建议放到experiments/torchao-npu/torchao_npu/quantization/quant_primitives下，与mx量化、block_mx量化保持一致",
+                "createdAt": "2026-09-14T10:10:27+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:25",
+                "body": "此函数过度封装了。",
+                "createdAt": "2026-09-14T10:13:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap.py:17",
+                "body": "仍然不建议定义ModuleSwapConfig这个基类，因为一个module的权重很可能不止一个，也可能一个都没有。其接受的激活也可能不止一个。因此 ModuleSwapConfig中的activation_config和 weight_config很可能不具有可复用性。建议直接定义QuantLightningIndexerConfig然后提供quantize_需要的handler。",
+                "createdAt": "2026-09-14T10:24:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:37",
+                "body": "固定的量化配置组合建议移出功能支持代码，放在converter里。QuantLightningIndexerConfig的``__post_init__``里只检查用户指定的q，k量化配置是不是受支持。",
+                "createdAt": "2026-09-14T10:26:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/configs/module_swap_configs/quant_lightning_indexer.py:65",
+                "body": "建议去掉quant_mode。用户可以直接指定q、k量化配置。QuantLightningIndexerConfig在``__post_init__``中做配置的合法性检查。",
+                "createdAt": "2026-09-14T10:30:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:40",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:41+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/ops/li_ops.py:72",
+                "body": "单纯传参的冗余封装建议去掉。",
+                "createdAt": "2026-09-14T10:35:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:103",
+                "body": "过度封装建议去掉。",
+                "createdAt": "2026-09-14T10:36:23+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_configs.py:94",
+                "body": "可以把HiF8QuantizeConfig合并进FP8QuantizeConfig。其中elem_dtype的类型为``torch.dtype | int``。``__post_init__``中通过检查只接受e4m3和e5m2以及hif8三种FP8格式。新增一个@property变量npu_elem_dtype，返回torch_npu下整型表示的数据类型，可参考MXQuantizeConfig。另外，FP8QuantizeConfig应再增加一个变量granularity，接受torchao中定义的Granularity类，并在 ``__post_init__``中通过检查表明目前只支持pertensor。同理，可以增添npu_granularity这个属性将Granularity翻译为torch_npu.npu_dynamic_quant接受的参数。 另外，torch_npu.npu_dynamic_quant有一个dst_type_max参数，也应该在FP8QuantizeConfig中暴露给用户，并在``__post_init__``中做合法性检查。",
+                "createdAt": "2026-09-14T10:47:33+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:18",
+                "body": "不支持HiF8吗？另外LIQuantization建议改名为LIQuantizationDtype",
+                "createdAt": "2026-09-14T10:51:52+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:114",
+                "body": "同样的改名，并在doc中补充使用说明",
+                "createdAt": "2026-09-14T11:02:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:35",
+                "body": "应改成在FP8QuantizeConfig中引入的npm_elem_dtype这个属性。另外，应该传入在FP8QuantizeConfig中定义的npu_granularity属性，和dst_type_max类变量，以保证FP8QuantizeConfig中所有的配置都生效。",
+                "createdAt": "2026-09-14T11:27:45+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/fp8.py:32",
+                "body": "torch_npu.npu_dynamic_quant是否跟npu_dynamic_mx_quant一样对输入张量的内存连续性有要求？是否会在输入不满足要求的情况下触发额外的内存操作。",
+                "createdAt": "2026-09-14T11:31:49+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/transform.py:51",
+                "body": "Module替换这个操作的handler的注册和派发在torchao的quantize_里已经完全实现了。应该直接利用这个机制，不用重新再写一遍派发。ParaSwapConfig需要自己写派发的原因是quantize_没过对parameter的遍历和派发机制。",
+                "createdAt": "2026-09-14T11:35:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantization/quant_primitives/hif8.py:16",
+                "body": "与其他两种fp8使用相同的算子，接受相同的配置。在HiF8QuantizeConfig合并到FP8QuantizeConfig之后，fp8_quantize的功能完全覆盖quantize_hifloat8，可以考虑删除该函数。",
+                "createdAt": "2026-09-14T12:47:25+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "torchtitan_npu/config/configs.py:122",
+                "body": "这里的校验是不是在通过 TrainerEx 启动训练时不会生效？ 对应torchtitan_npu/extensions/trainer.py:59-74 ``` TrainerEx.__init__() ├── 读取 quantization_config ├── 判断 enable_quantized_training └── 只有 True 时才调用 apply_quantization_converter() ``` 这个时候如果配置enable_quantized_training = False li_quantization = \"fp8\"，也不会执行validate内的校验吧",
+                "createdAt": "2026-09-14T13:08:36+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zhuofanshen",
+                "path": "interfaces/torchao_converter.py:307",
+                "body": "如果自定义自定义 compression ratio，这里当self.config.li_kernel_config.cmp_ratio not in metadata.plan时，会直接报错。 建议改为： ``` ratio = self.config.li_kernel_config.cmp_ratio plan = metadata.plans.get(ratio) if plan is None: raise ValueError( f\"LI compression ratio {ratio} is not present in attention metadata\" ) ```",
+                "createdAt": "2026-09-14T14:02:05+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "caoshuyang",
+                "path": "experiments/torchao-npu/torchao_npu/quantized_modules/lightning_indexer_metadata.py:22",
+                "body": "建议在``__post_init__``中检查传入配置的合法性。",
+                "createdAt": "2026-09-14T14:05:08+08:00"
+              }
+            ]
+          },
+          {
+            "id": 780,
+            "title": "feat: add DeepSeek-V4 Flash A5 launcher",
+            "author": "hitwdy",
+            "mergedAt": "2026-09-14T11:57:03+08:00",
+            "lines": 511,
+            "reviews": 6,
+            "score": 3.0,
+            "reviewer": "xuyujun",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/780",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:48",
+                "body": "按调用A3脚本实现",
+                "createdAt": "2026-09-11T16:15:29+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:41",
+                "body": "这里为啥跟A3有差异？",
+                "createdAt": "2026-09-11T18:09:08+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:58",
+                "body": "swap的修改也落到A3的脚本里吧，作为base",
+                "createdAt": "2026-09-11T18:09:54+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "xuyujun",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_mini_1p_cpt_2k_a3.sh:107",
+                "body": "这里单独提出来是为啥干啥？",
+                "createdAt": "2026-09-12T16:37:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a5.sh:41",
+                "body": "这边需要增加选择重计算配置吗？",
+                "createdAt": "2026-09-12T17:11:01+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:138",
+                "body": "建议在所有 base 启动脚本末尾统一追加 \"CLI_OVERRIDES\"，由上层 A5 脚本定义这个差异参数。这样可利用 CLI 后置覆盖前值的语义复用 A3，避免为 RoPE 等单独引入环境变量 `bash scripts/run_train.sh \\ $HF_ASSETS_ARGS \\ $DATALOADER_ARGS \\ $PARALLELISM_ARGS \\ $TRAINING_ARGS \\ $DEBUG_ARGS \\ $OPTIMIZER_ARGS \\ $PROFILER_ARGS \\ $COMM_ARGS \\ $CHECKPOINT_ARGS \\ --override.imports \"${NPU_OPS_OVERRIDES[@]}\" $OPTIMIZER_OVERRIDES \\ $CLI_OVERRIDES \\ \"$@\"`",
+                "createdAt": "2026-09-12T17:30:31+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "xuyujun",
+                "path": "",
+                "body": "【MR评价】评价分数:3, 评价意见： 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足;",
+                "createdAt": "2026-09-14T11:52:11+08:00"
+              }
+            ]
+          },
           {
             "id": 801,
             "title": "fix: support Muon with context parallelism",
@@ -132455,12 +133742,12 @@
             "rated_prs": 40,
             "poor_prs": 0,
             "excellent_prs": 6,
-            "review_comments": 503,
-            "scored_prs": 105,
+            "review_comments": 504,
+            "scored_prs": 106,
             "scored_poor": 13,
             "scored_excellent": 17,
             "nonstandard_prs": 30,
-            "review_prs": 176
+            "review_prs": 177
           },
           {
             "name": "lrwei0709",
@@ -132485,12 +133772,12 @@
             "rated_prs": 8,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 207,
+            "review_comments": 212,
             "scored_prs": 23,
             "scored_poor": 3,
             "scored_excellent": 4,
             "nonstandard_prs": 12,
-            "review_prs": 85
+            "review_prs": 86
           },
           {
             "name": "panchao-gitcode",
@@ -132509,10 +133796,10 @@
           },
           {
             "name": "hitwdy",
-            "submit_prs": 54,
-            "submit_lines": 33976,
-            "received_reviews": 149,
-            "rated_prs": 41,
+            "submit_prs": 55,
+            "submit_lines": 34487,
+            "received_reviews": 155,
+            "rated_prs": 42,
             "poor_prs": 0,
             "excellent_prs": 9,
             "review_comments": 61,
@@ -132643,6 +133930,21 @@
             "review_prs": 1
           },
           {
+            "name": "caoshuyang",
+            "submit_prs": 6,
+            "submit_lines": 9167,
+            "received_reviews": 25,
+            "rated_prs": 5,
+            "poor_prs": 0,
+            "excellent_prs": 2,
+            "review_comments": 17,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 4
+          },
+          {
             "name": "zhangwei1177",
             "submit_prs": 20,
             "submit_lines": 8326,
@@ -132688,6 +133990,21 @@
             "review_prs": 0
           },
           {
+            "name": "zhuofanshen",
+            "submit_prs": 7,
+            "submit_lines": 1765,
+            "received_reviews": 27,
+            "rated_prs": 5,
+            "poor_prs": 1,
+            "excellent_prs": 0,
+            "review_comments": 7,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 3,
+            "review_prs": 3
+          },
+          {
             "name": "MissingPompeii",
             "submit_prs": 14,
             "submit_lines": 904,
@@ -132718,21 +134035,6 @@
             "review_prs": 0
           },
           {
-            "name": "zhuofanshen",
-            "submit_prs": 7,
-            "submit_lines": 1765,
-            "received_reviews": 27,
-            "rated_prs": 5,
-            "poor_prs": 1,
-            "excellent_prs": 0,
-            "review_comments": 5,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 2,
-            "review_prs": 2
-          },
-          {
             "name": "zhangjianshe",
             "submit_prs": 7,
             "submit_lines": 1686,
@@ -132756,21 +134058,6 @@
             "poor_prs": 0,
             "excellent_prs": 1,
             "review_comments": 3,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 3
-          },
-          {
-            "name": "caoshuyang",
-            "submit_prs": 6,
-            "submit_lines": 9167,
-            "received_reviews": 25,
-            "rated_prs": 5,
-            "poor_prs": 0,
-            "excellent_prs": 2,
-            "review_comments": 4,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
@@ -132853,6 +134140,21 @@
             "review_prs": 6
           },
           {
+            "name": "wanghui0",
+            "submit_prs": 3,
+            "submit_lines": 702,
+            "received_reviews": 15,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 5,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 2
+          },
+          {
             "name": "weixin_69877254",
             "submit_prs": 7,
             "submit_lines": 4368,
@@ -132928,19 +134230,19 @@
             "review_prs": 0
           },
           {
-            "name": "wanghui0",
-            "submit_prs": 3,
-            "submit_lines": 702,
-            "received_reviews": 15,
-            "rated_prs": 2,
+            "name": "zhaoxi1029",
+            "submit_prs": 4,
+            "submit_lines": 1689,
+            "received_reviews": 32,
+            "rated_prs": 3,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 2,
+            "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 1,
-            "review_prs": 1
+            "nonstandard_prs": 0,
+            "review_prs": 0
           },
           {
             "name": "roadnotstop",
@@ -132965,21 +134267,6 @@
             "rated_prs": 3,
             "poor_prs": 1,
             "excellent_prs": 1,
-            "review_comments": 0,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 0
-          },
-          {
-            "name": "zhaoxi1029",
-            "submit_prs": 3,
-            "submit_lines": 804,
-            "received_reviews": 14,
-            "rated_prs": 3,
-            "poor_prs": 0,
-            "excellent_prs": 0,
             "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
@@ -133619,14 +134906,14 @@
           }
         ],
         "lastSync": {
-          "id": 105,
+          "id": 106,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-14T00:00:06.623167+08:00",
-          "finished_at": "2026-09-14T00:00:09.369515+08:00",
-          "window_start": "2026-09-13T00:00:00+08:00",
-          "window_end": "2026-09-14T00:00:00+08:00",
+          "started_at": "2026-09-15T00:00:07.679648+08:00",
+          "finished_at": "2026-09-15T00:00:28.430803+08:00",
+          "window_start": "2026-09-14T00:00:00+08:00",
+          "window_end": "2026-09-15T00:00:00+08:00",
           "status": "success",
-          "pr_count": 1,
+          "pr_count": 2,
           "error": null
         }
       }
