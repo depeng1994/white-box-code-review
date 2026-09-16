@@ -127,15 +127,253 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 6,
-          "lines": 7029,
-          "reviewComments": 32,
-          "ratedPrs": 2,
-          "averageScore": 3.0,
+          "mergedPrs": 11,
+          "lines": 10253,
+          "reviewComments": 52,
+          "ratedPrs": 4,
+          "averageScore": 3.05,
           "poorPrs": 0,
-          "excellentPrs": 0
+          "excellentPrs": 1
         },
         "prs": [
+          {
+            "id": 831,
+            "title": "refactor: configure training compile backend through CLI",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T22:44:03+08:00",
+            "lines": 128,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/831",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:157",
+                "body": "加一个COMPILE_ARGS把",
+                "createdAt": "2026-09-16T21:04:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:24",
+                "body": "A3也改成默认inductor吧 这俩就可以删除了",
+                "createdAt": "2026-09-16T21:46:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a3.sh:82",
+                "body": "同理 A3正式脚本也要默认打开AF",
+                "createdAt": "2026-09-16T21:46:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/tooling/test_compile_cli.py:118",
+                "body": "这个用例没必要",
+                "createdAt": "2026-09-16T21:47:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 827,
+            "title": "fix: tolerate appended torch_npu mHC backward op args in fake kernels",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T20:12:37+08:00",
+            "lines": 56,
+            "reviews": 0,
+            "score": 3.0,
+            "reviewer": "depeng1994",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/827",
+            "detail": [
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-09-16T20:12:14+08:00"
+              }
+            ]
+          },
+          {
+            "id": 823,
+            "title": "fix: 修改量化启动脚本",
+            "author": "wanghui0",
+            "mergedAt": "2026-09-16T19:51:49+08:00",
+            "lines": 3,
+            "reviews": 0,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "depeng1994",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/823",
+            "detail": []
+          },
+          {
+            "id": 772,
+            "title": "[feat] Support block mx prequantize of weights during the FSDP prefetch stage and enable FP8 all-gather communication",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-09-16T18:03:31+08:00",
+            "lines": 1023,
+            "reviews": 3,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "wanghui0",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/772",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "experiments/torchao-npu/torchao_npu/wrapper_tensors/block_mx_wrapper_tensor.py:290",
+                "body": "严重(S1): 复用 `out` 时这里写入了预量化数据却返回 `None`。FSDP 的 `fsdp_post_all_gather` 仍需要拿到可继续使用的 unsharded wrapper/inner tensors；请按当前 tensor-subclass hook 契约返回 `out` 及对应 inner tensors，否则后续训练步可能在参数重建或前向阶段失败。",
+                "createdAt": "2026-09-10T19:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:121",
+                "body": "在docs里补充开启方式吧",
+                "createdAt": "2026-09-16T14:03:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "interfaces/torchao_converter.py:439",
+                "body": "dense部分不会使用A8W4，只有moe的routed才会A8W4",
+                "createdAt": "2026-09-16T14:26:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 806,
+            "title": "feat(rope): DeepSeek-V4 partial RoPE 融合改用 override 直接调用融合算子，并删除旧的 graph pattern 机制",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T17:50:49+08:00",
+            "lines": 2014,
+            "reviews": 13,
+            "score": 3.2,
+            "reviewer": "depeng1994",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/806",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/rope.py:29",
+                "body": "【阻塞问题 1/N：common 层引入了模型专属算子包的硬依赖】 这一行顶层 import 把 `cann_ops_transformer`（经 `ops/ascendc/inplace_partial_rotary_mul.py` 的顶层 `import cann_ops_transformer...`）变成了所有使用 common RoPE override 的隐式依赖。但 `pyproject.toml` 声明的运行时依赖只有 `torchtitan` 和 `torch-npu`，CANN transformer 算子包并不在其中。 直接影响：`deepseek_v41/model_registry.py` 仅仅为了 `WorkaroundComplexRoPE` 就会连带拉起 partial-RoPE CANN op 的导入；在没有安装 CANN 包的环境（CPU UT、最小安装）里这条 import 链会直接失败。更关键的是，本次改动里 `test_independence.py` 新加的 `_ISOLATED_PRELUDE`（在隔离子进程里主动安装 fake CANN）正是在掩盖这个新引入的依赖——独立性测试本应证明 V4.1 不需要 V4 专属依赖也能跑，现在变成了主动替它补依赖。 修改建议（两选一）： 1. 【推荐】把 `AscPartialComplexRoPE` / `asc_partial` 整体移到模型域 `torchtitan_npu/override/deepseek_v4/rope.py`，common 只保留不依赖 DSV4/CANN 算子包的通用实现；A5 脚本的 override 路径相应改为 `torchtitan_npu.override.deepseek_v4.rope.asc_partial`。 2. 退而求其次：把对 op wrapper 的 import 挪进 `AscPartialComplexRoPE.forward` 内部做惰性导入，至少保证导入 common 模块本身不触发 CANN 依赖。 无论选哪个，都应撤回 `test_independence.py` 的 fake-CANN prelude，让独立性测试回到\"无 CANN 也能导入构建\"的语义。",
+                "createdAt": "2026-09-16T01:08:03+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:1",
+                "body": "【阻塞问题 2/N：SAR workaround 的归属位置和安装方式不符合 patches 目录的定位】 按本仓约定，`patches/torchtitan` 是\"准备贡献上游的通用代码\"的临时存放地。但这个文件： - `_ROPE_MUTATOR_OPS` 硬编码匹配 `cann_ops_transformer.inplace_partial_rotary_mul`（第 69 行），是明确的 DSV4/CANN 算子特判； - 整体复制了上游 SAR pass（本文件 456 行），并经文件末尾的 `_install()` 全局替换上游实现。 而 `memory_policy.py` 里的 side-effect import 会在 GraphTrainer 路径上**无条件**安装这份 fork——所有走 GraphTrainer 的模型都会运行它，不只是 DSV4。上游 SAR pass 后续一旦演进，本仓会静默停留在旧实现；且上游 issue #4688 目前只是问题报告，还没有被接受的修复方案，本地 fork 与未来上游修复很可能行为分叉。 修改建议（两选一）： 1. 【推荐，长期】做通用的 mutation/storage-aware SAR 修复：不匹配任何 CANN op 名，放在 patches 并同步提交 TorchTitan 上游 PR。 2. 【短期】保留局部 workaround，但移出 patches，放到 `torchtitan_npu/extensions/graph_trainer/`（或 DSV4 专属 extension 路径），并且只在明确选择 DSV4 GraphTrainer + asc_partial 时安装；同时把 fork 范围压到最小，避免整段复制上游 pass。",
+                "createdAt": "2026-09-16T01:08:51+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/memory_policy.py:36",
+                "body": "这个 side-effect import 是上面 SAR workaround 全局安装的触发点：只要走到 memory_policy，partial-RoPE 专用 fork 就被无条件装上，与模型是否为 DSV4、是否启用 asc_partial 无关。请随该 workaround 一起迁移（见 selective_activation_remat.py 首行的意见）：改为在 DSV4 + asc_partial 的明确配置下按需安装，不要从通用 GraphTrainer patch 做全局注入。",
+                "createdAt": "2026-09-16T01:08:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:110",
+                "body": "【阻塞问题 3/N：仓内缺少 torch.compile / 真实链路的回归测试（真机验证已有，但未沉淀为 CI 可执行的 oracle）】 先澄清：PR 描述里的 NPU 实测（A3 8 卡、GraphTrainer 模式 asc_partial 开/关各 50 步、首步 loss 逐位一致、吞吐 +19%）实际上已经覆盖了 compile 链路的数值与性能，这条意见不针对真机验证的充分性。 缺的是仓内可重复执行的测试：本 PR 删除了旧 compile pattern 测试（`test_inplace_partial_rope.py`、`test_pattern_replacement.py`）后，新增 CPU UT 集中在 eager 数值等价、cache、split 契约，`torch.compile` / AOTAutograd 回归缺位；SAR 测试也是手工构造 FX Graph，未从真实的 `AscPartialComplexRoPE -> autograd.Function -> clone -> CANN mutator` trace 整条链路。将来上游或本仓的改动若引入 graph break 或 SAR 形态变化，现有 CI 拦不住，只能靠再跑一次 8 卡实测发现。 修改建议（CPU fake op 即可，无需 NPU）： 1. compile UT：对 `AscPartialComplexRoPE` 跑 `torch.compile(..., backend=\"aot_eager\", fullgraph=True)` forward/backward 与 reference 对比，确认无 graph break、mutator 落在预期图中； 2. SAR 集成 UT：从真实 functional wrapper trace 出 joint graph，应用 SAR 后比较 loss/gradient 与不应用 SAR 的结果。",
+                "createdAt": "2026-09-16T01:09:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/models/deepseek_v41/test_independence.py:43",
+                "body": "这个 prelude 的效果是给隔离子进程预装 fake CANN 包，它掩盖的是 common rope 新引入的 import-time 硬依赖（见 override/common/rope.py 第 29 行的意见）。引入它的那个 commit 说明写得很直白：不加这一步，子进程会直接 `ModuleNotFoundError: cann_ops_transformer`。 独立性测试的语义应该是\"V4.1 在不安装 V4/partial-RoPE 专属依赖时仍能导入、构建、运行\"，现在被反转成了\"主动替被测对象补上缺失的依赖\"。请在生产侧修好 import 分层（asc_partial 移到模型域或惰性导入）后撤回这段 prelude，让这个测试重新回到无 CANN 运行的状态。",
+                "createdAt": "2026-09-16T01:09:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/rope.py:1",
+                "body": "【重要 1/N：patch 文件头的 upstream 出处与 PR 描述不一致，删除条件会误导读代码的人】 先说明：PR 描述里这部分是准确的——\"backport 上游 `br_dpsk_v4_1` 的 split-aware RoPE\"\"rope patch 待上游 `br_dpsk_v4_1` 合入后整体删除\"。问题只在这个文件头的注释。 我核对了上游：注释引用的 \"Pending upstream PR: pytorch/torchtitan#3634\" 已于 2026-09-02 合入且改过 `models/common/rope.py`，但改的是 key 可选与 inverse 支持；当前 TorchTitan main 的 `rope.py` 里**完全没有** split 字段、`_split`/`_unsplit` 这套 API。本文件实际 backport 的是 `sdmyzlp/torchtitan:br_dpsk_v4_1` 分支的代码，而非 #3634。头部写 \"Remove this module after the TorchTitan dependency includes the change\" 并引用 #3634，读代码的人会误以为删除条件是 #3634 合入（它已合入但不包含此代码）。另外注释把 split-aware 变更挂在 issue #4688 的\"rope context\"下，但 #4688 的主题是 SAR 丢失 in-place write（描述里它也只用于 SAR 规避），不是 split-aware RoPE 的跟踪 issue。 一个开放问题：`br_dpsk_v4_1` 是个人 fork 的分支，\"待其合入后删除\"的上游化路径目前并不确定。建议：若推动上游，建立真实的 upstream PR/issue 并让文件头只引用那个链接；否则头部改为如实描述来源（fork 分支 backport）与删除条件，避免悬空引用。",
+                "createdAt": "2026-09-16T01:09:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:97",
+                "body": "【重要 2/N：对已识别 mutator 的异常静默跳过，与\"不满足形态显式报错\"的设计承诺不一致】 PR 描述明确承诺：SAR 规避\"不满足该形态时显式报错，避免静默算错\"，且 UT 里有\"不支持的形态显式报错\"用例。主要坏形态（写目标不是 recomputed clone）确实在第 201 行 fail-fast 了，这条承诺对它成立。 但这条 `except (AttributeError, RuntimeError): return None` 加上\"写目标数量不为一返回 None\"，是承诺之外的静默缺口：schema 解析异常或多写目标时 `_rope_write_target` 返回 None，调用方 `if target_node is not n: continue` 跳过 replay——被跳过的旋转恰好重新落回 issue #4688 那个静默错梯度场景。对一个 schema 固定的 CANN 算子这层防御式吞错没有实际收益。修改建议：对该算子已识别调用，schema 解析失败或写目标数量异常时直接 raise（与第 201 行同风格）；read-only 区分保留但用显式条件，不并入异常处理。",
+                "createdAt": "2026-09-16T01:09:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/deepseek_v4_graph_trainer_recompute.md:159",
+                "body": "【重要 3/N：文档没有同步本次引入的 SAR 行为】 这行改动把旧 pattern 机制的条目从表格里删掉了，这部分是对的；但本次实际引入了\"全局替换上游 SAR pass\"这一重要行为，文档却完全没提：全文没有描述 issue #4688、没有列出 `selective_activation_remat.py`、没有说明 partial-RoPE + selective AC 下的额外 replay 契约，而且第 17 行还写着\"通用策略由上游提供，NPU 仓只扩展 DSV4 所需规则\"——实现已经 fork 了整个上游 pass，这句话不再成立。 无论最终按哪种方案落地（上游通用修复 or 本地 extension），都请刷新此文档：写明新的执行流程、限制、关键文件归属，保持文档与代码一致。",
+                "createdAt": "2026-09-16T01:09:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:3",
+                "body": "【重要 4/N：头部注释引用了仓内不存在的交接文件】 `HANDOFF_rope_override.md` 和 `SAR_fix_v3.patch` 在本分支树里都不存在（应该是本地交接时的遗留引用）。产品源码里不要保留指向本地临时文件的引用，读到这里的人无从查起。建议删除这两行；相关分析如果有保留价值，移入正式 docs 或直接贴到上游 issue #4688 的讨论里。",
+                "createdAt": "2026-09-16T01:10:02+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/ops/ascendc/inplace_partial_rotary_mul.py:73",
+                "body": "【次要 1/N：热路径上的防御式校验——与描述的\"错误直接报错\"原则一致，建议明确它捕获的真实错误或前移】 `partial_slice` 由 RoPE config 的固定 `split`/`dim` 推导，不是用户动态输入，每次 forward 都做这组 Python 检查会额外进入 Dynamo guard/trace 逻辑。 不过说明：这个检查与本 PR 描述\"发生布局/内存错误时直接报错\"的取向一致，且确实捕获过真实错误——本 PR 自己的 MTP 修复（pin MTP rope split）修的正是 split 与实际张量宽度不匹配、宽度只在调用时可知的问题，以及空窗口会被 native kernel 当 no-op 静默跳过的风险。二选一即可：保留检查但把这两类真实错误写进注释说明；或上移到 config/site 构造期校验一次（能覆盖宽度匹配的一类），热路径只留空窗口断言。",
+                "createdAt": "2026-09-16T01:10:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/conftest.py:59",
+                "body": "【次要 2/N：CPU fake 脚手架留有旧机制的遗留】 两处遗留： 1. 附近的注释 \"Imported via cann_ops_transformer.ops (the compile-pattern module)\" 引用的 compile-pattern module 已随本 PR 删除，注释失效； 2. conftest 仍在构造内层嵌套 fake module `cann_ops_transformer.ops.inplace_partial_rotary_mul.inplace_partial_rotary_mul` 及其 `InplacePartialRotaryMulFn` 表面——这是旧 wrapper 直接继承原生 Function 时的形态，新 wrapper 只 import 外层注册模块（`import cann_ops_transformer.ops.inplace_partial_rotary_mul`），内层已无生产代码使用。 建议同步清理，保持测试环境与生产依赖面一致（外层注册模块的 fake 仍需保留）。",
+                "createdAt": "2026-09-16T01:10:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:18",
+                "body": "【次要 3/N：CosSin 路径的 split 改动缺少测试】 split patch 同时改了两条通用路径：新增 `SplitComplexRoPEConfig` 和 `SplitCosSinRoPEConfig`，并改写了 `CosSinRoPE.apply_rotary_emb` 的行为。但新增测试只覆盖了 Complex 一侧（全测试目录对 `SplitCosSinRoPE` 零引用），而 DSV4 当前只消费 Complex，CosSin split 的回归完全靠不上消费方兜底。如果该 patch 继续以\"通用上游 patch\"形态保留，请补 CosSinRoPE 的 split=0 / split>0 / query+key 等价性测试。",
+                "createdAt": "2026-09-16T01:10:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/fused_ops.md:11",
+                "body": "增加文档说明",
+                "createdAt": "2026-09-16T10:47:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+                "createdAt": "2026-09-16T17:02:41+08:00"
+              }
+            ]
+          },
           {
             "id": 814,
             "title": "feat(deepseek_v4): add A5 Flash QAT training scripts",
@@ -478,6 +716,21 @@
         ],
         "contributors": [
           {
+            "name": "depeng1994",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 28,
+            "scored_prs": 2,
+            "scored_poor": 0,
+            "scored_excellent": 1,
+            "nonstandard_prs": 1,
+            "review_prs": 5
+          },
+          {
             "name": "caoshuyang",
             "submit_prs": 0,
             "submit_lines": 0,
@@ -493,34 +746,49 @@
             "review_prs": 1
           },
           {
-            "name": "depeng1994",
-            "submit_prs": 0,
-            "submit_lines": 0,
+            "name": "wanghui0",
+            "submit_prs": 1,
+            "submit_lines": 3,
             "received_reviews": 0,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 11,
+            "review_comments": 6,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 0,
+            "nonstandard_prs": 2,
             "review_prs": 3
           },
           {
-            "name": "wanghui0",
-            "submit_prs": 0,
-            "submit_lines": 0,
-            "received_reviews": 0,
+            "name": "xuyujun",
+            "submit_prs": 3,
+            "submit_lines": 2198,
+            "received_reviews": 17,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 1,
+            "review_comments": 1,
+            "scored_prs": 1,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 1
+          },
+          {
+            "name": "zhuofanshen",
+            "submit_prs": 1,
+            "submit_lines": 1023,
+            "received_reviews": 3,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 4,
+            "review_comments": 2,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 1,
-            "review_prs": 2
+            "review_prs": 1
           },
           {
             "name": "panchao-gitcode",
@@ -538,22 +806,7 @@
             "review_prs": 0
           },
           {
-            "name": "xuyujun",
-            "submit_prs": 0,
-            "submit_lines": 0,
-            "received_reviews": 0,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 1,
-            "scored_prs": 1,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 1,
-            "review_prs": 1
-          },
-          {
-            "name": "zhuofanshen",
+            "name": "Messi8",
             "submit_prs": 0,
             "submit_lines": 0,
             "received_reviews": 0,
@@ -564,8 +817,8 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 1,
-            "review_prs": 1
+            "nonstandard_prs": 0,
+            "review_prs": 2
           },
           {
             "name": "zhaoxi1029",
@@ -643,30 +896,30 @@
             "review_prs": 0
           },
           {
-            "name": "Messi8",
+            "name": "lrwei0709",
             "submit_prs": 0,
             "submit_lines": 0,
             "received_reviews": 0,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 1,
+            "review_comments": 0,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 1
+            "nonstandard_prs": 1,
+            "review_prs": 0
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -3140,14 +3393,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -4421,14 +4674,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -6318,14 +6571,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -8302,14 +8555,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -10075,14 +10328,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -11472,14 +11725,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -12046,14 +12299,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -12957,14 +13210,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -13959,14 +14212,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -14802,14 +15055,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -15792,14 +16045,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -17109,14 +17362,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -17714,14 +17967,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -19019,14 +19272,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -20531,14 +20784,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -22489,14 +22742,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -23799,14 +24052,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -24509,14 +24762,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -25346,14 +25599,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -26181,14 +26434,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -26459,14 +26712,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -27322,14 +27575,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -27867,14 +28120,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -29001,14 +29254,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -29578,14 +29831,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -29910,14 +30163,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -30833,14 +31086,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -31272,14 +31525,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -32080,14 +32333,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -32323,14 +32576,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -32586,14 +32839,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -33301,14 +33554,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       }
@@ -33379,15 +33632,253 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 57,
-          "lines": 285311,
-          "reviewComments": 255,
-          "ratedPrs": 33,
-          "averageScore": 2.98,
+          "mergedPrs": 62,
+          "lines": 288535,
+          "reviewComments": 275,
+          "ratedPrs": 35,
+          "averageScore": 2.99,
           "poorPrs": 6,
-          "excellentPrs": 1
+          "excellentPrs": 2
         },
         "prs": [
+          {
+            "id": 831,
+            "title": "refactor: configure training compile backend through CLI",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T22:44:03+08:00",
+            "lines": 128,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/831",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:157",
+                "body": "加一个COMPILE_ARGS把",
+                "createdAt": "2026-09-16T21:04:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:24",
+                "body": "A3也改成默认inductor吧 这俩就可以删除了",
+                "createdAt": "2026-09-16T21:46:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a3.sh:82",
+                "body": "同理 A3正式脚本也要默认打开AF",
+                "createdAt": "2026-09-16T21:46:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/tooling/test_compile_cli.py:118",
+                "body": "这个用例没必要",
+                "createdAt": "2026-09-16T21:47:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 827,
+            "title": "fix: tolerate appended torch_npu mHC backward op args in fake kernels",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T20:12:37+08:00",
+            "lines": 56,
+            "reviews": 0,
+            "score": 3.0,
+            "reviewer": "depeng1994",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/827",
+            "detail": [
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-09-16T20:12:14+08:00"
+              }
+            ]
+          },
+          {
+            "id": 823,
+            "title": "fix: 修改量化启动脚本",
+            "author": "wanghui0",
+            "mergedAt": "2026-09-16T19:51:49+08:00",
+            "lines": 3,
+            "reviews": 0,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "depeng1994",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/823",
+            "detail": []
+          },
+          {
+            "id": 772,
+            "title": "[feat] Support block mx prequantize of weights during the FSDP prefetch stage and enable FP8 all-gather communication",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-09-16T18:03:31+08:00",
+            "lines": 1023,
+            "reviews": 3,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "wanghui0",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/772",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "experiments/torchao-npu/torchao_npu/wrapper_tensors/block_mx_wrapper_tensor.py:290",
+                "body": "严重(S1): 复用 `out` 时这里写入了预量化数据却返回 `None`。FSDP 的 `fsdp_post_all_gather` 仍需要拿到可继续使用的 unsharded wrapper/inner tensors；请按当前 tensor-subclass hook 契约返回 `out` 及对应 inner tensors，否则后续训练步可能在参数重建或前向阶段失败。",
+                "createdAt": "2026-09-10T19:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:121",
+                "body": "在docs里补充开启方式吧",
+                "createdAt": "2026-09-16T14:03:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "interfaces/torchao_converter.py:439",
+                "body": "dense部分不会使用A8W4，只有moe的routed才会A8W4",
+                "createdAt": "2026-09-16T14:26:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 806,
+            "title": "feat(rope): DeepSeek-V4 partial RoPE 融合改用 override 直接调用融合算子，并删除旧的 graph pattern 机制",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T17:50:49+08:00",
+            "lines": 2014,
+            "reviews": 13,
+            "score": 3.2,
+            "reviewer": "depeng1994",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/806",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/rope.py:29",
+                "body": "【阻塞问题 1/N：common 层引入了模型专属算子包的硬依赖】 这一行顶层 import 把 `cann_ops_transformer`（经 `ops/ascendc/inplace_partial_rotary_mul.py` 的顶层 `import cann_ops_transformer...`）变成了所有使用 common RoPE override 的隐式依赖。但 `pyproject.toml` 声明的运行时依赖只有 `torchtitan` 和 `torch-npu`，CANN transformer 算子包并不在其中。 直接影响：`deepseek_v41/model_registry.py` 仅仅为了 `WorkaroundComplexRoPE` 就会连带拉起 partial-RoPE CANN op 的导入；在没有安装 CANN 包的环境（CPU UT、最小安装）里这条 import 链会直接失败。更关键的是，本次改动里 `test_independence.py` 新加的 `_ISOLATED_PRELUDE`（在隔离子进程里主动安装 fake CANN）正是在掩盖这个新引入的依赖——独立性测试本应证明 V4.1 不需要 V4 专属依赖也能跑，现在变成了主动替它补依赖。 修改建议（两选一）： 1. 【推荐】把 `AscPartialComplexRoPE` / `asc_partial` 整体移到模型域 `torchtitan_npu/override/deepseek_v4/rope.py`，common 只保留不依赖 DSV4/CANN 算子包的通用实现；A5 脚本的 override 路径相应改为 `torchtitan_npu.override.deepseek_v4.rope.asc_partial`。 2. 退而求其次：把对 op wrapper 的 import 挪进 `AscPartialComplexRoPE.forward` 内部做惰性导入，至少保证导入 common 模块本身不触发 CANN 依赖。 无论选哪个，都应撤回 `test_independence.py` 的 fake-CANN prelude，让独立性测试回到\"无 CANN 也能导入构建\"的语义。",
+                "createdAt": "2026-09-16T01:08:03+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:1",
+                "body": "【阻塞问题 2/N：SAR workaround 的归属位置和安装方式不符合 patches 目录的定位】 按本仓约定，`patches/torchtitan` 是\"准备贡献上游的通用代码\"的临时存放地。但这个文件： - `_ROPE_MUTATOR_OPS` 硬编码匹配 `cann_ops_transformer.inplace_partial_rotary_mul`（第 69 行），是明确的 DSV4/CANN 算子特判； - 整体复制了上游 SAR pass（本文件 456 行），并经文件末尾的 `_install()` 全局替换上游实现。 而 `memory_policy.py` 里的 side-effect import 会在 GraphTrainer 路径上**无条件**安装这份 fork——所有走 GraphTrainer 的模型都会运行它，不只是 DSV4。上游 SAR pass 后续一旦演进，本仓会静默停留在旧实现；且上游 issue #4688 目前只是问题报告，还没有被接受的修复方案，本地 fork 与未来上游修复很可能行为分叉。 修改建议（两选一）： 1. 【推荐，长期】做通用的 mutation/storage-aware SAR 修复：不匹配任何 CANN op 名，放在 patches 并同步提交 TorchTitan 上游 PR。 2. 【短期】保留局部 workaround，但移出 patches，放到 `torchtitan_npu/extensions/graph_trainer/`（或 DSV4 专属 extension 路径），并且只在明确选择 DSV4 GraphTrainer + asc_partial 时安装；同时把 fork 范围压到最小，避免整段复制上游 pass。",
+                "createdAt": "2026-09-16T01:08:51+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/memory_policy.py:36",
+                "body": "这个 side-effect import 是上面 SAR workaround 全局安装的触发点：只要走到 memory_policy，partial-RoPE 专用 fork 就被无条件装上，与模型是否为 DSV4、是否启用 asc_partial 无关。请随该 workaround 一起迁移（见 selective_activation_remat.py 首行的意见）：改为在 DSV4 + asc_partial 的明确配置下按需安装，不要从通用 GraphTrainer patch 做全局注入。",
+                "createdAt": "2026-09-16T01:08:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:110",
+                "body": "【阻塞问题 3/N：仓内缺少 torch.compile / 真实链路的回归测试（真机验证已有，但未沉淀为 CI 可执行的 oracle）】 先澄清：PR 描述里的 NPU 实测（A3 8 卡、GraphTrainer 模式 asc_partial 开/关各 50 步、首步 loss 逐位一致、吞吐 +19%）实际上已经覆盖了 compile 链路的数值与性能，这条意见不针对真机验证的充分性。 缺的是仓内可重复执行的测试：本 PR 删除了旧 compile pattern 测试（`test_inplace_partial_rope.py`、`test_pattern_replacement.py`）后，新增 CPU UT 集中在 eager 数值等价、cache、split 契约，`torch.compile` / AOTAutograd 回归缺位；SAR 测试也是手工构造 FX Graph，未从真实的 `AscPartialComplexRoPE -> autograd.Function -> clone -> CANN mutator` trace 整条链路。将来上游或本仓的改动若引入 graph break 或 SAR 形态变化，现有 CI 拦不住，只能靠再跑一次 8 卡实测发现。 修改建议（CPU fake op 即可，无需 NPU）： 1. compile UT：对 `AscPartialComplexRoPE` 跑 `torch.compile(..., backend=\"aot_eager\", fullgraph=True)` forward/backward 与 reference 对比，确认无 graph break、mutator 落在预期图中； 2. SAR 集成 UT：从真实 functional wrapper trace 出 joint graph，应用 SAR 后比较 loss/gradient 与不应用 SAR 的结果。",
+                "createdAt": "2026-09-16T01:09:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/models/deepseek_v41/test_independence.py:43",
+                "body": "这个 prelude 的效果是给隔离子进程预装 fake CANN 包，它掩盖的是 common rope 新引入的 import-time 硬依赖（见 override/common/rope.py 第 29 行的意见）。引入它的那个 commit 说明写得很直白：不加这一步，子进程会直接 `ModuleNotFoundError: cann_ops_transformer`。 独立性测试的语义应该是\"V4.1 在不安装 V4/partial-RoPE 专属依赖时仍能导入、构建、运行\"，现在被反转成了\"主动替被测对象补上缺失的依赖\"。请在生产侧修好 import 分层（asc_partial 移到模型域或惰性导入）后撤回这段 prelude，让这个测试重新回到无 CANN 运行的状态。",
+                "createdAt": "2026-09-16T01:09:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/rope.py:1",
+                "body": "【重要 1/N：patch 文件头的 upstream 出处与 PR 描述不一致，删除条件会误导读代码的人】 先说明：PR 描述里这部分是准确的——\"backport 上游 `br_dpsk_v4_1` 的 split-aware RoPE\"\"rope patch 待上游 `br_dpsk_v4_1` 合入后整体删除\"。问题只在这个文件头的注释。 我核对了上游：注释引用的 \"Pending upstream PR: pytorch/torchtitan#3634\" 已于 2026-09-02 合入且改过 `models/common/rope.py`，但改的是 key 可选与 inverse 支持；当前 TorchTitan main 的 `rope.py` 里**完全没有** split 字段、`_split`/`_unsplit` 这套 API。本文件实际 backport 的是 `sdmyzlp/torchtitan:br_dpsk_v4_1` 分支的代码，而非 #3634。头部写 \"Remove this module after the TorchTitan dependency includes the change\" 并引用 #3634，读代码的人会误以为删除条件是 #3634 合入（它已合入但不包含此代码）。另外注释把 split-aware 变更挂在 issue #4688 的\"rope context\"下，但 #4688 的主题是 SAR 丢失 in-place write（描述里它也只用于 SAR 规避），不是 split-aware RoPE 的跟踪 issue。 一个开放问题：`br_dpsk_v4_1` 是个人 fork 的分支，\"待其合入后删除\"的上游化路径目前并不确定。建议：若推动上游，建立真实的 upstream PR/issue 并让文件头只引用那个链接；否则头部改为如实描述来源（fork 分支 backport）与删除条件，避免悬空引用。",
+                "createdAt": "2026-09-16T01:09:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:97",
+                "body": "【重要 2/N：对已识别 mutator 的异常静默跳过，与\"不满足形态显式报错\"的设计承诺不一致】 PR 描述明确承诺：SAR 规避\"不满足该形态时显式报错，避免静默算错\"，且 UT 里有\"不支持的形态显式报错\"用例。主要坏形态（写目标不是 recomputed clone）确实在第 201 行 fail-fast 了，这条承诺对它成立。 但这条 `except (AttributeError, RuntimeError): return None` 加上\"写目标数量不为一返回 None\"，是承诺之外的静默缺口：schema 解析异常或多写目标时 `_rope_write_target` 返回 None，调用方 `if target_node is not n: continue` 跳过 replay——被跳过的旋转恰好重新落回 issue #4688 那个静默错梯度场景。对一个 schema 固定的 CANN 算子这层防御式吞错没有实际收益。修改建议：对该算子已识别调用，schema 解析失败或写目标数量异常时直接 raise（与第 201 行同风格）；read-only 区分保留但用显式条件，不并入异常处理。",
+                "createdAt": "2026-09-16T01:09:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/deepseek_v4_graph_trainer_recompute.md:159",
+                "body": "【重要 3/N：文档没有同步本次引入的 SAR 行为】 这行改动把旧 pattern 机制的条目从表格里删掉了，这部分是对的；但本次实际引入了\"全局替换上游 SAR pass\"这一重要行为，文档却完全没提：全文没有描述 issue #4688、没有列出 `selective_activation_remat.py`、没有说明 partial-RoPE + selective AC 下的额外 replay 契约，而且第 17 行还写着\"通用策略由上游提供，NPU 仓只扩展 DSV4 所需规则\"——实现已经 fork 了整个上游 pass，这句话不再成立。 无论最终按哪种方案落地（上游通用修复 or 本地 extension），都请刷新此文档：写明新的执行流程、限制、关键文件归属，保持文档与代码一致。",
+                "createdAt": "2026-09-16T01:09:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:3",
+                "body": "【重要 4/N：头部注释引用了仓内不存在的交接文件】 `HANDOFF_rope_override.md` 和 `SAR_fix_v3.patch` 在本分支树里都不存在（应该是本地交接时的遗留引用）。产品源码里不要保留指向本地临时文件的引用，读到这里的人无从查起。建议删除这两行；相关分析如果有保留价值，移入正式 docs 或直接贴到上游 issue #4688 的讨论里。",
+                "createdAt": "2026-09-16T01:10:02+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/ops/ascendc/inplace_partial_rotary_mul.py:73",
+                "body": "【次要 1/N：热路径上的防御式校验——与描述的\"错误直接报错\"原则一致，建议明确它捕获的真实错误或前移】 `partial_slice` 由 RoPE config 的固定 `split`/`dim` 推导，不是用户动态输入，每次 forward 都做这组 Python 检查会额外进入 Dynamo guard/trace 逻辑。 不过说明：这个检查与本 PR 描述\"发生布局/内存错误时直接报错\"的取向一致，且确实捕获过真实错误——本 PR 自己的 MTP 修复（pin MTP rope split）修的正是 split 与实际张量宽度不匹配、宽度只在调用时可知的问题，以及空窗口会被 native kernel 当 no-op 静默跳过的风险。二选一即可：保留检查但把这两类真实错误写进注释说明；或上移到 config/site 构造期校验一次（能覆盖宽度匹配的一类），热路径只留空窗口断言。",
+                "createdAt": "2026-09-16T01:10:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/conftest.py:59",
+                "body": "【次要 2/N：CPU fake 脚手架留有旧机制的遗留】 两处遗留： 1. 附近的注释 \"Imported via cann_ops_transformer.ops (the compile-pattern module)\" 引用的 compile-pattern module 已随本 PR 删除，注释失效； 2. conftest 仍在构造内层嵌套 fake module `cann_ops_transformer.ops.inplace_partial_rotary_mul.inplace_partial_rotary_mul` 及其 `InplacePartialRotaryMulFn` 表面——这是旧 wrapper 直接继承原生 Function 时的形态，新 wrapper 只 import 外层注册模块（`import cann_ops_transformer.ops.inplace_partial_rotary_mul`），内层已无生产代码使用。 建议同步清理，保持测试环境与生产依赖面一致（外层注册模块的 fake 仍需保留）。",
+                "createdAt": "2026-09-16T01:10:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:18",
+                "body": "【次要 3/N：CosSin 路径的 split 改动缺少测试】 split patch 同时改了两条通用路径：新增 `SplitComplexRoPEConfig` 和 `SplitCosSinRoPEConfig`，并改写了 `CosSinRoPE.apply_rotary_emb` 的行为。但新增测试只覆盖了 Complex 一侧（全测试目录对 `SplitCosSinRoPE` 零引用），而 DSV4 当前只消费 Complex，CosSin split 的回归完全靠不上消费方兜底。如果该 patch 继续以\"通用上游 patch\"形态保留，请补 CosSinRoPE 的 split=0 / split>0 / query+key 等价性测试。",
+                "createdAt": "2026-09-16T01:10:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/fused_ops.md:11",
+                "body": "增加文档说明",
+                "createdAt": "2026-09-16T10:47:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+                "createdAt": "2026-09-16T17:02:41+08:00"
+              }
+            ]
+          },
           {
             "id": 814,
             "title": "feat(deepseek_v4): add A5 Flash QAT training scripts",
@@ -36375,23 +36866,8 @@
             "scored_prs": 9,
             "scored_poor": 2,
             "scored_excellent": 0,
-            "nonstandard_prs": 4,
+            "nonstandard_prs": 5,
             "review_prs": 9
-          },
-          {
-            "name": "xuyujun",
-            "submit_prs": 4,
-            "submit_lines": 254618,
-            "received_reviews": 4,
-            "rated_prs": 3,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 31,
-            "scored_prs": 20,
-            "scored_poor": 4,
-            "scored_excellent": 1,
-            "nonstandard_prs": 8,
-            "review_prs": 18
           },
           {
             "name": "depeng1994",
@@ -36401,12 +36877,27 @@
             "rated_prs": 1,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 40,
-            "scored_prs": 0,
+            "review_comments": 57,
+            "scored_prs": 2,
             "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 13
+            "scored_excellent": 1,
+            "nonstandard_prs": 1,
+            "review_prs": 15
+          },
+          {
+            "name": "xuyujun",
+            "submit_prs": 7,
+            "submit_lines": 256816,
+            "received_reviews": 21,
+            "rated_prs": 5,
+            "poor_prs": 0,
+            "excellent_prs": 1,
+            "review_comments": 31,
+            "scored_prs": 20,
+            "scored_poor": 4,
+            "scored_excellent": 1,
+            "nonstandard_prs": 8,
+            "review_prs": 18
           },
           {
             "name": "hwcaifubi",
@@ -36431,12 +36922,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 20,
+            "review_comments": 21,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 15
+            "review_prs": 16
           },
           {
             "name": "panchao-gitcode",
@@ -36484,6 +36975,21 @@
             "review_prs": 3
           },
           {
+            "name": "wanghui0",
+            "submit_prs": 2,
+            "submit_lines": 23,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 8,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 3,
+            "review_prs": 4
+          },
+          {
             "name": "zzyyjj012",
             "submit_prs": 2,
             "submit_lines": 4185,
@@ -36514,19 +37020,19 @@
             "review_prs": 1
           },
           {
-            "name": "wanghui0",
+            "name": "zhuofanshen",
             "submit_prs": 1,
-            "submit_lines": 20,
-            "received_reviews": 0,
+            "submit_lines": 1023,
+            "received_reviews": 3,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 6,
+            "review_comments": 3,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 2,
-            "review_prs": 3
+            "nonstandard_prs": 3,
+            "review_prs": 2
           },
           {
             "name": "hitwdy",
@@ -36557,21 +37063,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
-          },
-          {
-            "name": "zhuofanshen",
-            "submit_prs": 0,
-            "submit_lines": 0,
-            "received_reviews": 0,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 3,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 3,
-            "review_prs": 2
           },
           {
             "name": "zhaoxi1029",
@@ -36995,14 +37486,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -43259,14 +43750,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -46234,14 +46725,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -50390,14 +50881,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -54413,14 +54904,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -57068,14 +57559,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -58921,14 +59412,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -59907,14 +60398,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -60622,14 +61113,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       }
@@ -60700,15 +61191,253 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 211,
-          "lines": 598464,
-          "reviewComments": 901,
-          "ratedPrs": 156,
+          "mergedPrs": 216,
+          "lines": 601688,
+          "reviewComments": 921,
+          "ratedPrs": 158,
           "averageScore": 3.0,
           "poorPrs": 19,
-          "excellentPrs": 22
+          "excellentPrs": 23
         },
         "prs": [
+          {
+            "id": 831,
+            "title": "refactor: configure training compile backend through CLI",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T22:44:03+08:00",
+            "lines": 128,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/831",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:157",
+                "body": "加一个COMPILE_ARGS把",
+                "createdAt": "2026-09-16T21:04:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:24",
+                "body": "A3也改成默认inductor吧 这俩就可以删除了",
+                "createdAt": "2026-09-16T21:46:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a3.sh:82",
+                "body": "同理 A3正式脚本也要默认打开AF",
+                "createdAt": "2026-09-16T21:46:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/tooling/test_compile_cli.py:118",
+                "body": "这个用例没必要",
+                "createdAt": "2026-09-16T21:47:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 827,
+            "title": "fix: tolerate appended torch_npu mHC backward op args in fake kernels",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T20:12:37+08:00",
+            "lines": 56,
+            "reviews": 0,
+            "score": 3.0,
+            "reviewer": "depeng1994",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/827",
+            "detail": [
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-09-16T20:12:14+08:00"
+              }
+            ]
+          },
+          {
+            "id": 823,
+            "title": "fix: 修改量化启动脚本",
+            "author": "wanghui0",
+            "mergedAt": "2026-09-16T19:51:49+08:00",
+            "lines": 3,
+            "reviews": 0,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "depeng1994",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/823",
+            "detail": []
+          },
+          {
+            "id": 772,
+            "title": "[feat] Support block mx prequantize of weights during the FSDP prefetch stage and enable FP8 all-gather communication",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-09-16T18:03:31+08:00",
+            "lines": 1023,
+            "reviews": 3,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "wanghui0",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/772",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "experiments/torchao-npu/torchao_npu/wrapper_tensors/block_mx_wrapper_tensor.py:290",
+                "body": "严重(S1): 复用 `out` 时这里写入了预量化数据却返回 `None`。FSDP 的 `fsdp_post_all_gather` 仍需要拿到可继续使用的 unsharded wrapper/inner tensors；请按当前 tensor-subclass hook 契约返回 `out` 及对应 inner tensors，否则后续训练步可能在参数重建或前向阶段失败。",
+                "createdAt": "2026-09-10T19:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:121",
+                "body": "在docs里补充开启方式吧",
+                "createdAt": "2026-09-16T14:03:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "interfaces/torchao_converter.py:439",
+                "body": "dense部分不会使用A8W4，只有moe的routed才会A8W4",
+                "createdAt": "2026-09-16T14:26:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 806,
+            "title": "feat(rope): DeepSeek-V4 partial RoPE 融合改用 override 直接调用融合算子，并删除旧的 graph pattern 机制",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T17:50:49+08:00",
+            "lines": 2014,
+            "reviews": 13,
+            "score": 3.2,
+            "reviewer": "depeng1994",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/806",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/rope.py:29",
+                "body": "【阻塞问题 1/N：common 层引入了模型专属算子包的硬依赖】 这一行顶层 import 把 `cann_ops_transformer`（经 `ops/ascendc/inplace_partial_rotary_mul.py` 的顶层 `import cann_ops_transformer...`）变成了所有使用 common RoPE override 的隐式依赖。但 `pyproject.toml` 声明的运行时依赖只有 `torchtitan` 和 `torch-npu`，CANN transformer 算子包并不在其中。 直接影响：`deepseek_v41/model_registry.py` 仅仅为了 `WorkaroundComplexRoPE` 就会连带拉起 partial-RoPE CANN op 的导入；在没有安装 CANN 包的环境（CPU UT、最小安装）里这条 import 链会直接失败。更关键的是，本次改动里 `test_independence.py` 新加的 `_ISOLATED_PRELUDE`（在隔离子进程里主动安装 fake CANN）正是在掩盖这个新引入的依赖——独立性测试本应证明 V4.1 不需要 V4 专属依赖也能跑，现在变成了主动替它补依赖。 修改建议（两选一）： 1. 【推荐】把 `AscPartialComplexRoPE` / `asc_partial` 整体移到模型域 `torchtitan_npu/override/deepseek_v4/rope.py`，common 只保留不依赖 DSV4/CANN 算子包的通用实现；A5 脚本的 override 路径相应改为 `torchtitan_npu.override.deepseek_v4.rope.asc_partial`。 2. 退而求其次：把对 op wrapper 的 import 挪进 `AscPartialComplexRoPE.forward` 内部做惰性导入，至少保证导入 common 模块本身不触发 CANN 依赖。 无论选哪个，都应撤回 `test_independence.py` 的 fake-CANN prelude，让独立性测试回到\"无 CANN 也能导入构建\"的语义。",
+                "createdAt": "2026-09-16T01:08:03+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:1",
+                "body": "【阻塞问题 2/N：SAR workaround 的归属位置和安装方式不符合 patches 目录的定位】 按本仓约定，`patches/torchtitan` 是\"准备贡献上游的通用代码\"的临时存放地。但这个文件： - `_ROPE_MUTATOR_OPS` 硬编码匹配 `cann_ops_transformer.inplace_partial_rotary_mul`（第 69 行），是明确的 DSV4/CANN 算子特判； - 整体复制了上游 SAR pass（本文件 456 行），并经文件末尾的 `_install()` 全局替换上游实现。 而 `memory_policy.py` 里的 side-effect import 会在 GraphTrainer 路径上**无条件**安装这份 fork——所有走 GraphTrainer 的模型都会运行它，不只是 DSV4。上游 SAR pass 后续一旦演进，本仓会静默停留在旧实现；且上游 issue #4688 目前只是问题报告，还没有被接受的修复方案，本地 fork 与未来上游修复很可能行为分叉。 修改建议（两选一）： 1. 【推荐，长期】做通用的 mutation/storage-aware SAR 修复：不匹配任何 CANN op 名，放在 patches 并同步提交 TorchTitan 上游 PR。 2. 【短期】保留局部 workaround，但移出 patches，放到 `torchtitan_npu/extensions/graph_trainer/`（或 DSV4 专属 extension 路径），并且只在明确选择 DSV4 GraphTrainer + asc_partial 时安装；同时把 fork 范围压到最小，避免整段复制上游 pass。",
+                "createdAt": "2026-09-16T01:08:51+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/memory_policy.py:36",
+                "body": "这个 side-effect import 是上面 SAR workaround 全局安装的触发点：只要走到 memory_policy，partial-RoPE 专用 fork 就被无条件装上，与模型是否为 DSV4、是否启用 asc_partial 无关。请随该 workaround 一起迁移（见 selective_activation_remat.py 首行的意见）：改为在 DSV4 + asc_partial 的明确配置下按需安装，不要从通用 GraphTrainer patch 做全局注入。",
+                "createdAt": "2026-09-16T01:08:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:110",
+                "body": "【阻塞问题 3/N：仓内缺少 torch.compile / 真实链路的回归测试（真机验证已有，但未沉淀为 CI 可执行的 oracle）】 先澄清：PR 描述里的 NPU 实测（A3 8 卡、GraphTrainer 模式 asc_partial 开/关各 50 步、首步 loss 逐位一致、吞吐 +19%）实际上已经覆盖了 compile 链路的数值与性能，这条意见不针对真机验证的充分性。 缺的是仓内可重复执行的测试：本 PR 删除了旧 compile pattern 测试（`test_inplace_partial_rope.py`、`test_pattern_replacement.py`）后，新增 CPU UT 集中在 eager 数值等价、cache、split 契约，`torch.compile` / AOTAutograd 回归缺位；SAR 测试也是手工构造 FX Graph，未从真实的 `AscPartialComplexRoPE -> autograd.Function -> clone -> CANN mutator` trace 整条链路。将来上游或本仓的改动若引入 graph break 或 SAR 形态变化，现有 CI 拦不住，只能靠再跑一次 8 卡实测发现。 修改建议（CPU fake op 即可，无需 NPU）： 1. compile UT：对 `AscPartialComplexRoPE` 跑 `torch.compile(..., backend=\"aot_eager\", fullgraph=True)` forward/backward 与 reference 对比，确认无 graph break、mutator 落在预期图中； 2. SAR 集成 UT：从真实 functional wrapper trace 出 joint graph，应用 SAR 后比较 loss/gradient 与不应用 SAR 的结果。",
+                "createdAt": "2026-09-16T01:09:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/models/deepseek_v41/test_independence.py:43",
+                "body": "这个 prelude 的效果是给隔离子进程预装 fake CANN 包，它掩盖的是 common rope 新引入的 import-time 硬依赖（见 override/common/rope.py 第 29 行的意见）。引入它的那个 commit 说明写得很直白：不加这一步，子进程会直接 `ModuleNotFoundError: cann_ops_transformer`。 独立性测试的语义应该是\"V4.1 在不安装 V4/partial-RoPE 专属依赖时仍能导入、构建、运行\"，现在被反转成了\"主动替被测对象补上缺失的依赖\"。请在生产侧修好 import 分层（asc_partial 移到模型域或惰性导入）后撤回这段 prelude，让这个测试重新回到无 CANN 运行的状态。",
+                "createdAt": "2026-09-16T01:09:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/rope.py:1",
+                "body": "【重要 1/N：patch 文件头的 upstream 出处与 PR 描述不一致，删除条件会误导读代码的人】 先说明：PR 描述里这部分是准确的——\"backport 上游 `br_dpsk_v4_1` 的 split-aware RoPE\"\"rope patch 待上游 `br_dpsk_v4_1` 合入后整体删除\"。问题只在这个文件头的注释。 我核对了上游：注释引用的 \"Pending upstream PR: pytorch/torchtitan#3634\" 已于 2026-09-02 合入且改过 `models/common/rope.py`，但改的是 key 可选与 inverse 支持；当前 TorchTitan main 的 `rope.py` 里**完全没有** split 字段、`_split`/`_unsplit` 这套 API。本文件实际 backport 的是 `sdmyzlp/torchtitan:br_dpsk_v4_1` 分支的代码，而非 #3634。头部写 \"Remove this module after the TorchTitan dependency includes the change\" 并引用 #3634，读代码的人会误以为删除条件是 #3634 合入（它已合入但不包含此代码）。另外注释把 split-aware 变更挂在 issue #4688 的\"rope context\"下，但 #4688 的主题是 SAR 丢失 in-place write（描述里它也只用于 SAR 规避），不是 split-aware RoPE 的跟踪 issue。 一个开放问题：`br_dpsk_v4_1` 是个人 fork 的分支，\"待其合入后删除\"的上游化路径目前并不确定。建议：若推动上游，建立真实的 upstream PR/issue 并让文件头只引用那个链接；否则头部改为如实描述来源（fork 分支 backport）与删除条件，避免悬空引用。",
+                "createdAt": "2026-09-16T01:09:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:97",
+                "body": "【重要 2/N：对已识别 mutator 的异常静默跳过，与\"不满足形态显式报错\"的设计承诺不一致】 PR 描述明确承诺：SAR 规避\"不满足该形态时显式报错，避免静默算错\"，且 UT 里有\"不支持的形态显式报错\"用例。主要坏形态（写目标不是 recomputed clone）确实在第 201 行 fail-fast 了，这条承诺对它成立。 但这条 `except (AttributeError, RuntimeError): return None` 加上\"写目标数量不为一返回 None\"，是承诺之外的静默缺口：schema 解析异常或多写目标时 `_rope_write_target` 返回 None，调用方 `if target_node is not n: continue` 跳过 replay——被跳过的旋转恰好重新落回 issue #4688 那个静默错梯度场景。对一个 schema 固定的 CANN 算子这层防御式吞错没有实际收益。修改建议：对该算子已识别调用，schema 解析失败或写目标数量异常时直接 raise（与第 201 行同风格）；read-only 区分保留但用显式条件，不并入异常处理。",
+                "createdAt": "2026-09-16T01:09:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/deepseek_v4_graph_trainer_recompute.md:159",
+                "body": "【重要 3/N：文档没有同步本次引入的 SAR 行为】 这行改动把旧 pattern 机制的条目从表格里删掉了，这部分是对的；但本次实际引入了\"全局替换上游 SAR pass\"这一重要行为，文档却完全没提：全文没有描述 issue #4688、没有列出 `selective_activation_remat.py`、没有说明 partial-RoPE + selective AC 下的额外 replay 契约，而且第 17 行还写着\"通用策略由上游提供，NPU 仓只扩展 DSV4 所需规则\"——实现已经 fork 了整个上游 pass，这句话不再成立。 无论最终按哪种方案落地（上游通用修复 or 本地 extension），都请刷新此文档：写明新的执行流程、限制、关键文件归属，保持文档与代码一致。",
+                "createdAt": "2026-09-16T01:09:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:3",
+                "body": "【重要 4/N：头部注释引用了仓内不存在的交接文件】 `HANDOFF_rope_override.md` 和 `SAR_fix_v3.patch` 在本分支树里都不存在（应该是本地交接时的遗留引用）。产品源码里不要保留指向本地临时文件的引用，读到这里的人无从查起。建议删除这两行；相关分析如果有保留价值，移入正式 docs 或直接贴到上游 issue #4688 的讨论里。",
+                "createdAt": "2026-09-16T01:10:02+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/ops/ascendc/inplace_partial_rotary_mul.py:73",
+                "body": "【次要 1/N：热路径上的防御式校验——与描述的\"错误直接报错\"原则一致，建议明确它捕获的真实错误或前移】 `partial_slice` 由 RoPE config 的固定 `split`/`dim` 推导，不是用户动态输入，每次 forward 都做这组 Python 检查会额外进入 Dynamo guard/trace 逻辑。 不过说明：这个检查与本 PR 描述\"发生布局/内存错误时直接报错\"的取向一致，且确实捕获过真实错误——本 PR 自己的 MTP 修复（pin MTP rope split）修的正是 split 与实际张量宽度不匹配、宽度只在调用时可知的问题，以及空窗口会被 native kernel 当 no-op 静默跳过的风险。二选一即可：保留检查但把这两类真实错误写进注释说明；或上移到 config/site 构造期校验一次（能覆盖宽度匹配的一类），热路径只留空窗口断言。",
+                "createdAt": "2026-09-16T01:10:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/conftest.py:59",
+                "body": "【次要 2/N：CPU fake 脚手架留有旧机制的遗留】 两处遗留： 1. 附近的注释 \"Imported via cann_ops_transformer.ops (the compile-pattern module)\" 引用的 compile-pattern module 已随本 PR 删除，注释失效； 2. conftest 仍在构造内层嵌套 fake module `cann_ops_transformer.ops.inplace_partial_rotary_mul.inplace_partial_rotary_mul` 及其 `InplacePartialRotaryMulFn` 表面——这是旧 wrapper 直接继承原生 Function 时的形态，新 wrapper 只 import 外层注册模块（`import cann_ops_transformer.ops.inplace_partial_rotary_mul`），内层已无生产代码使用。 建议同步清理，保持测试环境与生产依赖面一致（外层注册模块的 fake 仍需保留）。",
+                "createdAt": "2026-09-16T01:10:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:18",
+                "body": "【次要 3/N：CosSin 路径的 split 改动缺少测试】 split patch 同时改了两条通用路径：新增 `SplitComplexRoPEConfig` 和 `SplitCosSinRoPEConfig`，并改写了 `CosSinRoPE.apply_rotary_emb` 的行为。但新增测试只覆盖了 Complex 一侧（全测试目录对 `SplitCosSinRoPE` 零引用），而 DSV4 当前只消费 Complex，CosSin split 的回归完全靠不上消费方兜底。如果该 patch 继续以\"通用上游 patch\"形态保留，请补 CosSinRoPE 的 split=0 / split>0 / query+key 等价性测试。",
+                "createdAt": "2026-09-16T01:10:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/fused_ops.md:11",
+                "body": "增加文档说明",
+                "createdAt": "2026-09-16T10:47:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+                "createdAt": "2026-09-16T17:02:41+08:00"
+              }
+            ]
+          },
           {
             "id": 814,
             "title": "feat(deepseek_v4): add A5 Flash QAT training scripts",
@@ -71802,12 +72531,12 @@
         "contributors": [
           {
             "name": "xuyujun",
-            "submit_prs": 23,
-            "submit_lines": 257437,
-            "received_reviews": 27,
-            "rated_prs": 20,
+            "submit_prs": 26,
+            "submit_lines": 259635,
+            "received_reviews": 44,
+            "rated_prs": 22,
             "poor_prs": 0,
-            "excellent_prs": 1,
+            "excellent_prs": 2,
             "review_comments": 222,
             "scored_prs": 52,
             "scored_poor": 9,
@@ -71827,7 +72556,7 @@
             "scored_prs": 46,
             "scored_poor": 6,
             "scored_excellent": 7,
-            "nonstandard_prs": 10,
+            "nonstandard_prs": 11,
             "review_prs": 32
           },
           {
@@ -71838,12 +72567,12 @@
             "rated_prs": 6,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 124,
-            "scored_prs": 14,
+            "review_comments": 141,
+            "scored_prs": 16,
             "scored_poor": 1,
-            "scored_excellent": 3,
-            "nonstandard_prs": 1,
-            "review_prs": 47
+            "scored_excellent": 4,
+            "nonstandard_prs": 2,
+            "review_prs": 49
           },
           {
             "name": "panchao-gitcode",
@@ -71913,12 +72642,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 44,
+            "review_comments": 45,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 37
+            "review_prs": 38
           },
           {
             "name": "hwcaifubi",
@@ -71982,9 +72711,9 @@
           },
           {
             "name": "zhuofanshen",
-            "submit_prs": 5,
-            "submit_lines": 603,
-            "received_reviews": 14,
+            "submit_prs": 6,
+            "submit_lines": 1626,
+            "received_reviews": 17,
             "rated_prs": 4,
             "poor_prs": 1,
             "excellent_prs": 0,
@@ -71994,6 +72723,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 3,
             "review_prs": 3
+          },
+          {
+            "name": "wanghui0",
+            "submit_prs": 4,
+            "submit_lines": 705,
+            "received_reviews": 15,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 8,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 3,
+            "review_prs": 4
           },
           {
             "name": "tanghaoran7",
@@ -72039,21 +72783,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
-          },
-          {
-            "name": "wanghui0",
-            "submit_prs": 3,
-            "submit_lines": 702,
-            "received_reviews": 15,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 6,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 2,
-            "review_prs": 3
           },
           {
             "name": "weixin_69877254",
@@ -72732,14 +73461,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -82923,14 +83652,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -85984,14 +86713,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       }
@@ -86062,15 +86791,253 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 211,
-          "lines": 598464,
-          "reviewComments": 901,
-          "ratedPrs": 156,
+          "mergedPrs": 216,
+          "lines": 601688,
+          "reviewComments": 921,
+          "ratedPrs": 158,
           "averageScore": 3.0,
           "poorPrs": 19,
-          "excellentPrs": 22
+          "excellentPrs": 23
         },
         "prs": [
+          {
+            "id": 831,
+            "title": "refactor: configure training compile backend through CLI",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T22:44:03+08:00",
+            "lines": 128,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/831",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:157",
+                "body": "加一个COMPILE_ARGS把",
+                "createdAt": "2026-09-16T21:04:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:24",
+                "body": "A3也改成默认inductor吧 这俩就可以删除了",
+                "createdAt": "2026-09-16T21:46:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a3.sh:82",
+                "body": "同理 A3正式脚本也要默认打开AF",
+                "createdAt": "2026-09-16T21:46:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/tooling/test_compile_cli.py:118",
+                "body": "这个用例没必要",
+                "createdAt": "2026-09-16T21:47:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 827,
+            "title": "fix: tolerate appended torch_npu mHC backward op args in fake kernels",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T20:12:37+08:00",
+            "lines": 56,
+            "reviews": 0,
+            "score": 3.0,
+            "reviewer": "depeng1994",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/827",
+            "detail": [
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-09-16T20:12:14+08:00"
+              }
+            ]
+          },
+          {
+            "id": 823,
+            "title": "fix: 修改量化启动脚本",
+            "author": "wanghui0",
+            "mergedAt": "2026-09-16T19:51:49+08:00",
+            "lines": 3,
+            "reviews": 0,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "depeng1994",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/823",
+            "detail": []
+          },
+          {
+            "id": 772,
+            "title": "[feat] Support block mx prequantize of weights during the FSDP prefetch stage and enable FP8 all-gather communication",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-09-16T18:03:31+08:00",
+            "lines": 1023,
+            "reviews": 3,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "wanghui0",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/772",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "experiments/torchao-npu/torchao_npu/wrapper_tensors/block_mx_wrapper_tensor.py:290",
+                "body": "严重(S1): 复用 `out` 时这里写入了预量化数据却返回 `None`。FSDP 的 `fsdp_post_all_gather` 仍需要拿到可继续使用的 unsharded wrapper/inner tensors；请按当前 tensor-subclass hook 契约返回 `out` 及对应 inner tensors，否则后续训练步可能在参数重建或前向阶段失败。",
+                "createdAt": "2026-09-10T19:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:121",
+                "body": "在docs里补充开启方式吧",
+                "createdAt": "2026-09-16T14:03:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "interfaces/torchao_converter.py:439",
+                "body": "dense部分不会使用A8W4，只有moe的routed才会A8W4",
+                "createdAt": "2026-09-16T14:26:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 806,
+            "title": "feat(rope): DeepSeek-V4 partial RoPE 融合改用 override 直接调用融合算子，并删除旧的 graph pattern 机制",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T17:50:49+08:00",
+            "lines": 2014,
+            "reviews": 13,
+            "score": 3.2,
+            "reviewer": "depeng1994",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/806",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/rope.py:29",
+                "body": "【阻塞问题 1/N：common 层引入了模型专属算子包的硬依赖】 这一行顶层 import 把 `cann_ops_transformer`（经 `ops/ascendc/inplace_partial_rotary_mul.py` 的顶层 `import cann_ops_transformer...`）变成了所有使用 common RoPE override 的隐式依赖。但 `pyproject.toml` 声明的运行时依赖只有 `torchtitan` 和 `torch-npu`，CANN transformer 算子包并不在其中。 直接影响：`deepseek_v41/model_registry.py` 仅仅为了 `WorkaroundComplexRoPE` 就会连带拉起 partial-RoPE CANN op 的导入；在没有安装 CANN 包的环境（CPU UT、最小安装）里这条 import 链会直接失败。更关键的是，本次改动里 `test_independence.py` 新加的 `_ISOLATED_PRELUDE`（在隔离子进程里主动安装 fake CANN）正是在掩盖这个新引入的依赖——独立性测试本应证明 V4.1 不需要 V4 专属依赖也能跑，现在变成了主动替它补依赖。 修改建议（两选一）： 1. 【推荐】把 `AscPartialComplexRoPE` / `asc_partial` 整体移到模型域 `torchtitan_npu/override/deepseek_v4/rope.py`，common 只保留不依赖 DSV4/CANN 算子包的通用实现；A5 脚本的 override 路径相应改为 `torchtitan_npu.override.deepseek_v4.rope.asc_partial`。 2. 退而求其次：把对 op wrapper 的 import 挪进 `AscPartialComplexRoPE.forward` 内部做惰性导入，至少保证导入 common 模块本身不触发 CANN 依赖。 无论选哪个，都应撤回 `test_independence.py` 的 fake-CANN prelude，让独立性测试回到\"无 CANN 也能导入构建\"的语义。",
+                "createdAt": "2026-09-16T01:08:03+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:1",
+                "body": "【阻塞问题 2/N：SAR workaround 的归属位置和安装方式不符合 patches 目录的定位】 按本仓约定，`patches/torchtitan` 是\"准备贡献上游的通用代码\"的临时存放地。但这个文件： - `_ROPE_MUTATOR_OPS` 硬编码匹配 `cann_ops_transformer.inplace_partial_rotary_mul`（第 69 行），是明确的 DSV4/CANN 算子特判； - 整体复制了上游 SAR pass（本文件 456 行），并经文件末尾的 `_install()` 全局替换上游实现。 而 `memory_policy.py` 里的 side-effect import 会在 GraphTrainer 路径上**无条件**安装这份 fork——所有走 GraphTrainer 的模型都会运行它，不只是 DSV4。上游 SAR pass 后续一旦演进，本仓会静默停留在旧实现；且上游 issue #4688 目前只是问题报告，还没有被接受的修复方案，本地 fork 与未来上游修复很可能行为分叉。 修改建议（两选一）： 1. 【推荐，长期】做通用的 mutation/storage-aware SAR 修复：不匹配任何 CANN op 名，放在 patches 并同步提交 TorchTitan 上游 PR。 2. 【短期】保留局部 workaround，但移出 patches，放到 `torchtitan_npu/extensions/graph_trainer/`（或 DSV4 专属 extension 路径），并且只在明确选择 DSV4 GraphTrainer + asc_partial 时安装；同时把 fork 范围压到最小，避免整段复制上游 pass。",
+                "createdAt": "2026-09-16T01:08:51+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/memory_policy.py:36",
+                "body": "这个 side-effect import 是上面 SAR workaround 全局安装的触发点：只要走到 memory_policy，partial-RoPE 专用 fork 就被无条件装上，与模型是否为 DSV4、是否启用 asc_partial 无关。请随该 workaround 一起迁移（见 selective_activation_remat.py 首行的意见）：改为在 DSV4 + asc_partial 的明确配置下按需安装，不要从通用 GraphTrainer patch 做全局注入。",
+                "createdAt": "2026-09-16T01:08:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:110",
+                "body": "【阻塞问题 3/N：仓内缺少 torch.compile / 真实链路的回归测试（真机验证已有，但未沉淀为 CI 可执行的 oracle）】 先澄清：PR 描述里的 NPU 实测（A3 8 卡、GraphTrainer 模式 asc_partial 开/关各 50 步、首步 loss 逐位一致、吞吐 +19%）实际上已经覆盖了 compile 链路的数值与性能，这条意见不针对真机验证的充分性。 缺的是仓内可重复执行的测试：本 PR 删除了旧 compile pattern 测试（`test_inplace_partial_rope.py`、`test_pattern_replacement.py`）后，新增 CPU UT 集中在 eager 数值等价、cache、split 契约，`torch.compile` / AOTAutograd 回归缺位；SAR 测试也是手工构造 FX Graph，未从真实的 `AscPartialComplexRoPE -> autograd.Function -> clone -> CANN mutator` trace 整条链路。将来上游或本仓的改动若引入 graph break 或 SAR 形态变化，现有 CI 拦不住，只能靠再跑一次 8 卡实测发现。 修改建议（CPU fake op 即可，无需 NPU）： 1. compile UT：对 `AscPartialComplexRoPE` 跑 `torch.compile(..., backend=\"aot_eager\", fullgraph=True)` forward/backward 与 reference 对比，确认无 graph break、mutator 落在预期图中； 2. SAR 集成 UT：从真实 functional wrapper trace 出 joint graph，应用 SAR 后比较 loss/gradient 与不应用 SAR 的结果。",
+                "createdAt": "2026-09-16T01:09:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/models/deepseek_v41/test_independence.py:43",
+                "body": "这个 prelude 的效果是给隔离子进程预装 fake CANN 包，它掩盖的是 common rope 新引入的 import-time 硬依赖（见 override/common/rope.py 第 29 行的意见）。引入它的那个 commit 说明写得很直白：不加这一步，子进程会直接 `ModuleNotFoundError: cann_ops_transformer`。 独立性测试的语义应该是\"V4.1 在不安装 V4/partial-RoPE 专属依赖时仍能导入、构建、运行\"，现在被反转成了\"主动替被测对象补上缺失的依赖\"。请在生产侧修好 import 分层（asc_partial 移到模型域或惰性导入）后撤回这段 prelude，让这个测试重新回到无 CANN 运行的状态。",
+                "createdAt": "2026-09-16T01:09:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/rope.py:1",
+                "body": "【重要 1/N：patch 文件头的 upstream 出处与 PR 描述不一致，删除条件会误导读代码的人】 先说明：PR 描述里这部分是准确的——\"backport 上游 `br_dpsk_v4_1` 的 split-aware RoPE\"\"rope patch 待上游 `br_dpsk_v4_1` 合入后整体删除\"。问题只在这个文件头的注释。 我核对了上游：注释引用的 \"Pending upstream PR: pytorch/torchtitan#3634\" 已于 2026-09-02 合入且改过 `models/common/rope.py`，但改的是 key 可选与 inverse 支持；当前 TorchTitan main 的 `rope.py` 里**完全没有** split 字段、`_split`/`_unsplit` 这套 API。本文件实际 backport 的是 `sdmyzlp/torchtitan:br_dpsk_v4_1` 分支的代码，而非 #3634。头部写 \"Remove this module after the TorchTitan dependency includes the change\" 并引用 #3634，读代码的人会误以为删除条件是 #3634 合入（它已合入但不包含此代码）。另外注释把 split-aware 变更挂在 issue #4688 的\"rope context\"下，但 #4688 的主题是 SAR 丢失 in-place write（描述里它也只用于 SAR 规避），不是 split-aware RoPE 的跟踪 issue。 一个开放问题：`br_dpsk_v4_1` 是个人 fork 的分支，\"待其合入后删除\"的上游化路径目前并不确定。建议：若推动上游，建立真实的 upstream PR/issue 并让文件头只引用那个链接；否则头部改为如实描述来源（fork 分支 backport）与删除条件，避免悬空引用。",
+                "createdAt": "2026-09-16T01:09:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:97",
+                "body": "【重要 2/N：对已识别 mutator 的异常静默跳过，与\"不满足形态显式报错\"的设计承诺不一致】 PR 描述明确承诺：SAR 规避\"不满足该形态时显式报错，避免静默算错\"，且 UT 里有\"不支持的形态显式报错\"用例。主要坏形态（写目标不是 recomputed clone）确实在第 201 行 fail-fast 了，这条承诺对它成立。 但这条 `except (AttributeError, RuntimeError): return None` 加上\"写目标数量不为一返回 None\"，是承诺之外的静默缺口：schema 解析异常或多写目标时 `_rope_write_target` 返回 None，调用方 `if target_node is not n: continue` 跳过 replay——被跳过的旋转恰好重新落回 issue #4688 那个静默错梯度场景。对一个 schema 固定的 CANN 算子这层防御式吞错没有实际收益。修改建议：对该算子已识别调用，schema 解析失败或写目标数量异常时直接 raise（与第 201 行同风格）；read-only 区分保留但用显式条件，不并入异常处理。",
+                "createdAt": "2026-09-16T01:09:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/deepseek_v4_graph_trainer_recompute.md:159",
+                "body": "【重要 3/N：文档没有同步本次引入的 SAR 行为】 这行改动把旧 pattern 机制的条目从表格里删掉了，这部分是对的；但本次实际引入了\"全局替换上游 SAR pass\"这一重要行为，文档却完全没提：全文没有描述 issue #4688、没有列出 `selective_activation_remat.py`、没有说明 partial-RoPE + selective AC 下的额外 replay 契约，而且第 17 行还写着\"通用策略由上游提供，NPU 仓只扩展 DSV4 所需规则\"——实现已经 fork 了整个上游 pass，这句话不再成立。 无论最终按哪种方案落地（上游通用修复 or 本地 extension），都请刷新此文档：写明新的执行流程、限制、关键文件归属，保持文档与代码一致。",
+                "createdAt": "2026-09-16T01:09:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:3",
+                "body": "【重要 4/N：头部注释引用了仓内不存在的交接文件】 `HANDOFF_rope_override.md` 和 `SAR_fix_v3.patch` 在本分支树里都不存在（应该是本地交接时的遗留引用）。产品源码里不要保留指向本地临时文件的引用，读到这里的人无从查起。建议删除这两行；相关分析如果有保留价值，移入正式 docs 或直接贴到上游 issue #4688 的讨论里。",
+                "createdAt": "2026-09-16T01:10:02+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/ops/ascendc/inplace_partial_rotary_mul.py:73",
+                "body": "【次要 1/N：热路径上的防御式校验——与描述的\"错误直接报错\"原则一致，建议明确它捕获的真实错误或前移】 `partial_slice` 由 RoPE config 的固定 `split`/`dim` 推导，不是用户动态输入，每次 forward 都做这组 Python 检查会额外进入 Dynamo guard/trace 逻辑。 不过说明：这个检查与本 PR 描述\"发生布局/内存错误时直接报错\"的取向一致，且确实捕获过真实错误——本 PR 自己的 MTP 修复（pin MTP rope split）修的正是 split 与实际张量宽度不匹配、宽度只在调用时可知的问题，以及空窗口会被 native kernel 当 no-op 静默跳过的风险。二选一即可：保留检查但把这两类真实错误写进注释说明；或上移到 config/site 构造期校验一次（能覆盖宽度匹配的一类），热路径只留空窗口断言。",
+                "createdAt": "2026-09-16T01:10:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/conftest.py:59",
+                "body": "【次要 2/N：CPU fake 脚手架留有旧机制的遗留】 两处遗留： 1. 附近的注释 \"Imported via cann_ops_transformer.ops (the compile-pattern module)\" 引用的 compile-pattern module 已随本 PR 删除，注释失效； 2. conftest 仍在构造内层嵌套 fake module `cann_ops_transformer.ops.inplace_partial_rotary_mul.inplace_partial_rotary_mul` 及其 `InplacePartialRotaryMulFn` 表面——这是旧 wrapper 直接继承原生 Function 时的形态，新 wrapper 只 import 外层注册模块（`import cann_ops_transformer.ops.inplace_partial_rotary_mul`），内层已无生产代码使用。 建议同步清理，保持测试环境与生产依赖面一致（外层注册模块的 fake 仍需保留）。",
+                "createdAt": "2026-09-16T01:10:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:18",
+                "body": "【次要 3/N：CosSin 路径的 split 改动缺少测试】 split patch 同时改了两条通用路径：新增 `SplitComplexRoPEConfig` 和 `SplitCosSinRoPEConfig`，并改写了 `CosSinRoPE.apply_rotary_emb` 的行为。但新增测试只覆盖了 Complex 一侧（全测试目录对 `SplitCosSinRoPE` 零引用），而 DSV4 当前只消费 Complex，CosSin split 的回归完全靠不上消费方兜底。如果该 patch 继续以\"通用上游 patch\"形态保留，请补 CosSinRoPE 的 split=0 / split>0 / query+key 等价性测试。",
+                "createdAt": "2026-09-16T01:10:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/fused_ops.md:11",
+                "body": "增加文档说明",
+                "createdAt": "2026-09-16T10:47:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+                "createdAt": "2026-09-16T17:02:41+08:00"
+              }
+            ]
+          },
           {
             "id": 814,
             "title": "feat(deepseek_v4): add A5 Flash QAT training scripts",
@@ -97164,12 +98131,12 @@
         "contributors": [
           {
             "name": "xuyujun",
-            "submit_prs": 23,
-            "submit_lines": 257437,
-            "received_reviews": 27,
-            "rated_prs": 20,
+            "submit_prs": 26,
+            "submit_lines": 259635,
+            "received_reviews": 44,
+            "rated_prs": 22,
             "poor_prs": 0,
-            "excellent_prs": 1,
+            "excellent_prs": 2,
             "review_comments": 222,
             "scored_prs": 52,
             "scored_poor": 9,
@@ -97189,7 +98156,7 @@
             "scored_prs": 46,
             "scored_poor": 6,
             "scored_excellent": 7,
-            "nonstandard_prs": 10,
+            "nonstandard_prs": 11,
             "review_prs": 32
           },
           {
@@ -97200,12 +98167,12 @@
             "rated_prs": 6,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 124,
-            "scored_prs": 14,
+            "review_comments": 141,
+            "scored_prs": 16,
             "scored_poor": 1,
-            "scored_excellent": 3,
-            "nonstandard_prs": 1,
-            "review_prs": 47
+            "scored_excellent": 4,
+            "nonstandard_prs": 2,
+            "review_prs": 49
           },
           {
             "name": "panchao-gitcode",
@@ -97275,12 +98242,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 44,
+            "review_comments": 45,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 37
+            "review_prs": 38
           },
           {
             "name": "hwcaifubi",
@@ -97344,9 +98311,9 @@
           },
           {
             "name": "zhuofanshen",
-            "submit_prs": 5,
-            "submit_lines": 603,
-            "received_reviews": 14,
+            "submit_prs": 6,
+            "submit_lines": 1626,
+            "received_reviews": 17,
             "rated_prs": 4,
             "poor_prs": 1,
             "excellent_prs": 0,
@@ -97356,6 +98323,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 3,
             "review_prs": 3
+          },
+          {
+            "name": "wanghui0",
+            "submit_prs": 4,
+            "submit_lines": 705,
+            "received_reviews": 15,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 8,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 3,
+            "review_prs": 4
           },
           {
             "name": "tanghaoran7",
@@ -97401,21 +98383,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
-          },
-          {
-            "name": "wanghui0",
-            "submit_prs": 3,
-            "submit_lines": 702,
-            "received_reviews": 15,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 6,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 2,
-            "review_prs": 3
           },
           {
             "name": "weixin_69877254",
@@ -98094,14 +99061,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       },
@@ -111047,14 +112014,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       }
@@ -111125,15 +112092,253 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 505,
-          "lines": 870689,
-          "reviewComments": 1717,
-          "ratedPrs": 366,
+          "mergedPrs": 510,
+          "lines": 873913,
+          "reviewComments": 1737,
+          "ratedPrs": 368,
           "averageScore": 3.01,
           "poorPrs": 29,
-          "excellentPrs": 60
+          "excellentPrs": 61
         },
         "prs": [
+          {
+            "id": 831,
+            "title": "refactor: configure training compile backend through CLI",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T22:44:03+08:00",
+            "lines": 128,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "lrwei0709",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/831",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a3.sh:157",
+                "body": "加一个COMPILE_ARGS把",
+                "createdAt": "2026-09-16T21:04:39+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/debug/deepseek_v4_flash_8p_cpt_4k_a5.sh:24",
+                "body": "A3也改成默认inductor吧 这俩就可以删除了",
+                "createdAt": "2026-09-16T21:46:11+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "examples/deepseek_v4/deepseek_v4_flash_cpt_4k_a3.sh:82",
+                "body": "同理 A3正式脚本也要默认打开AF",
+                "createdAt": "2026-09-16T21:46:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/tooling/test_compile_cli.py:118",
+                "body": "这个用例没必要",
+                "createdAt": "2026-09-16T21:47:34+08:00"
+              }
+            ]
+          },
+          {
+            "id": 827,
+            "title": "fix: tolerate appended torch_npu mHC backward op args in fake kernels",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T20:12:37+08:00",
+            "lines": 56,
+            "reviews": 0,
+            "score": 3.0,
+            "reviewer": "depeng1994",
+            "level": "达标",
+            "summary": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/827",
+            "detail": [
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数:3 评价意见：x修复torch_npu 0914 之后mhc传参 编码规范遵守度：无编码规范问题； 代码设计：不涉及代码设计； DT质量：基本逻辑DT测试覆盖充足；",
+                "createdAt": "2026-09-16T20:12:14+08:00"
+              }
+            ]
+          },
+          {
+            "id": 823,
+            "title": "fix: 修改量化启动脚本",
+            "author": "wanghui0",
+            "mergedAt": "2026-09-16T19:51:49+08:00",
+            "lines": 3,
+            "reviews": 0,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "depeng1994",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/823",
+            "detail": []
+          },
+          {
+            "id": 772,
+            "title": "[feat] Support block mx prequantize of weights during the FSDP prefetch stage and enable FP8 all-gather communication",
+            "author": "zhuofanshen",
+            "mergedAt": "2026-09-16T18:03:31+08:00",
+            "lines": 1023,
+            "reviews": 3,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "wanghui0",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/772",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": "experiments/torchao-npu/torchao_npu/wrapper_tensors/block_mx_wrapper_tensor.py:290",
+                "body": "严重(S1): 复用 `out` 时这里写入了预量化数据却返回 `None`。FSDP 的 `fsdp_post_all_gather` 仍需要拿到可继续使用的 unsharded wrapper/inner tensors；请按当前 tensor-subclass hook 契约返回 `out` 及对应 inner tensors，否则后续训练步可能在参数重建或前向阶段失败。",
+                "createdAt": "2026-09-10T19:51:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "torchtitan_npu/config/configs.py:121",
+                "body": "在docs里补充开启方式吧",
+                "createdAt": "2026-09-16T14:03:26+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "wanghui0",
+                "path": "interfaces/torchao_converter.py:439",
+                "body": "dense部分不会使用A8W4，只有moe的routed才会A8W4",
+                "createdAt": "2026-09-16T14:26:46+08:00"
+              }
+            ]
+          },
+          {
+            "id": 806,
+            "title": "feat(rope): DeepSeek-V4 partial RoPE 融合改用 override 直接调用融合算子，并删除旧的 graph pattern 机制",
+            "author": "xuyujun",
+            "mergedAt": "2026-09-16T17:50:49+08:00",
+            "lines": 2014,
+            "reviews": 13,
+            "score": 3.2,
+            "reviewer": "depeng1994",
+            "level": "优秀",
+            "summary": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+            "nonstandardReviewer": "",
+            "nonstandardReason": "",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/806",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/override/common/rope.py:29",
+                "body": "【阻塞问题 1/N：common 层引入了模型专属算子包的硬依赖】 这一行顶层 import 把 `cann_ops_transformer`（经 `ops/ascendc/inplace_partial_rotary_mul.py` 的顶层 `import cann_ops_transformer...`）变成了所有使用 common RoPE override 的隐式依赖。但 `pyproject.toml` 声明的运行时依赖只有 `torchtitan` 和 `torch-npu`，CANN transformer 算子包并不在其中。 直接影响：`deepseek_v41/model_registry.py` 仅仅为了 `WorkaroundComplexRoPE` 就会连带拉起 partial-RoPE CANN op 的导入；在没有安装 CANN 包的环境（CPU UT、最小安装）里这条 import 链会直接失败。更关键的是，本次改动里 `test_independence.py` 新加的 `_ISOLATED_PRELUDE`（在隔离子进程里主动安装 fake CANN）正是在掩盖这个新引入的依赖——独立性测试本应证明 V4.1 不需要 V4 专属依赖也能跑，现在变成了主动替它补依赖。 修改建议（两选一）： 1. 【推荐】把 `AscPartialComplexRoPE` / `asc_partial` 整体移到模型域 `torchtitan_npu/override/deepseek_v4/rope.py`，common 只保留不依赖 DSV4/CANN 算子包的通用实现；A5 脚本的 override 路径相应改为 `torchtitan_npu.override.deepseek_v4.rope.asc_partial`。 2. 退而求其次：把对 op wrapper 的 import 挪进 `AscPartialComplexRoPE.forward` 内部做惰性导入，至少保证导入 common 模块本身不触发 CANN 依赖。 无论选哪个，都应撤回 `test_independence.py` 的 fake-CANN prelude，让独立性测试回到\"无 CANN 也能导入构建\"的语义。",
+                "createdAt": "2026-09-16T01:08:03+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:1",
+                "body": "【阻塞问题 2/N：SAR workaround 的归属位置和安装方式不符合 patches 目录的定位】 按本仓约定，`patches/torchtitan` 是\"准备贡献上游的通用代码\"的临时存放地。但这个文件： - `_ROPE_MUTATOR_OPS` 硬编码匹配 `cann_ops_transformer.inplace_partial_rotary_mul`（第 69 行），是明确的 DSV4/CANN 算子特判； - 整体复制了上游 SAR pass（本文件 456 行），并经文件末尾的 `_install()` 全局替换上游实现。 而 `memory_policy.py` 里的 side-effect import 会在 GraphTrainer 路径上**无条件**安装这份 fork——所有走 GraphTrainer 的模型都会运行它，不只是 DSV4。上游 SAR pass 后续一旦演进，本仓会静默停留在旧实现；且上游 issue #4688 目前只是问题报告，还没有被接受的修复方案，本地 fork 与未来上游修复很可能行为分叉。 修改建议（两选一）： 1. 【推荐，长期】做通用的 mutation/storage-aware SAR 修复：不匹配任何 CANN op 名，放在 patches 并同步提交 TorchTitan 上游 PR。 2. 【短期】保留局部 workaround，但移出 patches，放到 `torchtitan_npu/extensions/graph_trainer/`（或 DSV4 专属 extension 路径），并且只在明确选择 DSV4 GraphTrainer + asc_partial 时安装；同时把 fork 范围压到最小，避免整段复制上游 pass。",
+                "createdAt": "2026-09-16T01:08:51+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/memory_policy.py:36",
+                "body": "这个 side-effect import 是上面 SAR workaround 全局安装的触发点：只要走到 memory_policy，partial-RoPE 专用 fork 就被无条件装上，与模型是否为 DSV4、是否启用 asc_partial 无关。请随该 workaround 一起迁移（见 selective_activation_remat.py 首行的意见）：改为在 DSV4 + asc_partial 的明确配置下按需安装，不要从通用 GraphTrainer patch 做全局注入。",
+                "createdAt": "2026-09-16T01:08:59+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:110",
+                "body": "【阻塞问题 3/N：仓内缺少 torch.compile / 真实链路的回归测试（真机验证已有，但未沉淀为 CI 可执行的 oracle）】 先澄清：PR 描述里的 NPU 实测（A3 8 卡、GraphTrainer 模式 asc_partial 开/关各 50 步、首步 loss 逐位一致、吞吐 +19%）实际上已经覆盖了 compile 链路的数值与性能，这条意见不针对真机验证的充分性。 缺的是仓内可重复执行的测试：本 PR 删除了旧 compile pattern 测试（`test_inplace_partial_rope.py`、`test_pattern_replacement.py`）后，新增 CPU UT 集中在 eager 数值等价、cache、split 契约，`torch.compile` / AOTAutograd 回归缺位；SAR 测试也是手工构造 FX Graph，未从真实的 `AscPartialComplexRoPE -> autograd.Function -> clone -> CANN mutator` trace 整条链路。将来上游或本仓的改动若引入 graph break 或 SAR 形态变化，现有 CI 拦不住，只能靠再跑一次 8 卡实测发现。 修改建议（CPU fake op 即可，无需 NPU）： 1. compile UT：对 `AscPartialComplexRoPE` 跑 `torch.compile(..., backend=\"aot_eager\", fullgraph=True)` forward/backward 与 reference 对比，确认无 graph break、mutator 落在预期图中； 2. SAR 集成 UT：从真实 functional wrapper trace 出 joint graph，应用 SAR 后比较 loss/gradient 与不应用 SAR 的结果。",
+                "createdAt": "2026-09-16T01:09:09+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/models/deepseek_v41/test_independence.py:43",
+                "body": "这个 prelude 的效果是给隔离子进程预装 fake CANN 包，它掩盖的是 common rope 新引入的 import-time 硬依赖（见 override/common/rope.py 第 29 行的意见）。引入它的那个 commit 说明写得很直白：不加这一步，子进程会直接 `ModuleNotFoundError: cann_ops_transformer`。 独立性测试的语义应该是\"V4.1 在不安装 V4/partial-RoPE 专属依赖时仍能导入、构建、运行\"，现在被反转成了\"主动替被测对象补上缺失的依赖\"。请在生产侧修好 import 分层（asc_partial 移到模型域或惰性导入）后撤回这段 prelude，让这个测试重新回到无 CANN 运行的状态。",
+                "createdAt": "2026-09-16T01:09:18+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/models/common/rope.py:1",
+                "body": "【重要 1/N：patch 文件头的 upstream 出处与 PR 描述不一致，删除条件会误导读代码的人】 先说明：PR 描述里这部分是准确的——\"backport 上游 `br_dpsk_v4_1` 的 split-aware RoPE\"\"rope patch 待上游 `br_dpsk_v4_1` 合入后整体删除\"。问题只在这个文件头的注释。 我核对了上游：注释引用的 \"Pending upstream PR: pytorch/torchtitan#3634\" 已于 2026-09-02 合入且改过 `models/common/rope.py`，但改的是 key 可选与 inverse 支持；当前 TorchTitan main 的 `rope.py` 里**完全没有** split 字段、`_split`/`_unsplit` 这套 API。本文件实际 backport 的是 `sdmyzlp/torchtitan:br_dpsk_v4_1` 分支的代码，而非 #3634。头部写 \"Remove this module after the TorchTitan dependency includes the change\" 并引用 #3634，读代码的人会误以为删除条件是 #3634 合入（它已合入但不包含此代码）。另外注释把 split-aware 变更挂在 issue #4688 的\"rope context\"下，但 #4688 的主题是 SAR 丢失 in-place write（描述里它也只用于 SAR 规避），不是 split-aware RoPE 的跟踪 issue。 一个开放问题：`br_dpsk_v4_1` 是个人 fork 的分支，\"待其合入后删除\"的上游化路径目前并不确定。建议：若推动上游，建立真实的 upstream PR/issue 并让文件头只引用那个链接；否则头部改为如实描述来源（fork 分支 backport）与删除条件，避免悬空引用。",
+                "createdAt": "2026-09-16T01:09:30+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:97",
+                "body": "【重要 2/N：对已识别 mutator 的异常静默跳过，与\"不满足形态显式报错\"的设计承诺不一致】 PR 描述明确承诺：SAR 规避\"不满足该形态时显式报错，避免静默算错\"，且 UT 里有\"不支持的形态显式报错\"用例。主要坏形态（写目标不是 recomputed clone）确实在第 201 行 fail-fast 了，这条承诺对它成立。 但这条 `except (AttributeError, RuntimeError): return None` 加上\"写目标数量不为一返回 None\"，是承诺之外的静默缺口：schema 解析异常或多写目标时 `_rope_write_target` 返回 None，调用方 `if target_node is not n: continue` 跳过 replay——被跳过的旋转恰好重新落回 issue #4688 那个静默错梯度场景。对一个 schema 固定的 CANN 算子这层防御式吞错没有实际收益。修改建议：对该算子已识别调用，schema 解析失败或写目标数量异常时直接 raise（与第 201 行同风格）；read-only 区分保留但用显式条件，不并入异常处理。",
+                "createdAt": "2026-09-16T01:09:46+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/deepseek_v4_graph_trainer_recompute.md:159",
+                "body": "【重要 3/N：文档没有同步本次引入的 SAR 行为】 这行改动把旧 pattern 机制的条目从表格里删掉了，这部分是对的；但本次实际引入了\"全局替换上游 SAR pass\"这一重要行为，文档却完全没提：全文没有描述 issue #4688、没有列出 `selective_activation_remat.py`、没有说明 partial-RoPE + selective AC 下的额外 replay 契约，而且第 17 行还写着\"通用策略由上游提供，NPU 仓只扩展 DSV4 所需规则\"——实现已经 fork 了整个上游 pass，这句话不再成立。 无论最终按哪种方案落地（上游通用修复 or 本地 extension），都请刷新此文档：写明新的执行流程、限制、关键文件归属，保持文档与代码一致。",
+                "createdAt": "2026-09-16T01:09:55+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/patches/torchtitan/graph_trainer/selective_activation_remat.py:3",
+                "body": "【重要 4/N：头部注释引用了仓内不存在的交接文件】 `HANDOFF_rope_override.md` 和 `SAR_fix_v3.patch` 在本分支树里都不存在（应该是本地交接时的遗留引用）。产品源码里不要保留指向本地临时文件的引用，读到这里的人无从查起。建议删除这两行；相关分析如果有保留价值，移入正式 docs 或直接贴到上游 issue #4688 的讨论里。",
+                "createdAt": "2026-09-16T01:10:02+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "torchtitan_npu/ops/ascendc/inplace_partial_rotary_mul.py:73",
+                "body": "【次要 1/N：热路径上的防御式校验——与描述的\"错误直接报错\"原则一致，建议明确它捕获的真实错误或前移】 `partial_slice` 由 RoPE config 的固定 `split`/`dim` 推导，不是用户动态输入，每次 forward 都做这组 Python 检查会额外进入 Dynamo guard/trace 逻辑。 不过说明：这个检查与本 PR 描述\"发生布局/内存错误时直接报错\"的取向一致，且确实捕获过真实错误——本 PR 自己的 MTP 修复（pin MTP rope split）修的正是 split 与实际张量宽度不匹配、宽度只在调用时可知的问题，以及空窗口会被 native kernel 当 no-op 静默跳过的风险。二选一即可：保留检查但把这两类真实错误写进注释说明；或上移到 config/site 构造期校验一次（能覆盖宽度匹配的一类），热路径只留空窗口断言。",
+                "createdAt": "2026-09-16T01:10:14+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/conftest.py:59",
+                "body": "【次要 2/N：CPU fake 脚手架留有旧机制的遗留】 两处遗留： 1. 附近的注释 \"Imported via cann_ops_transformer.ops (the compile-pattern module)\" 引用的 compile-pattern module 已随本 PR 删除，注释失效； 2. conftest 仍在构造内层嵌套 fake module `cann_ops_transformer.ops.inplace_partial_rotary_mul.inplace_partial_rotary_mul` 及其 `InplacePartialRotaryMulFn` 表面——这是旧 wrapper 直接继承原生 Function 时的形态，新 wrapper 只 import 外层注册模块（`import cann_ops_transformer.ops.inplace_partial_rotary_mul`），内层已无生产代码使用。 建议同步清理，保持测试环境与生产依赖面一致（外层注册模块的 fake 仍需保留）。",
+                "createdAt": "2026-09-16T01:10:24+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "tests/unit_tests/override/common/test_rope.py:18",
+                "body": "【次要 3/N：CosSin 路径的 split 改动缺少测试】 split patch 同时改了两条通用路径：新增 `SplitComplexRoPEConfig` 和 `SplitCosSinRoPEConfig`，并改写了 `CosSinRoPE.apply_rotary_emb` 的行为。但新增测试只覆盖了 Complex 一侧（全测试目录对 `SplitCosSinRoPE` 零引用），而 DSV4 当前只消费 Complex，CosSin split 的回归完全靠不上消费方兜底。如果该 patch 继续以\"通用上游 patch\"形态保留，请补 CosSinRoPE 的 split=0 / split>0 / query+key 等价性测试。",
+                "createdAt": "2026-09-16T01:10:32+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "depeng1994",
+                "path": "docs/feature_guides/fused_ops.md:11",
+                "body": "增加文档说明",
+                "createdAt": "2026-09-16T10:47:37+08:00"
+              },
+              {
+                "type": "MR评价",
+                "author": "depeng1994",
+                "path": "",
+                "body": "【MR评价】评价分数：3.2， 评价意见：性能+架构双线优化，删除 pre-AOT pattern 统一走 override 融合算子，方向正确 编码规范遵守度：无编程规范问题，注释失效、交接文件引用等卫生问题已清理； 代码设计：涉及且良好——functional 包装可被 Dynamo inline，eager/compile/GraphTrainer 三模式统一实现；SAR 采用通用 upstream 修复而非算子特判，符合 patches 目录定位； DT质量：测试覆盖充足——全量 523 UT 通过（含 compile 回归、真实 trace SAR 集成、V4.1 独立性验证、CosSin 等价性测试），A3 8 卡双模式真机对比首步 loss 逐位一致。",
+                "createdAt": "2026-09-16T17:02:41+08:00"
+              }
+            ]
+          },
           {
             "id": 814,
             "title": "feat(deepseek_v4): add A5 Flash QAT training scripts",
@@ -134506,12 +135711,12 @@
         "contributors": [
           {
             "name": "xuyujun",
-            "submit_prs": 50,
-            "submit_lines": 262475,
-            "received_reviews": 34,
-            "rated_prs": 40,
+            "submit_prs": 53,
+            "submit_lines": 264673,
+            "received_reviews": 51,
+            "rated_prs": 42,
             "poor_prs": 0,
-            "excellent_prs": 6,
+            "excellent_prs": 7,
             "review_comments": 504,
             "scored_prs": 106,
             "scored_poor": 13,
@@ -134531,7 +135736,7 @@
             "scored_prs": 143,
             "scored_poor": 10,
             "scored_excellent": 20,
-            "nonstandard_prs": 59,
+            "nonstandard_prs": 60,
             "review_prs": 59
           },
           {
@@ -134542,12 +135747,12 @@
             "rated_prs": 8,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 218,
-            "scored_prs": 23,
+            "review_comments": 235,
+            "scored_prs": 25,
             "scored_poor": 3,
-            "scored_excellent": 4,
-            "nonstandard_prs": 12,
-            "review_prs": 88
+            "scored_excellent": 5,
+            "nonstandard_prs": 13,
+            "review_prs": 90
           },
           {
             "name": "panchao-gitcode",
@@ -134662,12 +135867,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 44,
+            "review_comments": 45,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 37
+            "review_prs": 38
           },
           {
             "name": "hwcaifubi",
@@ -134761,9 +135966,9 @@
           },
           {
             "name": "zhuofanshen",
-            "submit_prs": 7,
-            "submit_lines": 1765,
-            "received_reviews": 27,
+            "submit_prs": 8,
+            "submit_lines": 2788,
+            "received_reviews": 30,
             "rated_prs": 5,
             "poor_prs": 1,
             "excellent_prs": 0,
@@ -134835,6 +136040,21 @@
             "review_prs": 3
           },
           {
+            "name": "wanghui0",
+            "submit_prs": 4,
+            "submit_lines": 705,
+            "received_reviews": 15,
+            "rated_prs": 2,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 8,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 3,
+            "review_prs": 4
+          },
+          {
             "name": "zcklllyao",
             "submit_prs": 10,
             "submit_lines": 5475,
@@ -134893,21 +136113,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 1
-          },
-          {
-            "name": "wanghui0",
-            "submit_prs": 3,
-            "submit_lines": 702,
-            "received_reviews": 15,
-            "rated_prs": 2,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 6,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 2,
-            "review_prs": 3
           },
           {
             "name": "zhangky_gitcode",
@@ -135691,14 +136896,14 @@
           }
         ],
         "lastSync": {
-          "id": 107,
+          "id": 108,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-09-16T00:00:07.246535+08:00",
-          "finished_at": "2026-09-16T00:00:17.258560+08:00",
-          "window_start": "2026-09-15T00:00:00+08:00",
-          "window_end": "2026-09-16T00:00:00+08:00",
+          "started_at": "2026-09-17T00:00:07.775178+08:00",
+          "finished_at": "2026-09-17T00:00:28.080355+08:00",
+          "window_start": "2026-09-16T00:00:00+08:00",
+          "window_end": "2026-09-17T00:00:00+08:00",
           "status": "success",
-          "pr_count": 4,
+          "pr_count": 5,
           "error": null
         }
       }
