@@ -147,15 +147,108 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 20,
-          "lines": 37844,
-          "reviewComments": 77,
+          "mergedPrs": 23,
+          "lines": 38070,
+          "reviewComments": 83,
           "ratedPrs": 1,
           "averageScore": 3.0,
           "poorPrs": 0,
           "excellentPrs": 0
         },
         "prs": [
+          {
+            "id": 1250,
+            "title": "[fix] 修复 DSV4 奇数专家 EFSDP 切分与 DistMuon 存储校验报错",
+            "author": "zhaowei1936",
+            "mergedAt": "2026-11-13T17:38:32+08:00",
+            "lines": 108,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "xuyujun",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1250",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/unit_tests/patches/torchtitan/distributed/flex_shard/test_dist_muon.py",
+                "body": "patch文件建议不要增加UT",
+                "createdAt": "2026-11-12T20:08:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py",
+                "body": "引入的patch是torchtitan上游的已有问题吗",
+                "createdAt": "2026-11-12T20:09:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:569",
+                "body": "这个校验不应该放在patches目录下",
+                "createdAt": "2026-11-12T20:11:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:7",
+                "body": "把issue链接放在这里再合入PR吧",
+                "createdAt": "2026-11-13T16:10:45+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1232,
+            "title": "oidc切换",
+            "author": "cui_jiahao",
+            "mergedAt": "2026-11-13T15:51:54+08:00",
+            "lines": 88,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "tanghaoran7",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1232",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": ".gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113",
+                "body": "实际位置是 `.gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113-120`。 一般(S2): 【实际位置：同文件 134-144 行的 smoke executor，删除了 `export AK=${{secrets.AK}}` / `export SK=${{secrets.SK}}`】这个作业现在只加了 OIDC 认证和 `obs-download`，没有任何 `obs-upload` 步骤，但 PR 描述里说的是「冒烟 plog 上传统一走 obs-upload(OIDC)」。仓库里跟踪的 `.gitcode/scripts/torchtitan-npu_smoke.sh` 既不上传也不读 AK/SK，而流水线实际执行的是 OBS 上的同名副本（见 `.agents/skills/check-pr-docs/references/repo-impact-map.md:60-62`）。 后果：如果那份 OBS 副本里的 `upload.py` 仍然按 `$AK/$SK` 往 `obs_smoke_path` 上传 plog，这次删除会让冒烟作业在上传阶段因缺凭据失败（脚本开头就是 `set -e`），而且报错点离根因很远，很难排查。 建议：要么在这里补一个显式的 `obs-upload` 步骤（`if: always()`，用 OIDC 临时凭证，`object-prefix` 用 `env.obs_smoke_path`），要么确认 OBS 副本已同步、并把同步后的脚本纳入仓库，让定义和实际执行的东西一致。 问题编号：R1232-001 <!-- pilot-issue:794:1 --> <!-- pilot-review:57bfd2ab6b4a482798fa0198c40b2a12:eacfde67b8453c153ed5bee2 --> 审查版本：`a7d93af67f18dc0a2a261e0553392e3e6a01e20f`",
+                "createdAt": "2026-11-10T12:56:44+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1255,
+            "title": "refactor: align native checkpoint integration with TorchTitan v0.4.0",
+            "author": "jiangna1111",
+            "mergedAt": "2026-11-13T15:46:03+08:00",
+            "lines": 30,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "hwcaifubi",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1255",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "jiangna1111",
+                "path": "torchtitan_npu/extensions/torchtitan/components/torch_checkpointing.py:108",
+                "body": "上游已经修正接口，改回正常传参",
+                "createdAt": "2026-11-13T15:08:52+08:00"
+              }
+            ]
+          },
           {
             "id": 1238,
             "title": "[fix](patch): 先加载 torchtitan.config，修复 CP 循环导入 (#5744)",
@@ -1040,6 +1133,21 @@
         ],
         "contributors": [
           {
+            "name": "lrwei0709",
+            "submit_prs": 4,
+            "submit_lines": 3777,
+            "received_reviews": 24,
+            "rated_prs": 1,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 21,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 8,
+            "review_prs": 6
+          },
+          {
             "name": "xuyujun",
             "submit_prs": 1,
             "submit_lines": 106,
@@ -1051,23 +1159,8 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 4,
+            "nonstandard_prs": 5,
             "review_prs": 10
-          },
-          {
-            "name": "lrwei0709",
-            "submit_prs": 4,
-            "submit_lines": 3777,
-            "received_reviews": 24,
-            "rated_prs": 1,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 19,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 8,
-            "review_prs": 5
           },
           {
             "name": "Messi8",
@@ -1077,18 +1170,18 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 12,
+            "review_comments": 13,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 7
+            "review_prs": 8
           },
           {
             "name": "zhaowei1936",
-            "submit_prs": 2,
-            "submit_lines": 1094,
-            "received_reviews": 4,
+            "submit_prs": 3,
+            "submit_lines": 1202,
+            "received_reviews": 8,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
@@ -1098,6 +1191,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 1,
             "review_prs": 2
+          },
+          {
+            "name": "jiangna1111",
+            "submit_prs": 3,
+            "submit_lines": 330,
+            "received_reviews": 7,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 4,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 3
           },
           {
             "name": "hitwdy",
@@ -1115,18 +1223,18 @@
             "review_prs": 2
           },
           {
-            "name": "jiangna1111",
-            "submit_prs": 2,
-            "submit_lines": 300,
-            "received_reviews": 6,
+            "name": "zzyyjj012",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 3,
+            "review_comments": 5,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 0,
+            "nonstandard_prs": 3,
             "review_prs": 2
           },
           {
@@ -1143,21 +1251,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 1,
             "review_prs": 2
-          },
-          {
-            "name": "zzyyjj012",
-            "submit_prs": 0,
-            "submit_lines": 0,
-            "received_reviews": 0,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 3,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 3,
-            "review_prs": 1
           },
           {
             "name": "leedongkun30-arch",
@@ -1295,6 +1388,21 @@
             "review_prs": 0
           },
           {
+            "name": "cui_jiahao",
+            "submit_prs": 1,
+            "submit_lines": 88,
+            "received_reviews": 1,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
             "name": "weixin_69877254",
             "submit_prs": 1,
             "submit_lines": 13,
@@ -1325,6 +1433,21 @@
             "review_prs": 1
           },
           {
+            "name": "tanghaoran7",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 0
+          },
+          {
             "name": "hwcaifubi",
             "submit_prs": 0,
             "submit_lines": 0,
@@ -1336,19 +1459,19 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 2,
+            "nonstandard_prs": 3,
             "review_prs": 0
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -3342,14 +3465,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -4998,14 +5121,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -7312,14 +7435,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -8144,14 +8267,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -9283,14 +9406,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -11948,14 +12071,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -14758,14 +14881,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -17249,14 +17372,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -18540,14 +18663,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -20447,14 +20570,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -22441,14 +22564,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -24224,14 +24347,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -25631,14 +25754,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -26215,14 +26338,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -27136,14 +27259,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -28148,14 +28271,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -29001,14 +29124,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -30001,14 +30124,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -31328,14 +31451,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -31943,14 +32066,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -33258,14 +33381,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -34780,14 +34903,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -36748,14 +36871,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -38068,14 +38191,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -38788,14 +38911,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -39635,14 +39758,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -40480,14 +40603,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -40768,14 +40891,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -41641,14 +41764,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -42196,14 +42319,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -43340,14 +43463,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -43927,14 +44050,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -44269,14 +44392,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -45202,14 +45325,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -45651,14 +45774,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -46469,14 +46592,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -46722,14 +46845,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -46995,14 +47118,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -47720,14 +47843,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       }
@@ -47808,15 +47931,108 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 20,
-          "lines": 37844,
-          "reviewComments": 77,
+          "mergedPrs": 23,
+          "lines": 38070,
+          "reviewComments": 83,
           "ratedPrs": 1,
           "averageScore": 3.0,
           "poorPrs": 0,
           "excellentPrs": 0
         },
         "prs": [
+          {
+            "id": 1250,
+            "title": "[fix] 修复 DSV4 奇数专家 EFSDP 切分与 DistMuon 存储校验报错",
+            "author": "zhaowei1936",
+            "mergedAt": "2026-11-13T17:38:32+08:00",
+            "lines": 108,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "xuyujun",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1250",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/unit_tests/patches/torchtitan/distributed/flex_shard/test_dist_muon.py",
+                "body": "patch文件建议不要增加UT",
+                "createdAt": "2026-11-12T20:08:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py",
+                "body": "引入的patch是torchtitan上游的已有问题吗",
+                "createdAt": "2026-11-12T20:09:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:569",
+                "body": "这个校验不应该放在patches目录下",
+                "createdAt": "2026-11-12T20:11:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:7",
+                "body": "把issue链接放在这里再合入PR吧",
+                "createdAt": "2026-11-13T16:10:45+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1232,
+            "title": "oidc切换",
+            "author": "cui_jiahao",
+            "mergedAt": "2026-11-13T15:51:54+08:00",
+            "lines": 88,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "tanghaoran7",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1232",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": ".gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113",
+                "body": "实际位置是 `.gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113-120`。 一般(S2): 【实际位置：同文件 134-144 行的 smoke executor，删除了 `export AK=${{secrets.AK}}` / `export SK=${{secrets.SK}}`】这个作业现在只加了 OIDC 认证和 `obs-download`，没有任何 `obs-upload` 步骤，但 PR 描述里说的是「冒烟 plog 上传统一走 obs-upload(OIDC)」。仓库里跟踪的 `.gitcode/scripts/torchtitan-npu_smoke.sh` 既不上传也不读 AK/SK，而流水线实际执行的是 OBS 上的同名副本（见 `.agents/skills/check-pr-docs/references/repo-impact-map.md:60-62`）。 后果：如果那份 OBS 副本里的 `upload.py` 仍然按 `$AK/$SK` 往 `obs_smoke_path` 上传 plog，这次删除会让冒烟作业在上传阶段因缺凭据失败（脚本开头就是 `set -e`），而且报错点离根因很远，很难排查。 建议：要么在这里补一个显式的 `obs-upload` 步骤（`if: always()`，用 OIDC 临时凭证，`object-prefix` 用 `env.obs_smoke_path`），要么确认 OBS 副本已同步、并把同步后的脚本纳入仓库，让定义和实际执行的东西一致。 问题编号：R1232-001 <!-- pilot-issue:794:1 --> <!-- pilot-review:57bfd2ab6b4a482798fa0198c40b2a12:eacfde67b8453c153ed5bee2 --> 审查版本：`a7d93af67f18dc0a2a261e0553392e3e6a01e20f`",
+                "createdAt": "2026-11-10T12:56:44+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1255,
+            "title": "refactor: align native checkpoint integration with TorchTitan v0.4.0",
+            "author": "jiangna1111",
+            "mergedAt": "2026-11-13T15:46:03+08:00",
+            "lines": 30,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "hwcaifubi",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1255",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "jiangna1111",
+                "path": "torchtitan_npu/extensions/torchtitan/components/torch_checkpointing.py:108",
+                "body": "上游已经修正接口，改回正常传参",
+                "createdAt": "2026-11-13T15:08:52+08:00"
+              }
+            ]
+          },
           {
             "id": 1238,
             "title": "[fix](patch): 先加载 torchtitan.config，修复 CP 循环导入 (#5744)",
@@ -48701,6 +48917,21 @@
         ],
         "contributors": [
           {
+            "name": "lrwei0709",
+            "submit_prs": 4,
+            "submit_lines": 3777,
+            "received_reviews": 24,
+            "rated_prs": 1,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 21,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 8,
+            "review_prs": 6
+          },
+          {
             "name": "xuyujun",
             "submit_prs": 1,
             "submit_lines": 106,
@@ -48712,23 +48943,8 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 4,
+            "nonstandard_prs": 5,
             "review_prs": 10
-          },
-          {
-            "name": "lrwei0709",
-            "submit_prs": 4,
-            "submit_lines": 3777,
-            "received_reviews": 24,
-            "rated_prs": 1,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 19,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 8,
-            "review_prs": 5
           },
           {
             "name": "Messi8",
@@ -48738,18 +48954,18 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 12,
+            "review_comments": 13,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 7
+            "review_prs": 8
           },
           {
             "name": "zhaowei1936",
-            "submit_prs": 2,
-            "submit_lines": 1094,
-            "received_reviews": 4,
+            "submit_prs": 3,
+            "submit_lines": 1202,
+            "received_reviews": 8,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
@@ -48759,6 +48975,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 1,
             "review_prs": 2
+          },
+          {
+            "name": "jiangna1111",
+            "submit_prs": 3,
+            "submit_lines": 330,
+            "received_reviews": 7,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 4,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 3
           },
           {
             "name": "hitwdy",
@@ -48776,18 +49007,18 @@
             "review_prs": 2
           },
           {
-            "name": "jiangna1111",
-            "submit_prs": 2,
-            "submit_lines": 300,
-            "received_reviews": 6,
+            "name": "zzyyjj012",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 3,
+            "review_comments": 5,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 0,
+            "nonstandard_prs": 3,
             "review_prs": 2
           },
           {
@@ -48804,21 +49035,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 1,
             "review_prs": 2
-          },
-          {
-            "name": "zzyyjj012",
-            "submit_prs": 0,
-            "submit_lines": 0,
-            "received_reviews": 0,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 3,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 3,
-            "review_prs": 1
           },
           {
             "name": "leedongkun30-arch",
@@ -48956,6 +49172,21 @@
             "review_prs": 0
           },
           {
+            "name": "cui_jiahao",
+            "submit_prs": 1,
+            "submit_lines": 88,
+            "received_reviews": 1,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
             "name": "weixin_69877254",
             "submit_prs": 1,
             "submit_lines": 13,
@@ -48986,6 +49217,21 @@
             "review_prs": 1
           },
           {
+            "name": "tanghaoran7",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 0
+          },
+          {
             "name": "hwcaifubi",
             "submit_prs": 0,
             "submit_lines": 0,
@@ -48997,19 +49243,19 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 2,
+            "nonstandard_prs": 3,
             "review_prs": 0
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -54849,14 +55095,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -63583,14 +63829,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -69857,14 +70103,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -72842,14 +73088,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -77008,14 +77254,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -81041,14 +81287,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -83706,14 +83952,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -85569,14 +85815,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -86565,14 +86811,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -87290,14 +87536,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       }
@@ -87378,15 +87624,108 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 138,
-          "lines": 134605,
-          "reviewComments": 468,
+          "mergedPrs": 141,
+          "lines": 134831,
+          "reviewComments": 474,
           "ratedPrs": 48,
           "averageScore": 3.01,
           "poorPrs": 2,
           "excellentPrs": 6
         },
         "prs": [
+          {
+            "id": 1250,
+            "title": "[fix] 修复 DSV4 奇数专家 EFSDP 切分与 DistMuon 存储校验报错",
+            "author": "zhaowei1936",
+            "mergedAt": "2026-11-13T17:38:32+08:00",
+            "lines": 108,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "xuyujun",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1250",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/unit_tests/patches/torchtitan/distributed/flex_shard/test_dist_muon.py",
+                "body": "patch文件建议不要增加UT",
+                "createdAt": "2026-11-12T20:08:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py",
+                "body": "引入的patch是torchtitan上游的已有问题吗",
+                "createdAt": "2026-11-12T20:09:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:569",
+                "body": "这个校验不应该放在patches目录下",
+                "createdAt": "2026-11-12T20:11:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:7",
+                "body": "把issue链接放在这里再合入PR吧",
+                "createdAt": "2026-11-13T16:10:45+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1232,
+            "title": "oidc切换",
+            "author": "cui_jiahao",
+            "mergedAt": "2026-11-13T15:51:54+08:00",
+            "lines": 88,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "tanghaoran7",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1232",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": ".gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113",
+                "body": "实际位置是 `.gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113-120`。 一般(S2): 【实际位置：同文件 134-144 行的 smoke executor，删除了 `export AK=${{secrets.AK}}` / `export SK=${{secrets.SK}}`】这个作业现在只加了 OIDC 认证和 `obs-download`，没有任何 `obs-upload` 步骤，但 PR 描述里说的是「冒烟 plog 上传统一走 obs-upload(OIDC)」。仓库里跟踪的 `.gitcode/scripts/torchtitan-npu_smoke.sh` 既不上传也不读 AK/SK，而流水线实际执行的是 OBS 上的同名副本（见 `.agents/skills/check-pr-docs/references/repo-impact-map.md:60-62`）。 后果：如果那份 OBS 副本里的 `upload.py` 仍然按 `$AK/$SK` 往 `obs_smoke_path` 上传 plog，这次删除会让冒烟作业在上传阶段因缺凭据失败（脚本开头就是 `set -e`），而且报错点离根因很远，很难排查。 建议：要么在这里补一个显式的 `obs-upload` 步骤（`if: always()`，用 OIDC 临时凭证，`object-prefix` 用 `env.obs_smoke_path`），要么确认 OBS 副本已同步、并把同步后的脚本纳入仓库，让定义和实际执行的东西一致。 问题编号：R1232-001 <!-- pilot-issue:794:1 --> <!-- pilot-review:57bfd2ab6b4a482798fa0198c40b2a12:eacfde67b8453c153ed5bee2 --> 审查版本：`a7d93af67f18dc0a2a261e0553392e3e6a01e20f`",
+                "createdAt": "2026-11-10T12:56:44+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1255,
+            "title": "refactor: align native checkpoint integration with TorchTitan v0.4.0",
+            "author": "jiangna1111",
+            "mergedAt": "2026-11-13T15:46:03+08:00",
+            "lines": 30,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "hwcaifubi",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1255",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "jiangna1111",
+                "path": "torchtitan_npu/extensions/torchtitan/components/torch_checkpointing.py:108",
+                "body": "上游已经修正接口，改回正常传参",
+                "createdAt": "2026-11-13T15:08:52+08:00"
+              }
+            ]
+          },
           {
             "id": 1238,
             "title": "[fix](patch): 先加载 torchtitan.config，修复 CP 循环导入 (#5744)",
@@ -93325,7 +93664,7 @@
             "scored_prs": 27,
             "scored_poor": 1,
             "scored_excellent": 0,
-            "nonstandard_prs": 22,
+            "nonstandard_prs": 23,
             "review_prs": 58
           },
           {
@@ -93336,12 +93675,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 83,
+            "review_comments": 84,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 40
+            "review_prs": 41
           },
           {
             "name": "lrwei0709",
@@ -93351,18 +93690,18 @@
             "rated_prs": 11,
             "poor_prs": 0,
             "excellent_prs": 3,
-            "review_comments": 33,
+            "review_comments": 35,
             "scored_prs": 11,
             "scored_poor": 1,
             "scored_excellent": 3,
             "nonstandard_prs": 27,
-            "review_prs": 12
+            "review_prs": 13
           },
           {
             "name": "zhaowei1936",
-            "submit_prs": 8,
-            "submit_lines": 2299,
-            "received_reviews": 18,
+            "submit_prs": 9,
+            "submit_lines": 2407,
+            "received_reviews": 22,
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 0,
@@ -93411,12 +93750,12 @@
             "rated_prs": 2,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 16,
+            "review_comments": 18,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 15,
-            "review_prs": 9
+            "review_prs": 10
           },
           {
             "name": "panchao-gitcode",
@@ -93495,18 +93834,18 @@
           },
           {
             "name": "jiangna1111",
-            "submit_prs": 3,
-            "submit_lines": 1102,
-            "received_reviews": 7,
+            "submit_prs": 4,
+            "submit_lines": 1132,
+            "received_reviews": 8,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 3,
+            "review_comments": 4,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 2
+            "review_prs": 3
           },
           {
             "name": "hwcaifubi",
@@ -93520,7 +93859,7 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 3,
+            "nonstandard_prs": 4,
             "review_prs": 2
           },
           {
@@ -93869,6 +94208,21 @@
             "review_prs": 0
           },
           {
+            "name": "cui_jiahao",
+            "submit_prs": 1,
+            "submit_lines": 88,
+            "received_reviews": 1,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
             "name": "sunote",
             "submit_prs": 1,
             "submit_lines": 37,
@@ -93989,6 +94343,21 @@
             "review_prs": 0
           },
           {
+            "name": "tanghaoran7",
+            "submit_prs": 0,
+            "submit_lines": 0,
+            "received_reviews": 0,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 1,
+            "review_prs": 0
+          },
+          {
             "name": "zhanghz1",
             "submit_prs": 0,
             "submit_lines": 0,
@@ -94020,14 +94389,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -111065,14 +111434,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -121266,14 +121635,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -124337,14 +124706,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       }
@@ -124425,15 +124794,108 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 448,
-          "lines": 817841,
-          "reviewComments": 1791,
+          "mergedPrs": 451,
+          "lines": 818067,
+          "reviewComments": 1797,
           "ratedPrs": 233,
           "averageScore": 3.0,
           "poorPrs": 23,
           "excellentPrs": 30
         },
         "prs": [
+          {
+            "id": 1250,
+            "title": "[fix] 修复 DSV4 奇数专家 EFSDP 切分与 DistMuon 存储校验报错",
+            "author": "zhaowei1936",
+            "mergedAt": "2026-11-13T17:38:32+08:00",
+            "lines": 108,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "xuyujun",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1250",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/unit_tests/patches/torchtitan/distributed/flex_shard/test_dist_muon.py",
+                "body": "patch文件建议不要增加UT",
+                "createdAt": "2026-11-12T20:08:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py",
+                "body": "引入的patch是torchtitan上游的已有问题吗",
+                "createdAt": "2026-11-12T20:09:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:569",
+                "body": "这个校验不应该放在patches目录下",
+                "createdAt": "2026-11-12T20:11:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:7",
+                "body": "把issue链接放在这里再合入PR吧",
+                "createdAt": "2026-11-13T16:10:45+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1232,
+            "title": "oidc切换",
+            "author": "cui_jiahao",
+            "mergedAt": "2026-11-13T15:51:54+08:00",
+            "lines": 88,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "tanghaoran7",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1232",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": ".gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113",
+                "body": "实际位置是 `.gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113-120`。 一般(S2): 【实际位置：同文件 134-144 行的 smoke executor，删除了 `export AK=${{secrets.AK}}` / `export SK=${{secrets.SK}}`】这个作业现在只加了 OIDC 认证和 `obs-download`，没有任何 `obs-upload` 步骤，但 PR 描述里说的是「冒烟 plog 上传统一走 obs-upload(OIDC)」。仓库里跟踪的 `.gitcode/scripts/torchtitan-npu_smoke.sh` 既不上传也不读 AK/SK，而流水线实际执行的是 OBS 上的同名副本（见 `.agents/skills/check-pr-docs/references/repo-impact-map.md:60-62`）。 后果：如果那份 OBS 副本里的 `upload.py` 仍然按 `$AK/$SK` 往 `obs_smoke_path` 上传 plog，这次删除会让冒烟作业在上传阶段因缺凭据失败（脚本开头就是 `set -e`），而且报错点离根因很远，很难排查。 建议：要么在这里补一个显式的 `obs-upload` 步骤（`if: always()`，用 OIDC 临时凭证，`object-prefix` 用 `env.obs_smoke_path`），要么确认 OBS 副本已同步、并把同步后的脚本纳入仓库，让定义和实际执行的东西一致。 问题编号：R1232-001 <!-- pilot-issue:794:1 --> <!-- pilot-review:57bfd2ab6b4a482798fa0198c40b2a12:eacfde67b8453c153ed5bee2 --> 审查版本：`a7d93af67f18dc0a2a261e0553392e3e6a01e20f`",
+                "createdAt": "2026-11-10T12:56:44+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1255,
+            "title": "refactor: align native checkpoint integration with TorchTitan v0.4.0",
+            "author": "jiangna1111",
+            "mergedAt": "2026-11-13T15:46:03+08:00",
+            "lines": 30,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "hwcaifubi",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1255",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "jiangna1111",
+                "path": "torchtitan_npu/extensions/torchtitan/components/torch_checkpointing.py:108",
+                "body": "上游已经修正接口，改回正常传参",
+                "createdAt": "2026-11-13T15:08:52+08:00"
+              }
+            ]
+          },
           {
             "id": 1238,
             "title": "[fix](patch): 先加载 torchtitan.config，修复 CP 循环导入 (#5744)",
@@ -146268,7 +146730,7 @@
             "scored_prs": 88,
             "scored_poor": 11,
             "scored_excellent": 4,
-            "nonstandard_prs": 54,
+            "nonstandard_prs": 55,
             "review_prs": 158
           },
           {
@@ -146294,12 +146756,12 @@
             "rated_prs": 17,
             "poor_prs": 0,
             "excellent_prs": 3,
-            "review_comments": 239,
+            "review_comments": 241,
             "scored_prs": 59,
             "scored_poor": 7,
             "scored_excellent": 11,
             "nonstandard_prs": 51,
-            "review_prs": 46
+            "review_prs": 47
           },
           {
             "name": "panchao-gitcode",
@@ -146324,18 +146786,18 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 140,
+            "review_comments": 141,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 84
+            "review_prs": 85
           },
           {
             "name": "zhaowei1936",
-            "submit_prs": 26,
-            "submit_lines": 8036,
-            "received_reviews": 74,
+            "submit_prs": 27,
+            "submit_lines": 8144,
+            "received_reviews": 78,
             "rated_prs": 13,
             "poor_prs": 0,
             "excellent_prs": 0,
@@ -146354,12 +146816,12 @@
             "rated_prs": 9,
             "poor_prs": 0,
             "excellent_prs": 1,
-            "review_comments": 74,
+            "review_comments": 76,
             "scored_prs": 14,
             "scored_poor": 0,
             "scored_excellent": 2,
             "nonstandard_prs": 32,
-            "review_prs": 35
+            "review_prs": 36
           },
           {
             "name": "hitwdy",
@@ -146388,7 +146850,7 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 8,
+            "nonstandard_prs": 9,
             "review_prs": 12
           },
           {
@@ -146553,7 +147015,7 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 2,
+            "nonstandard_prs": 3,
             "review_prs": 1
           },
           {
@@ -146570,6 +147032,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
+          },
+          {
+            "name": "jiangna1111",
+            "submit_prs": 5,
+            "submit_lines": 3081,
+            "received_reviews": 46,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 4,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 3
           },
           {
             "name": "gcw_bImVmzsb",
@@ -146645,21 +147122,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
-          },
-          {
-            "name": "jiangna1111",
-            "submit_prs": 4,
-            "submit_lines": 3051,
-            "received_reviews": 45,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 3,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 2
           },
           {
             "name": "MissingPompeii",
@@ -147127,6 +147589,21 @@
             "review_prs": 0
           },
           {
+            "name": "cui_jiahao",
+            "submit_prs": 1,
+            "submit_lines": 88,
+            "received_reviews": 1,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
             "name": "zzyy_zzyy",
             "submit_prs": 1,
             "submit_lines": 72,
@@ -147518,14 +147995,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       },
@@ -160481,14 +160958,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       }
@@ -160569,15 +161046,108 @@
           ]
         },
         "metrics": {
-          "mergedPrs": 742,
-          "lines": 1090066,
-          "reviewComments": 2607,
+          "mergedPrs": 745,
+          "lines": 1090292,
+          "reviewComments": 2613,
           "ratedPrs": 443,
           "averageScore": 3.01,
           "poorPrs": 33,
           "excellentPrs": 68
         },
         "prs": [
+          {
+            "id": 1250,
+            "title": "[fix] 修复 DSV4 奇数专家 EFSDP 切分与 DistMuon 存储校验报错",
+            "author": "zhaowei1936",
+            "mergedAt": "2026-11-13T17:38:32+08:00",
+            "lines": 108,
+            "reviews": 4,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "xuyujun",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1250",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "tests/unit_tests/patches/torchtitan/distributed/flex_shard/test_dist_muon.py",
+                "body": "patch文件建议不要增加UT",
+                "createdAt": "2026-11-12T20:08:53+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "lrwei0709",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py",
+                "body": "引入的patch是torchtitan上游的已有问题吗",
+                "createdAt": "2026-11-12T20:09:15+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:569",
+                "body": "这个校验不应该放在patches目录下",
+                "createdAt": "2026-11-12T20:11:00+08:00"
+              },
+              {
+                "type": "检视意见",
+                "author": "zzyyjj012",
+                "path": "torchtitan_npu/patches/torchtitan/distributed/flex_shard/dist_muon.py:7",
+                "body": "把issue链接放在这里再合入PR吧",
+                "createdAt": "2026-11-13T16:10:45+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1232,
+            "title": "oidc切换",
+            "author": "cui_jiahao",
+            "mergedAt": "2026-11-13T15:51:54+08:00",
+            "lines": 88,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "tanghaoran7",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1232",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "Messi8",
+                "path": ".gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113",
+                "body": "实际位置是 `.gitcode/workflows/PR-pipeline_torchtitan-npu.yml:113-120`。 一般(S2): 【实际位置：同文件 134-144 行的 smoke executor，删除了 `export AK=${{secrets.AK}}` / `export SK=${{secrets.SK}}`】这个作业现在只加了 OIDC 认证和 `obs-download`，没有任何 `obs-upload` 步骤，但 PR 描述里说的是「冒烟 plog 上传统一走 obs-upload(OIDC)」。仓库里跟踪的 `.gitcode/scripts/torchtitan-npu_smoke.sh` 既不上传也不读 AK/SK，而流水线实际执行的是 OBS 上的同名副本（见 `.agents/skills/check-pr-docs/references/repo-impact-map.md:60-62`）。 后果：如果那份 OBS 副本里的 `upload.py` 仍然按 `$AK/$SK` 往 `obs_smoke_path` 上传 plog，这次删除会让冒烟作业在上传阶段因缺凭据失败（脚本开头就是 `set -e`），而且报错点离根因很远，很难排查。 建议：要么在这里补一个显式的 `obs-upload` 步骤（`if: always()`，用 OIDC 临时凭证，`object-prefix` 用 `env.obs_smoke_path`），要么确认 OBS 副本已同步、并把同步后的脚本纳入仓库，让定义和实际执行的东西一致。 问题编号：R1232-001 <!-- pilot-issue:794:1 --> <!-- pilot-review:57bfd2ab6b4a482798fa0198c40b2a12:eacfde67b8453c153ed5bee2 --> 审查版本：`a7d93af67f18dc0a2a261e0553392e3e6a01e20f`",
+                "createdAt": "2026-11-10T12:56:44+08:00"
+              }
+            ]
+          },
+          {
+            "id": 1255,
+            "title": "refactor: align native checkpoint integration with TorchTitan v0.4.0",
+            "author": "jiangna1111",
+            "mergedAt": "2026-11-13T15:46:03+08:00",
+            "lines": 30,
+            "reviews": 1,
+            "score": null,
+            "reviewer": "",
+            "level": "未评分",
+            "summary": "",
+            "nonstandardReviewer": "hwcaifubi",
+            "nonstandardReason": "只有LGTM无评分",
+            "htmlUrl": "https://gitcode.com/cann/torchtitan-npu/merge_requests/1255",
+            "detail": [
+              {
+                "type": "检视意见",
+                "author": "jiangna1111",
+                "path": "torchtitan_npu/extensions/torchtitan/components/torch_checkpointing.py:108",
+                "body": "上游已经修正接口，改回正常传参",
+                "createdAt": "2026-11-13T15:08:52+08:00"
+              }
+            ]
+          },
           {
             "id": 1238,
             "title": "[fix](patch): 先加载 torchtitan.config，修复 CP 循环导入 (#5744)",
@@ -194691,7 +195261,7 @@
             "scored_prs": 142,
             "scored_poor": 15,
             "scored_excellent": 17,
-            "nonstandard_prs": 72,
+            "nonstandard_prs": 73,
             "review_prs": 250
           },
           {
@@ -194702,12 +195272,12 @@
             "rated_prs": 28,
             "poor_prs": 0,
             "excellent_prs": 8,
-            "review_comments": 333,
+            "review_comments": 335,
             "scored_prs": 156,
             "scored_poor": 11,
             "scored_excellent": 24,
             "nonstandard_prs": 100,
-            "review_prs": 73
+            "review_prs": 74
           },
           {
             "name": "depeng1994",
@@ -194741,9 +195311,9 @@
           },
           {
             "name": "zhaowei1936",
-            "submit_prs": 36,
-            "submit_lines": 8842,
-            "received_reviews": 89,
+            "submit_prs": 37,
+            "submit_lines": 8950,
+            "received_reviews": 93,
             "rated_prs": 21,
             "poor_prs": 1,
             "excellent_prs": 0,
@@ -194777,12 +195347,12 @@
             "rated_prs": 18,
             "poor_prs": 0,
             "excellent_prs": 4,
-            "review_comments": 109,
+            "review_comments": 111,
             "scored_prs": 14,
             "scored_poor": 0,
             "scored_excellent": 2,
             "nonstandard_prs": 45,
-            "review_prs": 45
+            "review_prs": 46
           },
           {
             "name": "Messi8",
@@ -194792,12 +195362,12 @@
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
-            "review_comments": 140,
+            "review_comments": 141,
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
             "nonstandard_prs": 0,
-            "review_prs": 84
+            "review_prs": 85
           },
           {
             "name": "mystri",
@@ -194826,7 +195396,7 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 8,
+            "nonstandard_prs": 9,
             "review_prs": 12
           },
           {
@@ -195096,7 +195666,7 @@
             "scored_prs": 0,
             "scored_poor": 0,
             "scored_excellent": 0,
-            "nonstandard_prs": 2,
+            "nonstandard_prs": 3,
             "review_prs": 1
           },
           {
@@ -195128,6 +195698,21 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
+          },
+          {
+            "name": "jiangna1111",
+            "submit_prs": 5,
+            "submit_lines": 3081,
+            "received_reviews": 46,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 4,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 3
           },
           {
             "name": "zhangky_gitcode",
@@ -195203,21 +195788,6 @@
             "scored_excellent": 0,
             "nonstandard_prs": 0,
             "review_prs": 0
-          },
-          {
-            "name": "jiangna1111",
-            "submit_prs": 4,
-            "submit_lines": 3051,
-            "received_reviews": 45,
-            "rated_prs": 0,
-            "poor_prs": 0,
-            "excellent_prs": 0,
-            "review_comments": 3,
-            "scored_prs": 0,
-            "scored_poor": 0,
-            "scored_excellent": 0,
-            "nonstandard_prs": 0,
-            "review_prs": 2
           },
           {
             "name": "wy_test",
@@ -195689,6 +196259,21 @@
             "submit_prs": 1,
             "submit_lines": 580,
             "received_reviews": 7,
+            "rated_prs": 0,
+            "poor_prs": 0,
+            "excellent_prs": 0,
+            "review_comments": 0,
+            "scored_prs": 0,
+            "scored_poor": 0,
+            "scored_excellent": 0,
+            "nonstandard_prs": 0,
+            "review_prs": 0
+          },
+          {
+            "name": "cui_jiahao",
+            "submit_prs": 1,
+            "submit_lines": 88,
+            "received_reviews": 1,
             "rated_prs": 0,
             "poor_prs": 0,
             "excellent_prs": 0,
@@ -196196,14 +196781,14 @@
           }
         ],
         "lastSync": {
-          "id": 157,
+          "id": 158,
           "repo": "cann/torchtitan-npu",
-          "started_at": "2026-11-13T00:00:05.253281+08:00",
-          "finished_at": "2026-11-13T00:00:34.215741+08:00",
-          "window_start": "2026-11-12T00:00:00+08:00",
-          "window_end": "2026-11-13T00:00:00+08:00",
+          "started_at": "2026-11-14T00:00:06.068804+08:00",
+          "finished_at": "2026-11-14T00:00:16.122497+08:00",
+          "window_start": "2026-11-13T00:00:00+08:00",
+          "window_end": "2026-11-14T00:00:00+08:00",
           "status": "success",
-          "pr_count": 7,
+          "pr_count": 3,
           "error": null
         }
       }
